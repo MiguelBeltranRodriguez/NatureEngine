@@ -1,7 +1,7 @@
 package modelo;
 
-import java.awt.Graphics2D;
+import controlador.Renderizador2D;
 
 public interface Dibujable {
-	public void dibujar(Graphics2D g);
+	public void dibujar(Renderizador2D r);
 }
