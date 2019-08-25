@@ -36,15 +36,22 @@ public class Loop implements Runnable {
 		agentes.add(a2);
 		agentes.add(a3);
 		
-		a1.start();
-		a2.start();
-		a3.start();
+		
 	}	
 	
 	//Parte lógica
 	private void update() {
 		dibujables.clear();
 		dibujables.addAll(agentes);
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (Agente agente : agentes) {
+			agente.start();
+		}
 	}
 	//Parte visual
 	private void renderizar() {

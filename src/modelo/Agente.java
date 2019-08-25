@@ -37,15 +37,9 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public void run() {
-		//acciones del agente
-		while(true) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			movimientoAleatorio();
-		}
+		
+		movimientoAleatorio();
+		
 	}
 
 	private void movimientoAleatorio() {
@@ -77,6 +71,12 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public synchronized void dibujar(Renderizador2D r) {
 		r.dibujarOvalo(color, x, y, radio, radio);
+	}
+	public Thread getThread() {
+		return thread;
+	}
+	public void setThread(Thread thread) {
+		this.thread = thread;
 	}
 
 }
