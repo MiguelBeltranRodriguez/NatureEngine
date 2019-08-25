@@ -12,6 +12,14 @@ public class Agente implements Dibujable, Runnable {
 	private int y;
 	private int radio;
 	
+	
+	
+	public Agente(Color color, int x, int y, int radio) {
+		this.color = color;
+		this.x = x;
+		this.y = y;
+		this.radio = radio;
+	}
 	public synchronized void start() {	
 		thread = new Thread(this);
 		thread.start();
@@ -30,9 +38,8 @@ public class Agente implements Dibujable, Runnable {
 	}
 
 	@Override
-	public void dibujar(Renderizador2D r) {
+	public synchronized void dibujar(Renderizador2D r) {
 		r.dibujarOvalo(color, x, y, radio, radio);
-
 	}
 
 }
