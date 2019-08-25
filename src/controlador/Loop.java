@@ -27,15 +27,18 @@ public class Loop implements Runnable {
 		agentes = new ArrayList<Agente>();
 		dibujables = new ArrayList<Dibujable>();
 		
-		Agente a1 = new Agente(Color.green, 20, 20, 20);
-		Agente a2 = new Agente(Color.red, 20, 50, 18);
-		Agente a3 = new Agente(Color.BLUE, 30, 60, 21);
+		Agente a1 = new Agente(Color.green, 20, 20, 20, 1);
+		Agente a2 = new Agente(Color.red, 20, 50, 18, 2);
+		Agente a3 = new Agente(Color.BLUE, 30, 60, 21, 3);
 		
 		
 		agentes.add(a1);
 		agentes.add(a2);
 		agentes.add(a3);
 		
+		a1.start();
+		a2.start();
+		a3.start();
 	}	
 	
 	//Parte lógica

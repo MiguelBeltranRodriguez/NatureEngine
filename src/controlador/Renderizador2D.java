@@ -43,6 +43,7 @@ public class Renderizador2D {
 	public void dibujarRectangulo(Color c, int x, int y, int width, int height) {
 		g.setColor(c);
 		g.fillRect(x, y, width, height);
+		
 	}
 	public void dibujarOvalo(Color c, int x, int y, int width, int height) {
 		g.setColor(c);
