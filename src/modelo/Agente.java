@@ -8,6 +8,9 @@ public class Agente implements Dibujable, Runnable {
 
 	private Thread thread;
 	private Color color;
+	private int x;
+	private int y;
+	private int radio;
 	
 	public synchronized void start() {	
 		thread = new Thread(this);
@@ -28,7 +31,7 @@ public class Agente implements Dibujable, Runnable {
 
 	@Override
 	public void dibujar(Renderizador2D r) {
-		r.dibujarOvalo(color, x, y, width, height);
+		r.dibujarOvalo(color, x, y, radio, radio);
 
 	}
 
