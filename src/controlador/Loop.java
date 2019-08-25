@@ -43,14 +43,14 @@ public class Loop implements Runnable {
 	private void update() {
 		dibujables.clear();
 		dibujables.addAll(agentes);
+		for (Agente agente : agentes) {
+			agente.start();
+		}
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		for (Agente agente : agentes) {
-			agente.start();
 		}
 	}
 	//Parte visual
