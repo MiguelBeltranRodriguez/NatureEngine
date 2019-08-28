@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.List;
 
-import Utils.VarGlobalVista;
 import modelo.Dibujable;
+import utils.VarGlobalVista;
 import vista.Pantalla;
 
 public class Renderizador2D {

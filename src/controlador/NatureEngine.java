@@ -1,6 +1,6 @@
 package controlador;
 
-import Utils.VarGlobalVista;
+import utils.VarGlobalVista;
 import vista.Pantalla;
 
 /*

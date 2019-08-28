@@ -6,6 +6,7 @@ import java.util.List;
 
 import modelo.Agente;
 import modelo.Dibujable;
+import utils.VarGlobalGame;
 import vista.Pantalla;
 
 /*
@@ -36,22 +37,20 @@ public class Loop implements Runnable {
 		agentes.add(a2);
 		agentes.add(a3);
 		
+		for (int i = 0; i <3000; i++) {
+			agentes.add(new Agente(Color.CYAN, 100, 100, 20, 2));
+		}
+		for (Agente agente : agentes) {
+			agente.start();
+		}
+		dibujables.addAll(agentes);
 		
 	}	
 	
 	//Parte lógica
 	private void update() {
-		dibujables.clear();
-		dibujables.addAll(agentes);
-		for (Agente agente : agentes) {
-			agente.start();
-		}
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		
 	}
 	//Parte visual
 	private void renderizar() {
@@ -61,9 +60,32 @@ public class Loop implements Runnable {
 	@Override
 	public void run() {
 		inicio();
+		
+		double timerPerTick = 1000000000 / VarGlobalGame.FPS;
+		
+		long now;
+		long lastTime = System.nanoTime();
+		long timer = 0;
+		int ticks = 0;
+		
 		while(corriendo) {
-			update();
-			renderizar();
+			now = System.nanoTime();
+			VarGlobalGame.delta += (now -lastTime)/timerPerTick;
+			timer += now - lastTime;
+			lastTime = now;
+			
+			if(VarGlobalGame.delta>=1) {
+				update();
+				renderizar();
+				ticks++;
+				VarGlobalGame.delta--;
+			}
+			if(timer > 1000000000) {
+				System.out.println("Tiquets y Frames: "+ ticks);
+				ticks = 0;
+				timer = 0;
+			}
+			
 		}
 		stop();
 		

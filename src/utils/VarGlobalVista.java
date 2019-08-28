@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 /*
  * Contiene variables que van a ser usadas por muchas clases y/o que no van a cambiar durante el tiempo
  */

@@ -3,8 +3,8 @@ package modelo;
 import java.awt.Color;
 import java.util.Random;
 
-import Utils.VarGlobalVista;
 import controlador.Renderizador2D;
+import utils.VarGlobalVista;
 
 public class Agente implements Dibujable, Runnable {
 
@@ -24,10 +24,13 @@ public class Agente implements Dibujable, Runnable {
 		this.radio = radio;
 		this.velocidadPXs = velocidad;
 	}
-	public synchronized void start() {	
+	public synchronized void start() {
+		
 		thread = new Thread(this);
+		
 		thread.start();
 	}
+	
 	public synchronized void stop() {
 		try {
 			thread.join();
@@ -37,8 +40,31 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public void run() {
+		long newTime = 0;
+		long oldTime = System.currentTimeMillis();
+		long time = 0;
+
+		while(true) {
+			try {
+				newTime = System.currentTimeMillis();
+				time = newTime-oldTime;
+				oldTime = time;
+				movimientoAleatorio();
+				if(time>1000) {
+					Thread.sleep(1000);
+				}else {
+					Thread.sleep(1000-time);
+				}
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
-		movimientoAleatorio();
+	
+
 		
 	}
 
