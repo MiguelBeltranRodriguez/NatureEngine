@@ -5,8 +5,8 @@ package utils;
 public class VarGlobalVista {
 	
 	
-	public final static String titlePantalla = "NatureEngine";
-	public final static int widhtPantalla = 300;
-	public final static int heightPantalla = 300;
+	public final static String TITULO_JUEGO = "NatureEngine";
+	public final static int WIDHT_PANTALLA = 1080;
+	public final static int HEIGTH_PATALLA = 720;
 
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import controlador.Renderizador2D;
+import utils.VarGlobalGame;
 import utils.VarGlobalVista;
 
 public class Agente implements Dibujable, Runnable {
@@ -15,14 +16,16 @@ public class Agente implements Dibujable, Runnable {
 	private int y; //prueba
 	private int radio;  //prueba
 	private int velocidadPXs;
+	private Mundo mundo;
 	
 	
-	public Agente(Color color, int x, int y, int radio, int velocidad) {
+	public Agente(Color color, int x, int y, int radio, int velocidad, Mundo mundo) {
 		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.radio = radio;
 		this.velocidadPXs = velocidad;
+		this.mundo = mundo;
 	}
 	public synchronized void start() {
 		
@@ -50,10 +53,10 @@ public class Agente implements Dibujable, Runnable {
 				time = newTime-oldTime;
 				oldTime = time;
 				movimientoAleatorio();
-				if(time>1000) {
-					Thread.sleep(1000);
+				if(time>VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS) {
+					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
 				}else {
-					Thread.sleep(1000-time);
+					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS-time);
 				}
 				
 			} catch (InterruptedException e) {
@@ -73,7 +76,7 @@ public class Agente implements Dibujable, Runnable {
 		int newX = 0;
 		do {
 			newX =  x + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
-			if(newX>VarGlobalVista.widhtPantalla || newX <0) {
+			if(newX>=VarGlobalVista.WIDHT_PANTALLA || newX <0) {
 				newX =  x + rnd.nextInt(velocidadPXs + 1 + velocidadPXs) - velocidadPXs;
 			}else {
 				break;
@@ -82,15 +85,21 @@ public class Agente implements Dibujable, Runnable {
 		int newY = 0;
 		do {
 			newY =  y + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
-			if(newY>VarGlobalVista.heightPantalla || newY<0) {
+			if(newY>=VarGlobalVista.HEIGTH_PATALLA || newY<0) {
 				newY =  y +  rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
 			}else {
 				break;
 			}
 		}while(true);
-		cambiarPosicion(newX, newY);
+		if(mundo.celdaVacia(newX,newY)) {
+			cambiarPosicion(newX, newY);
+		}
+		
 	}
-	private synchronized void cambiarPosicion(int x2, int y2) {
+	private void cambiarPosicion(int x2, int y2) {
+		synchronized (mundo) {
+			mundo.moverAgente(x2, y2, this);
+		}
 		this.x = x2;
 		this.y = y2;
 	}
@@ -104,5 +113,22 @@ public class Agente implements Dibujable, Runnable {
 	public void setThread(Thread thread) {
 		this.thread = thread;
 	}
-
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	@Override
+	public void init() {
+		start();
+		
+	}
+	
 }

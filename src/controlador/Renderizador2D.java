@@ -3,9 +3,7 @@ package controlador;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
-import java.util.List;
-
-import modelo.Dibujable;
+import modelo.Mundo;
 import utils.VarGlobalVista;
 import vista.Pantalla;
 
@@ -19,21 +17,19 @@ public class Renderizador2D {
 		pantalla = Pantalla.getPantalla();
 	}
 	
-	public void renderizar(List<Dibujable> dibujables) {
+	public void renderizar(Mundo mundo) {
 		bs = pantalla.getCanvas().getBufferStrategy();
 		if(bs == null) {
 			pantalla.getCanvas().createBufferStrategy(3);
 			return;
 		}
 		g = (Graphics2D) bs.getDrawGraphics();
-		g.clearRect(0, 0, VarGlobalVista.widhtPantalla, VarGlobalVista.heightPantalla);
+		g.clearRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PATALLA);
 		//empieza a dibujar
 		g.setColor(Color.white);
-		g.fillRect(0, 0, VarGlobalVista.widhtPantalla, VarGlobalVista.heightPantalla);
+		g.fillRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PATALLA);
 		
-		for (Dibujable dibujable : dibujables) {
-			dibujable.dibujar(this);
-		}
+		mundo.dibujar(this);
 		//termina de dibujar
 		
 		bs.show();
