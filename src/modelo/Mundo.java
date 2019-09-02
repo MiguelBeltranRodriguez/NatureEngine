@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Random;
+
 import controlador.Renderizador2D;
 import utils.VarGlobalVista;
 
@@ -10,10 +12,10 @@ public class Mundo implements Dibujable {
 	
 	public Mundo() {
 		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA][VarGlobalVista.HEIGTH_PATALLA];
-		
+		Random r = new Random();
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA; x++) {
 			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA; y++) {
-				objetosDelMundo[x][y]= new Casilla(x,y);
+				objetosDelMundo[x][y]= new CasillaTierra(x,y, r.nextInt(100));
 			}
 		}
 		
@@ -23,10 +25,14 @@ public class Mundo implements Dibujable {
 	
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
-		
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA/VarGlobalVista.tamanoTextura; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA/VarGlobalVista.tamanoTextura; y++) {
+				objetosDelMundo[x*8][y*8].dibujarCasillas(r);
+			}
+		}
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA; x++) {
 			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA; y++) {
-				objetosDelMundo[x][y].dibujar(r);;
+				objetosDelMundo[x][y].dibujar(r);
 			}
 		}
 	}

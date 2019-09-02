@@ -27,8 +27,8 @@ public class Loop implements Runnable {
 		mundo = new Mundo();
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
-		for(int i = 0; i < 500; i++) {
-			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 60+i, 50+(i), 20, 5, mundo));
+		for(int i = 0; i < 250; i++) {
+			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+i, 150+(i), 12, 5, mundo));
 		}
 		
 		
