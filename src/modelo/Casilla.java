@@ -24,7 +24,7 @@ public abstract class Casilla {
 	}
 
 	public void dibujarCasillas(Renderizador2D r) {
-		r.dibujarRectangulo(color, x, y, VarGlobalVista.tamanoTextura, VarGlobalVista.tamanoTextura);
+		r.dibujarRectangulo(color, x, y, VarGlobalVista.TAMANO_TEXTURA, VarGlobalVista.TAMANO_TEXTURA);
 	}
 
 	public void agregarDibujable(Dibujable ag) {
@@ -63,7 +63,7 @@ public abstract class Casilla {
 		if(objetosEnCasilla.isEmpty()) {
 			return true;
 		}else {
-			System.out.println("Colision");
+			//System.out.println("Colision");
 			return false;
 		}
 	}
