@@ -1,6 +1,8 @@
 package controlador;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 
 import modelo.Agente;
@@ -30,12 +32,48 @@ public class Loop implements Runnable {
 		for(int i = 0; i < 250; i++) {
 			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+i, 150+(i), 12, 5, mundo));
 		}
-		
+		pantalla.getCanvas().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				seleccionar(e);
+			}
+		});
 		
 		mundo.init();
 	}	
 	
-	//Parte lógica
+	protected void seleccionar(MouseEvent e) {
+		if(!mundo.addPopUp(e.getX(), e.getY())) {
+			mundo.limpiarPopUp();
+		}
+	}
+
+	//Parte lï¿½gica
 	private void update() {
 
 		

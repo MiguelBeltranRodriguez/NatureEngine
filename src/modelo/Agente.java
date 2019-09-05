@@ -17,6 +17,7 @@ public class Agente implements Dibujable, Runnable {
 	private int radio;  //prueba
 	private int velocidadPXs;
 	private Mundo mundo;
+	private boolean resaltado;
 	
 	
 	public Agente(Color color, int x, int y, int radio, int velocidad, Mundo mundo) {
@@ -26,6 +27,7 @@ public class Agente implements Dibujable, Runnable {
 		this.radio = radio;
 		this.velocidadPXs = velocidad;
 		this.mundo = mundo;
+		resaltado = false;
 	}
 	public synchronized void start() {
 		
@@ -105,7 +107,10 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public synchronized void dibujar(Renderizador2D r) {
-		r.dibujarOvalo(color, x, y, radio, radio);
+		r.dibujarOvalo(color, x-(radio/2), y-(radio/2), radio, radio);
+		if(resaltado) {
+			r.dibujarContornoOvalo(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
+		}
 	}
 	public Thread getThread() {
 		return thread;
@@ -129,6 +134,14 @@ public class Agente implements Dibujable, Runnable {
 	public void init() {
 		start();
 		
+	}
+	@Override
+	public void Resaltar() {
+		resaltado = true;
+	}
+	@Override
+	public void DesResaltar() {
+		resaltado = false;
 	}
 	
 }

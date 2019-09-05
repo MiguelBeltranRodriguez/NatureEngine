@@ -44,4 +44,15 @@ public class Renderizador2D {
 		g.fillOval(x, y, width, height);
 	}
 
+	public void dibujarContornoRectangular(Color c, int x, int y, int width, int height) {
+		g.setColor(c);
+		g.drawRect(x, y, width, height);
+		
+	}
+
+	public void dibujarContornoOvalo(Color c, int x, int y, int width, int height) {
+		g.setColor(c);
+		g.drawOval(x, y, width, height);
+	}
+
 }

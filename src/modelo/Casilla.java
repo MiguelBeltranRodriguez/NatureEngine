@@ -68,4 +68,28 @@ public abstract class Casilla {
 		}
 	}
 
+	public List<Dibujable> getObjetosEnCasilla() {
+		return objetosEnCasilla;
+	}
+
+	public void setObjetosEnCasilla(List<Dibujable> objetosEnCasilla) {
+		this.objetosEnCasilla = objetosEnCasilla;
+	}
+
+	public int getHumedad() {
+		return humedad;
+	}
+
+	public void setHumedad(int humedad) {
+		this.humedad = humedad;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
 }
