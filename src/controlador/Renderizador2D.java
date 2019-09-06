@@ -20,12 +20,12 @@ public class Renderizador2D {
 	public void renderizar(Mundo mundo) {
 		bs = pantalla.getCanvas().getBufferStrategy();
 		if(bs == null) {
-			pantalla.getCanvas().createBufferStrategy(3);
+			pantalla.getCanvas().createBufferStrategy(4);
 			return;
 		}
 		g = (Graphics2D) bs.getDrawGraphics();
 		g.setColor(Color.WHITE);
-		g.clearRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PATALLA);
+		g.clearRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PANTALLA);
 		//empieza a dibujar
 		mundo.dibujar(this);
 		//termina de dibujar
@@ -53,6 +53,11 @@ public class Renderizador2D {
 	public void dibujarContornoOvalo(Color c, int x, int y, int width, int height) {
 		g.setColor(c);
 		g.drawOval(x, y, width, height);
+	}
+
+	public void dibujarString(Color c, int x, int y, String info) {
+		g.setColor(c);
+		g.drawString(info, x, y);
 	}
 
 }

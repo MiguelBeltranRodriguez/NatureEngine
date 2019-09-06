@@ -19,7 +19,7 @@ public class Mundo implements Dibujable {
 
 	public Mundo() {
 
-		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA][VarGlobalVista.HEIGTH_PATALLA];
+		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PATALLA_GAME];
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		cargarMapa();
 
@@ -71,13 +71,13 @@ public class Mundo implements Dibujable {
 
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA/VarGlobalVista.TAMANO_TEXTURA; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA/VarGlobalVista.TAMANO_TEXTURA; y++) {
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; y++) {
 				objetosDelMundo[x*8][y*8].dibujarCasillas(r);
 			}
 		}
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA; y++) {
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME; y++) {
 				objetosDelMundo[x][y].dibujar(r);
 			}
 		}
@@ -112,8 +112,8 @@ public class Mundo implements Dibujable {
 
 	@Override
 	public synchronized  void init() {
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA; y++) {
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME; y++) {
 				objetosDelMundo[x][y].init();
 			}
 		}
@@ -129,25 +129,25 @@ public class Mundo implements Dibujable {
 
 
 	public boolean addPopUp(int x, int y) {
-		int d0x = x - 10;
-		int d1x = x + 10;
-		int d0y = y - 10;
-		int d1y = y + 10;
+		int d0x = x - 8;
+		int d1x = x + 8;
+		int d0y = y - 8;
+		int d1y = y + 8;
 
 		if(d0x<0) {
 			d0x = 0;
 		}
-		else if(d1x>=VarGlobalVista.WIDHT_PANTALLA) {
-			d1x = VarGlobalVista.WIDHT_PANTALLA-1;
+		else if(d1x>=VarGlobalVista.WIDHT_PANTALLA_GAME) {
+			d1x = VarGlobalVista.WIDHT_PANTALLA_GAME-1;
 		}
 		if(d0y<0) {
 			d0y = 0;
 		}
-		else if(d1y>=VarGlobalVista.HEIGTH_PATALLA) {
-			d1y = VarGlobalVista.HEIGTH_PATALLA-1;
+		else if(d1y>=VarGlobalVista.HEIGTH_PATALLA_GAME) {
+			d1y = VarGlobalVista.HEIGTH_PATALLA_GAME-1;
 		}
-		for(int i = d0x; i <= d1x; i++) {
-			for(int j = d0y; j <= d1y; j++) {
+		for(int i = d0x; i < d1x; i++) {
+			for(int j = d0y; j < d1y; j++) {
 				if(!objetosDelMundo[i][j].esVacia()) {
 					List<Dibujable> listO = objetosDelMundo[i][j].getObjetosEnCasilla();
 					for (Dibujable dibujable : listO) {
@@ -179,6 +179,14 @@ public class Mundo implements Dibujable {
 
 	@Override
 	public void DesResaltar() {
+	}
+
+
+
+	@Override
+	public String info() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

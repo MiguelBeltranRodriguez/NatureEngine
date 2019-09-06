@@ -78,7 +78,7 @@ public class Agente implements Dibujable, Runnable {
 		int newX = 0;
 		do {
 			newX =  x + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
-			if(newX>=VarGlobalVista.WIDHT_PANTALLA || newX <0) {
+			if(newX>=VarGlobalVista.WIDHT_PANTALLA_GAME || newX <0) {
 				newX =  x + rnd.nextInt(velocidadPXs + 1 + velocidadPXs) - velocidadPXs;
 			}else {
 				break;
@@ -87,7 +87,7 @@ public class Agente implements Dibujable, Runnable {
 		int newY = 0;
 		do {
 			newY =  y + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
-			if(newY>=VarGlobalVista.HEIGTH_PATALLA || newY<0) {
+			if(newY>=VarGlobalVista.HEIGTH_PATALLA_GAME || newY<0) {
 				newY =  y +  rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
 			}else {
 				break;
@@ -142,6 +142,10 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public void DesResaltar() {
 		resaltado = false;
+	}
+	@Override
+	public String info() {
+		return this.thread.getName()+ "#" + "x: "+ this.x + " y: "+this.y;
 	}
 	
 }

@@ -9,4 +9,5 @@ public interface Dibujable {
 	public int getX();
 	public int getY();
 	public void  init();
+	public String info();
 }
