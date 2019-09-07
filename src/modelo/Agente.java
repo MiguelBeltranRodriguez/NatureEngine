@@ -23,7 +23,7 @@ public class Agente implements Dibujable, Runnable {
 	private int direccionX;
 	private int direccionY;
 	private int velocidadPXs;
-
+	private int timeOutBloqueo;
 
 	public Agente(Color color, int x, int y, int radio, int percepcion, Mundo mundo, int velocidad) {
 		this.color = color;
@@ -38,6 +38,7 @@ public class Agente implements Dibujable, Runnable {
 		this.delY = 0;
 		resaltado = false;
 		this.velocidadPXs = velocidad;
+		this.timeOutBloqueo = 4;
 	}
 	public synchronized void start() {
 
@@ -63,9 +64,9 @@ public class Agente implements Dibujable, Runnable {
 					movimientoAleatorio();
 				}
 				else {
-					if(moverse==100) {
+					if(moverse>=20) {
 						moverse();
-						moverse = 0;
+						moverse = moverse-20;
 					}else {
 						moverse += velocidadPXs;
 					}
@@ -91,16 +92,38 @@ public class Agente implements Dibujable, Runnable {
 				cambiarPosicion(x+(direccionX), y+(direccionY));
 				delX--;
 				delY--;
+			}else {
+				timeOutBloqueo--;
+			}if(timeOutBloqueo==0) {
+				if(mundo.celdaVacia(x-(direccionX), y-(direccionY))) {
+					cambiarPosicion(x-(direccionX), y-(direccionY));
+				}
+				timeOutBloqueo = 4;
 			}
 		}else if(delX>0) {
 			if(mundo.celdaVacia(x+(direccionX), y)) {
 				cambiarPosicion(x+(direccionX), y);
 				delX--;
+			}else {
+				timeOutBloqueo--;
+			}if(timeOutBloqueo==0) {
+				if(mundo.celdaVacia(x-(direccionX), y)) {
+					cambiarPosicion(x-(direccionX), y);
+				}
+				timeOutBloqueo = 4;
 			}
 		}else if(delY>0) {
 			if(mundo.celdaVacia(x, y+(direccionY))) {
 				cambiarPosicion(x, y+(direccionY));
 				delY--;
+			}else {
+				timeOutBloqueo--;
+			}
+			if(timeOutBloqueo==0) {
+				if(mundo.celdaVacia(x, y-(direccionY))) {
+					cambiarPosicion(x, y-(direccionY));
+				}
+				timeOutBloqueo = 4;
 			}
 		}	
 	}

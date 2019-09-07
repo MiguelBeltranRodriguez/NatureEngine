@@ -32,8 +32,8 @@ public class Loop implements Runnable {
 		mundo = new Mundo();
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
-		for(int i = 0; i < 250; i++) {
-			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+i, 150+(i), 12, 10, mundo, 5));
+		for(int i = 0; i < 1000; i++) {
+			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i/2), 150+(i/2), 12, 10, mundo, 6));
 		}
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
 			
