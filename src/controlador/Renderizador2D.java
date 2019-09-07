@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import modelo.Mundo;
 import utils.VarGlobalVista;
+import vista.Menu;
 import vista.Pantalla;
 
 public class Renderizador2D {
@@ -17,7 +18,7 @@ public class Renderizador2D {
 		pantalla = Pantalla.getPantalla();
 	}
 	
-	public void renderizar(Mundo mundo) {
+	public void renderizar(Mundo mundo, Menu menu) {
 		bs = pantalla.getCanvas().getBufferStrategy();
 		if(bs == null) {
 			pantalla.getCanvas().createBufferStrategy(4);
@@ -28,6 +29,7 @@ public class Renderizador2D {
 		g.clearRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PANTALLA);
 		//empieza a dibujar
 		mundo.dibujar(this);
+		menu.dibujar(this);
 		//termina de dibujar
 		
 		bs.show();

@@ -24,7 +24,7 @@ public class PopUpInfo implements Dibujable {
 		String info = dibujable.info();
 		String [] infoS = info.split("#");
 		for(int i = 1; i <= infoS.length; i++) {
-			r.dibujarString(Color.black, dibujable.getX() + 4, dibujable.getY()+(10*i), infoS[i-1]);
+			r.dibujarString(Color.black, dibujable.getX() + 4, dibujable.getY()+(12*i), infoS[i-1]);
 		}
 		dibujable.Resaltar();
 	}

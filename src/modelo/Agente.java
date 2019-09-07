@@ -9,33 +9,43 @@ import utils.VarGlobalVista;
 
 public class Agente implements Dibujable, Runnable {
 
-	
+
 	private Thread thread;
 	private Color color;  //prueba
 	private int x;	//prueba
 	private int y; //prueba
 	private int radio;  //prueba
-	private int velocidadPXs;
+	private int percepcion;
 	private Mundo mundo;
 	private boolean resaltado;
-	
-	
-	public Agente(Color color, int x, int y, int radio, int velocidad, Mundo mundo) {
+	private int delX;
+	private int delY;
+	private int direccionX;
+	private int direccionY;
+	private int velocidadPXs;
+
+
+	public Agente(Color color, int x, int y, int radio, int percepcion, Mundo mundo, int velocidad) {
 		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.radio = radio;
-		this.velocidadPXs = velocidad;
+		this.percepcion = percepcion;
 		this.mundo = mundo;
+		this.direccionX = 0;
+		this.direccionY = 0;
+		this.delX = 0;
+		this.delY = 0;
 		resaltado = false;
+		this.velocidadPXs = velocidad;
 	}
 	public synchronized void start() {
-		
+
 		thread = new Thread(this);
-		
+
 		thread.start();
 	}
-	
+
 	public synchronized void stop() {
 		try {
 			thread.join();
@@ -45,58 +55,90 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public void run() {
-		long newTime = 0;
-		long oldTime = System.currentTimeMillis();
-		long time = 0;
-
+		int moverse = 0;
 		while(true) {
-			try {
-				newTime = System.currentTimeMillis();
-				time = newTime-oldTime;
-				oldTime = time;
-				movimientoAleatorio();
-				if(time>VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS) {
-					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
-				}else {
-					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS-time);
+
+			if(VarGlobalGame.DELTA>=1) {
+				if(delX == 0 && delY == 0) {
+					movimientoAleatorio();
 				}
-				
+				else {
+					if(moverse==100) {
+						moverse();
+						moverse = 0;
+					}else {
+						moverse += velocidadPXs;
+					}
+					
+				}
+			}
+			try {
+				Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
-		
-	
 
-		
+
+
+
 	}
 
+	private void moverse() {
+		if(delX>0 && delY >0) {
+			if(mundo.celdaVacia(x+(direccionX), y+(direccionY))) {
+				cambiarPosicion(x+(direccionX), y+(direccionY));
+				delX--;
+				delY--;
+			}
+		}else if(delX>0) {
+			if(mundo.celdaVacia(x+(direccionX), y)) {
+				cambiarPosicion(x+(direccionX), y);
+				delX--;
+			}
+		}else if(delY>0) {
+			if(mundo.celdaVacia(x, y+(direccionY))) {
+				cambiarPosicion(x, y+(direccionY));
+				delY--;
+			}
+		}	
+	}
 	private void movimientoAleatorio() {
 		Random rnd = new Random();
 		int newX = 0;
 		do {
-			newX =  x + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
+			newX =  x + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
 			if(newX>=VarGlobalVista.WIDHT_PANTALLA_GAME || newX <0) {
-				newX =  x + rnd.nextInt(velocidadPXs + 1 + velocidadPXs) - velocidadPXs;
+				newX =  x + rnd.nextInt(percepcion + 1 + percepcion) - percepcion;
 			}else {
 				break;
 			}
 		}while(true);
 		int newY = 0;
 		do {
-			newY =  y + rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
-			if(newY>=VarGlobalVista.HEIGTH_PATALLA_GAME || newY<0) {
-				newY =  y +  rnd.nextInt(velocidadPXs + 1 +velocidadPXs) - velocidadPXs;
+			newY =  y + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
+			if(newY>=VarGlobalVista.HEIGTH_PANTALLA_GAME || newY<0) {
+				newY =  y +  rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
 			}else {
 				break;
 			}
 		}while(true);
-		if(mundo.celdaVacia(newX,newY)) {
-			cambiarPosicion(newX, newY);
+		decisionIrA(newX, newY);
+	}
+	private void decisionIrA(int newX, int newY) {
+		delX = Math.abs(newX-x);
+		delY = Math.abs(newY-y);
+		if(newX > x) {
+			direccionX = 1;
+		}else {
+			direccionX = -1;
 		}
-		
+		if(newY > y) {
+			direccionY = 1;
+		}else {
+			direccionY = -1;
+		}
 	}
 	private void cambiarPosicion(int x2, int y2) {
 		synchronized (mundo) {
@@ -133,7 +175,7 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public void init() {
 		start();
-		
+
 	}
 	@Override
 	public void Resaltar() {
@@ -145,7 +187,8 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public String info() {
-		return this.thread.getName()+ "#" + "x: "+ this.x + " y: "+this.y;
+		return this.thread.getName()+ 
+				"#x: "+ this.x + " y: "+this.y;
 	}
-	
+
 }

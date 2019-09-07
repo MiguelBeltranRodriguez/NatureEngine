@@ -1,5 +1,7 @@
 package vista;
 
+import java.awt.Color;
+
 import controlador.Renderizador2D;
 import modelo.Dibujable;
 import modelo.Mundo;
@@ -8,7 +10,7 @@ import utils.VarGlobalVista;
 public class Menu implements Dibujable {
 	
 	private Mundo mundo;
-	
+	private int indiceString = 0;
 	
 	public Menu(Mundo mundo) {
 		this.mundo = mundo;
@@ -16,8 +18,15 @@ public class Menu implements Dibujable {
 
 	@Override
 	public void dibujar(Renderizador2D r) {
-		// TODO Auto-generated method stub
-
+		indiceString = 12;
+		r.dibujarString(Color.black, VarGlobalVista.WIDHT_PANTALLA_GAME + 5 , indiceString, "Información del mundo: ");
+		indiceString += 12;
+		String info = mundo.info();
+		String [] infoS = info.split("#");
+		for(int i = 1; i <= infoS.length; i++) {
+			r.dibujarString(Color.black, VarGlobalVista.WIDHT_PANTALLA_GAME + 5, indiceString, infoS[i-1]);
+			indiceString +=12;
+		}
 	}
 
 	@Override
@@ -30,7 +39,7 @@ public class Menu implements Dibujable {
 
 	@Override
 	public int getX() {
-		return VarGlobalVista.HEIGTH_PATALLA_GAME+1;
+		return VarGlobalVista.HEIGTH_PANTALLA_GAME+1;
 	}
 
 	@Override

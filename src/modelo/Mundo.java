@@ -16,11 +16,13 @@ public class Mundo implements Dibujable {
 
 	private Casilla [][] objetosDelMundo;
 	private List<PopUpInfo> popUpsInfo;
+	private int contadorAgentes;
 
 	public Mundo() {
 
-		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PATALLA_GAME];
+		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
 		popUpsInfo = new ArrayList<PopUpInfo>();
+		setContadorAgentes(0);
 		cargarMapa();
 
 	}
@@ -72,12 +74,12 @@ public class Mundo implements Dibujable {
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; y++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; y++) {
 				objetosDelMundo[x*8][y*8].dibujarCasillas(r);
 			}
 		}
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME; y++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
 				objetosDelMundo[x][y].dibujar(r);
 			}
 		}
@@ -87,6 +89,7 @@ public class Mundo implements Dibujable {
 	}
 	public void agregarAgente(Agente ag) {
 		objetosDelMundo[ag.getX()][ag.getY()].agregarDibujable(ag);
+		setContadorAgentes(getContadorAgentes() + 1);
 	}
 
 
@@ -113,7 +116,7 @@ public class Mundo implements Dibujable {
 	@Override
 	public synchronized  void init() {
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PATALLA_GAME; y++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
 				objetosDelMundo[x][y].init();
 			}
 		}
@@ -143,8 +146,8 @@ public class Mundo implements Dibujable {
 		if(d0y<0) {
 			d0y = 0;
 		}
-		else if(d1y>=VarGlobalVista.HEIGTH_PATALLA_GAME) {
-			d1y = VarGlobalVista.HEIGTH_PATALLA_GAME-1;
+		else if(d1y>=VarGlobalVista.HEIGTH_PANTALLA_GAME) {
+			d1y = VarGlobalVista.HEIGTH_PANTALLA_GAME-1;
 		}
 		for(int i = d0x; i < d1x; i++) {
 			for(int j = d0y; j < d1y; j++) {
@@ -185,8 +188,20 @@ public class Mundo implements Dibujable {
 
 	@Override
 	public String info() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Número de agentes en el mundo: "+contadorAgentes+
+				"#Tamaño del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME;
+	}
+
+
+
+	public int getContadorAgentes() {
+		return contadorAgentes;
+	}
+
+
+
+	public void setContadorAgentes(int contadorAgentes) {
+		this.contadorAgentes = contadorAgentes;
 	}
 
 

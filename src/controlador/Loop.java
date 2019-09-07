@@ -5,9 +5,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
+
 import modelo.Agente;
 import modelo.Mundo;
 import utils.VarGlobalGame;
+import vista.Menu;
 import vista.Pantalla;
 
 /*
@@ -20,6 +22,7 @@ public class Loop implements Runnable {
 	private Pantalla pantalla;
 	private Renderizador2D render2D;
 	private Mundo mundo;
+	private Menu menu;
 	
 	
 	//Parte encargada de inicializar todo lo necesario
@@ -30,7 +33,7 @@ public class Loop implements Runnable {
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
 		for(int i = 0; i < 250; i++) {
-			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+i, 150+(i), 12, 5, mundo));
+			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+i, 150+(i), 12, 10, mundo, 5));
 		}
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
 			
@@ -65,6 +68,7 @@ public class Loop implements Runnable {
 		});
 		
 		mundo.init();
+		menu = new Menu(mundo);
 	}	
 	
 	protected void seleccionar(MouseEvent e) {
@@ -80,7 +84,7 @@ public class Loop implements Runnable {
 	}
 	//Parte visual
 	private void renderizar() {
-		render2D.renderizar(mundo);
+		render2D.renderizar(mundo, menu);
 	}
 	
 	@Override
