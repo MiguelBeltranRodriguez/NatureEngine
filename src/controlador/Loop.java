@@ -33,7 +33,7 @@ public class Loop implements Runnable {
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
 		for(int i = 0; i < 1000; i++) {
-			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i/2), 150+(i/2), 12, 10, mundo, 6));
+			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i/2), 150+(i/2), 12, 20, mundo, 10+i%5));
 		}
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
 			
@@ -111,8 +111,8 @@ public class Loop implements Runnable {
 				VarGlobalGame.DELTA--;
 			}
 			if(timer > 1000000000) {
-				System.out.println("Tiquets y Frames: "+ ticks);
-				ticks = 0;
+				VarGlobalGame.TICKS_S = ticks;
+				ticks = 0;	
 				timer = 0;
 			}
 			

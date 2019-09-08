@@ -14,6 +14,7 @@ public class NatureEngine{
 	public NatureEngine() {
 		crearPantalla();
 		loop = new Loop();
+		System.setProperty("sun.java2d.opengl", "true");
 		loop.start();
 	}
 

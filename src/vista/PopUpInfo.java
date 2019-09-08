@@ -13,7 +13,7 @@ public class PopUpInfo implements Dibujable {
 
 	public PopUpInfo(Dibujable dibujable) {
 		this.dibujable = dibujable;
-		width = 80;
+		width = 100;
 		height = 90;
 	}
 

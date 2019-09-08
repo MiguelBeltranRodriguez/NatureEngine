@@ -21,7 +21,7 @@ public class Renderizador2D {
 	public void renderizar(Mundo mundo, Menu menu) {
 		bs = pantalla.getCanvas().getBufferStrategy();
 		if(bs == null) {
-			pantalla.getCanvas().createBufferStrategy(4);
+			pantalla.getCanvas().createBufferStrategy(2);
 			return;
 		}
 		g = (Graphics2D) bs.getDrawGraphics();
@@ -29,6 +29,7 @@ public class Renderizador2D {
 		g.clearRect(0, 0, VarGlobalVista.WIDHT_PANTALLA, VarGlobalVista.HEIGTH_PANTALLA);
 		//empieza a dibujar
 		mundo.dibujar(this);
+		
 		menu.dibujar(this);
 		//termina de dibujar
 		

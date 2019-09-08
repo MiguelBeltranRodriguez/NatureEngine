@@ -30,7 +30,7 @@ public class Agente implements Dibujable, Runnable {
 		this.x = x;
 		this.y = y;
 		this.radio = radio;
-		this.percepcion = percepcion;
+		this.percepcion = percepcion+radio;
 		this.mundo = mundo;
 		this.direccionX = 0;
 		this.direccionY = 0;
@@ -38,7 +38,7 @@ public class Agente implements Dibujable, Runnable {
 		this.delY = 0;
 		resaltado = false;
 		this.velocidadPXs = velocidad;
-		this.timeOutBloqueo = 4;
+		this.timeOutBloqueo = 3;
 	}
 	public synchronized void start() {
 
@@ -57,34 +57,41 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public void run() {
 		int moverse = 0;
+		long newTime = 0;
+		long oldTime = System.currentTimeMillis();
+		long time = 0;
 		while(true) {
-
-			if(VarGlobalGame.DELTA>=1) {
+			try {
+				newTime = System.currentTimeMillis();
+				time = newTime-oldTime;
+				oldTime = time;
 				if(delX == 0 && delY == 0) {
 					movimientoAleatorio();
 				}
 				else {
-					if(moverse>=20) {
+					if(moverse>=25) {
 						moverse();
-						moverse = moverse-20;
+						moverse = moverse-25;
 					}else {
 						moverse += velocidadPXs;
 					}
-					
+
+				}
+				if(time>VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS) {
+					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
+				}else {
+					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS-time);
 				}
 			}
-			try {
-				Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
-			} catch (InterruptedException e) {
+			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		}
 
-
-
-
 	}
+
 
 	private void moverse() {
 		if(delX>0 && delY >0) {
@@ -123,7 +130,7 @@ public class Agente implements Dibujable, Runnable {
 				if(mundo.celdaVacia(x, y-(direccionY))) {
 					cambiarPosicion(x, y-(direccionY));
 				}
-				timeOutBloqueo = 4;
+				timeOutBloqueo = 3;
 			}
 		}	
 	}
@@ -171,10 +178,11 @@ public class Agente implements Dibujable, Runnable {
 		this.y = y2;
 	}
 	@Override
-	public synchronized void dibujar(Renderizador2D r) {
+	public  void dibujar(Renderizador2D r) {
 		r.dibujarOvalo(color, x-(radio/2), y-(radio/2), radio, radio);
 		if(resaltado) {
 			r.dibujarContornoOvalo(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
+			r.dibujarContornoRectangular(Color.BLACK, x-percepcion, y-percepcion, percepcion*2, percepcion*2);
 		}
 	}
 	public Thread getThread() {
@@ -211,7 +219,9 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public String info() {
 		return this.thread.getName()+ 
-				"#x: "+ this.x + " y: "+this.y;
+				"#x: "+ this.x + " y: "+this.y
+				+"#velocidad: "+velocidadPXs+
+				"#percepción: "+percepcion;
 	}
 
 }

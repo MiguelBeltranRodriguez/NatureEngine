@@ -132,10 +132,10 @@ public class Mundo implements Dibujable {
 
 
 	public boolean addPopUp(int x, int y) {
-		int d0x = x - 8;
-		int d1x = x + 8;
-		int d0y = y - 8;
-		int d1y = y + 8;
+		int d0x = x - 10;
+		int d1x = x + 10;
+		int d0y = y - 10;
+		int d1y = y + 10;
 
 		if(d0x<0) {
 			d0x = 0;

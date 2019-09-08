@@ -41,7 +41,7 @@ public abstract class Casilla {
 		// TODO Auto-generated method stub
 		return this.y;
 	}
-	public synchronized void dibujar(Renderizador2D r) {
+	public void dibujar(Renderizador2D r) {
 
 		for (Dibujable dibujable : objetosEnCasilla) {
 			dibujable.dibujar(r);

@@ -5,6 +5,7 @@ import java.awt.Color;
 import controlador.Renderizador2D;
 import modelo.Dibujable;
 import modelo.Mundo;
+import utils.VarGlobalGame;
 import utils.VarGlobalVista;
 
 public class Menu implements Dibujable {
@@ -20,6 +21,8 @@ public class Menu implements Dibujable {
 	public void dibujar(Renderizador2D r) {
 		indiceString = 12;
 		r.dibujarString(Color.black, VarGlobalVista.WIDHT_PANTALLA_GAME + 5 , indiceString, "Información del mundo: ");
+		indiceString += 12;
+		r.dibujarString(Color.black, VarGlobalVista.WIDHT_PANTALLA_GAME + 5, indiceString, "FPS: "+VarGlobalGame.TICKS_S);
 		indiceString += 12;
 		String info = mundo.info();
 		String [] infoS = info.split("#");
