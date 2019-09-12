@@ -179,9 +179,9 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public  void dibujar(Renderizador2D r) {
-		r.dibujarOvalo(color, x-(radio/2), y-(radio/2), radio, radio);
+		r.dibujarRectangulo(color, x-(radio/2), y-(radio/2), radio, radio);
 		if(resaltado) {
-			r.dibujarContornoOvalo(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
+			r.dibujarContornoRectangular(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
 			r.dibujarContornoRectangular(Color.BLACK, x-percepcion, y-percepcion, percepcion*2, percepcion*2);
 		}
 	}
@@ -208,6 +208,13 @@ public class Agente implements Dibujable, Runnable {
 		start();
 
 	}
+	
+	public int getRadio() {
+		return radio;
+	}
+	public void setRadio(int radio) {
+		this.radio = radio;
+	}
 	@Override
 	public void Resaltar() {
 		resaltado = true;
@@ -219,9 +226,10 @@ public class Agente implements Dibujable, Runnable {
 	@Override
 	public String info() {
 		return this.thread.getName()+ 
-				"#x: "+ this.x + " y: "+this.y
-				+"#velocidad: "+velocidadPXs+
-				"#percepción: "+percepcion;
+				"#x: "+ this.x + " y: "+this.y+
+				"#velocidad: "+velocidadPXs+
+				"#percepción: "+percepcion+
+				"#tamaño: "+this.radio;
 	}
 
 }
