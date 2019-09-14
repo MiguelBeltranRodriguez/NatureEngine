@@ -50,6 +50,8 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 
 **GenomeHandler** *extends* **CombinationHandler** *extends* **MutationsHandler** *extends* **AttributesCalculator** *extends* **GenomaCreator**
 
+------
+------
  **1. GenomeHandler:** *Entrada y Salida del componente. Tiene dos funciones*
 
 
@@ -67,6 +69,8 @@ Entrega AttrNuevoAgente (AtributosAgente)
 ```
 Requiere genoma (Map<String, List<String>>). Entrega atributosagente (AtributosAgente)
 ```
+------
+------
 
  **2. CombinationsHandler:** *Componente donde se realizan las principales operaciones secundarias al componente anterior*
    - **2.1 MeiosisUno:** *En este componente se recombinan los cromosomas de cada padre (Entre sí mismos)*
@@ -98,6 +102,36 @@ Requiere locus (List<String>). Entrega mixedlocus (List<String>).
 ```
 Requiere locusSingleDNA (String). Entrega moldeARN (List<String>). 
 ```
+------
+------
+
+ **3. AttributesCalculator.java:** *Componente donde se realizan las operaciones de calcular los atributos según la genética. De genotipo a fenotipo*
+   - **3.1 CalcularAtributos:** *Método principal. A partir de un genoma genera un fenotipo de valores de atributos. Realiza una iteración dentro de cada locus, para generar los valores de atributos para cada locus. Un locus es equivalente a un atributo*
+```
+Requiere genoma (Map<String, List<String>>). Entrega AttributeValues (Map<String, Integer>).
+```
+
+   - **3.2 ValorAtributo *(Privada)*:** *Requiere un locus, a partir del cual realiza todo el proceso para generar el valor del atributo*
+```
+Requiere locus (List<String>) y nombreAtributo(String). Entrega valor (int)).
+```
+
+   - **3.3 RNATrascription *(Privada)*:** *Corta cada cadena de código genético en cada locus en piezas dadas por los códigos de cierre o terminación. Además no tiene en cuenta las cadenas que no tienen código de inicio, ni el código genético previo al código de inicio. Es decir solo tiene en cuenta los exones*
+```
+Requiere locusSingleDNA (String). Entrega rnaMensajeros (List<String>).
+```
+
+   - **3.4 ProteinTranslate *(Privada)*:** *Transforma los rnaMensajeros, que son cadenas de código genético en proteínas, que son cadenas de aminoácidos. En la vida real los rnaMensajeros se agrupan en codones, que son grupos de a 3 nucleotidos del código genético. Generando 64 combinaciones posibles. Sin embargo solo existen 20 aminoácidos, por lo que varias combinaciones generan el mismo aminoácido. En nuestro simulador. El código genético se representa mediante letras en mayúsculas y minúsculas, generando 61 posibilidades distinas, mientras que los aminoacidos se representan mediante números, generando 10 posibilidades distinas. De una forma análoga, este método convierte cada letra (61 posibilidades) en un número (10 posibilidades)*
+```
+Requiere rnaMensajeros (List<String>). Entrega proteins (List<String>)
+```
+
+   - **3.5 ProteinValues *(Privada)*:** *Este método es el encargado de convertir los códigos generados de cada proteína en valores de atributos. Para esto, para cada atributo/locus se establecieron 5 patrones de 3 números almacenados como texto. (Ej. "125", "245", "657", "322", "005") a partir de los cuales se realizarán los calculos. Cada cálculo afectará dos variables, el atributo/locus en sí mismo, y la longevidad. Es muy importante tener en cuenta que cambios en las proteínas por lo general tienden a representar una desventaja e incluso ser mortales. Solo un pequeño porcentaje es beneficioso*
+```
+Requiere proteins (List<String>). Entrega valor (int).
+```
+------
+------
 ## Copyright
 
 NatureEngine © LosAmigosDeMiguel, 2019.
