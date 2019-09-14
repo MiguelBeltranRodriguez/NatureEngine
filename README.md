@@ -46,6 +46,58 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 * **Transcripción de proteínas:** Los exones en ARN de transcripción, son transcritos a aminoacidos (en grupos de a 3 bases nucleotidas en la vida real, para 64 combinaciones posibles ), de modo que de 64 combinaciones posibles, se producen solo 20 tipos de aminoacidos. Varias combinaciones traducen para el mismo aminoamiacido. Es por esto, que muchas mutaciones no generan un cambio en la proteína producida
 * **Resultado en fitness y atributos:** Las proteínas producidas son las que construyen al organismo, de modo que son sus proteínas las que le generan una ventaja o desventaja ante el ambiente
  
+#### Componentes
+
+**GenomeHandler** *extends* **CombinationHandler** *extends* **MutationsHandler** *extends* **AttributesCalculator** *extends* **GenomaCreator**
+
+* **1. GenomeHandler:** Entrada y Salida del componente. Tiene dos funciones
+
+
+* **1.1 GenerarAtributosHijo:** 
+```
+Requiere AttrPadre (AtributosAgente) y AttrMadre (AtributosAgente). Entrega AttrHijo (AtributosAgente)
+```
+
+* **1.2 GenerarAtributosAgenteSinPadres:**   
+```
+Entrega AttrNuevoAgente (AtributosAgente)
+```
+
+* **1.3 GenerarAtributos *(Privada)*:** 
+```
+Requiere genoma (Map<String, List<String>>). Entrega atributosagente (AtributosAgente)
+```
+
+ **2. CombinationsHandler:** Componente donde se realizan las principales operaciones secundarias al componente anterior
+* **2.1 MeiosisUno:** 
+```
+Requiere genoma (Map<String, List<String>>). Entrega genoma Map<String, List<String>>.
+```
+
+* **2.2 MeiosisDos:** 
+```
+Requiere genoma (Map<String, List<String>>). Entrega halfgenoma Map<String, String>>.
+```
+
+* **2.3 Fecundacion:**
+```
+Requiere halfgenomaPadre (Map<String, String>) y halfgenomaMadre  (Map<String, String>). Entrega genoma (Map<String, List<String>>).
+```
+
+* **2.4 SeleccionarPadreoMadre *(Privada)*:** 
+```
+Entrega valor (int)
+```
+
+* **2.5 RecombinarLocus *(Privada)*:**
+```
+Requiere locus (List<String>). Entrega mixedlocus (List<String>).
+```
+
+* **2.6 RNAMeiosisCopy *(Privada)*:** 
+```
+Requiere locusSingleDNA (String). Entrega moldeARN (List<String>). 
+```
 ## Copyright
 
 NatureEngine © LosAmigosDeMiguel, 2019.
