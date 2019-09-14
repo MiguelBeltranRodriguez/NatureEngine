@@ -50,51 +50,51 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 
 **GenomeHandler** *extends* **CombinationHandler** *extends* **MutationsHandler** *extends* **AttributesCalculator** *extends* **GenomaCreator**
 
-* **1. GenomeHandler:** Entrada y Salida del componente. Tiene dos funciones
+ **1. GenomeHandler:** Entrada y Salida del componente. Tiene dos funciones
 
 
-* **1.1 GenerarAtributosHijo:** 
+   - **1.1 GenerarAtributosHijo:** 
 ```
 Requiere AttrPadre (AtributosAgente) y AttrMadre (AtributosAgente). Entrega AttrHijo (AtributosAgente)
 ```
 
-* **1.2 GenerarAtributosAgenteSinPadres:**   
+   - **1.2 GenerarAtributosAgenteSinPadres:**   
 ```
 Entrega AttrNuevoAgente (AtributosAgente)
 ```
 
-* **1.3 GenerarAtributos *(Privada)*:** 
+   - **1.3 GenerarAtributos *(Privada)*:** 
 ```
 Requiere genoma (Map<String, List<String>>). Entrega atributosagente (AtributosAgente)
 ```
 
  **2. CombinationsHandler:** Componente donde se realizan las principales operaciones secundarias al componente anterior
-* **2.1 MeiosisUno:** 
+   - **2.1 MeiosisUno:** 
 ```
 Requiere genoma (Map<String, List<String>>). Entrega genoma Map<String, List<String>>.
 ```
 
-* **2.2 MeiosisDos:** 
+   - **2.2 MeiosisDos:** 
 ```
 Requiere genoma (Map<String, List<String>>). Entrega halfgenoma Map<String, String>>.
 ```
 
-* **2.3 Fecundacion:**
+   - **2.3 Fecundacion:**
 ```
 Requiere halfgenomaPadre (Map<String, String>) y halfgenomaMadre  (Map<String, String>). Entrega genoma (Map<String, List<String>>).
 ```
 
-* **2.4 SeleccionarPadreoMadre *(Privada)*:** 
+   - **2.4 SeleccionarPadreoMadre *(Privada)*:** 
 ```
 Entrega valor (int)
 ```
 
-* **2.5 RecombinarLocus *(Privada)*:**
+   - **2.5 RecombinarLocus *(Privada)*:**
 ```
 Requiere locus (List<String>). Entrega mixedlocus (List<String>).
 ```
 
-* **2.6 RNAMeiosisCopy *(Privada)*:** 
+   - **2.6 RNAMeiosisCopy *(Privada)*:** 
 ```
 Requiere locusSingleDNA (String). Entrega moldeARN (List<String>). 
 ```
