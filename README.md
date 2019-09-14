@@ -50,51 +50,51 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 
 **GenomeHandler** *extends* **CombinationHandler** *extends* **MutationsHandler** *extends* **AttributesCalculator** *extends* **GenomaCreator**
 
- **1. GenomeHandler:** Entrada y Salida del componente. Tiene dos funciones
+ **1. GenomeHandler:** *Entrada y Salida del componente. Tiene dos funciones*
 
 
-   - **1.1 GenerarAtributosHijo:** 
+   - **1.1 GenerarAtributosHijo:** *A partir de la génetica de dos padres, se genera la genética y atributos de un hijo* 
 ```
 Requiere AttrPadre (AtributosAgente) y AttrMadre (AtributosAgente). Entrega AttrHijo (AtributosAgente)
 ```
 
-   - **1.2 GenerarAtributosAgenteSinPadres:**   
+   - **1.2 GenerarAtributosAgenteSinPadres:** *Genera una génetica y atributos para un nuevo agente, desde cero, sin padres*
 ```
 Entrega AttrNuevoAgente (AtributosAgente)
 ```
 
-   - **1.3 GenerarAtributos *(Privada)*:** 
+   - **1.3 GenerarAtributos *(Privada)*:** *Función intermedia. Genera atributos a partir de la genética y los entrega a las dos funciones previas*
 ```
 Requiere genoma (Map<String, List<String>>). Entrega atributosagente (AtributosAgente)
 ```
 
- **2. CombinationsHandler:** Componente donde se realizan las principales operaciones secundarias al componente anterior
-   - **2.1 MeiosisUno:** 
+ **2. CombinationsHandler:** *Componente donde se realizan las principales operaciones secundarias al componente anterior*
+   - **2.1 MeiosisUno:** *En este componente se recombinan los cromosomas de cada padre (Entre sí mismos)*
 ```
 Requiere genoma (Map<String, List<String>>). Entrega genoma Map<String, List<String>>.
 ```
 
-   - **2.2 MeiosisDos:** 
+   - **2.2 MeiosisDos:** *Se selecciona un solo cromosoma a heredar*
 ```
 Requiere genoma (Map<String, List<String>>). Entrega halfgenoma Map<String, String>>.
 ```
 
-   - **2.3 Fecundacion:**
+   - **2.3 Fecundacion:** *Se juntan los gametos de ambos padres. Es decir se crea la genética del hijo a partir del cromosoma heredado de cada padre*
 ```
 Requiere halfgenomaPadre (Map<String, String>) y halfgenomaMadre  (Map<String, String>). Entrega genoma (Map<String, List<String>>).
 ```
 
-   - **2.4 SeleccionarPadreoMadre *(Privada)*:** 
+   - **2.4 SeleccionarPadreoMadre *(Privada)*:** *Tiene una función random que permite elegir el cromosoma*
 ```
 Entrega valor (int)
 ```
 
-   - **2.5 RecombinarLocus *(Privada)*:**
+   - **2.5 RecombinarLocus *(Privada)*:** *Requiere los locus de ambos cromosomas. Cada locus tiene varios genes. Luego procede a mezclar los locus. Es decir recombina los cromosomas. Finalmente devuelve ambos locus, cada uno con características mezcladas del otro*
 ```
 Requiere locus (List<String>). Entrega mixedlocus (List<String>).
 ```
 
-   - **2.6 RNAMeiosisCopy *(Privada)*:** 
+   - **2.6 RNAMeiosisCopy *(Privada)*:** *Simula al proceso en el que el ARN mensajero parte el código genético de cada locus según los puntos de corte o cierre, para generar tanto intrones como exones. En la recombinación tanto intrones como exones se mezclan*
 ```
 Requiere locusSingleDNA (String). Entrega moldeARN (List<String>). 
 ```
