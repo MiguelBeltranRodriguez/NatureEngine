@@ -52,7 +52,7 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 
 ------
 ------
- **1. GenomeHandler:** *Entrada y Salida del componente. Tiene dos funciones*
+ **1. GenomeHandler.java:** *Entrada y Salida del componente. Tiene dos funciones*
 
 
    - **1.1 GenerarAtributosHijo:** *A partir de la génetica de dos padres, se genera la genética y atributos de un hijo* 
@@ -72,7 +72,7 @@ Requiere genoma (Map<String, List<String>>). Entrega atributosagente (AtributosA
 ------
 ------
 
- **2. CombinationsHandler:** *Componente donde se realizan las principales operaciones secundarias al componente anterior*
+ **2. CombinationsHandler.java:** *Componente donde se realizan las principales operaciones secundarias al componente anterior*
    - **2.1 MeiosisUno:** *En este componente se recombinan los cromosomas de cada padre (Entre sí mismos)*
 ```
 Requiere genoma (Map<String, List<String>>). Entrega genoma Map<String, List<String>>.
@@ -132,6 +132,46 @@ Requiere proteins (List<String>). Entrega valor (int).
 ```
 ------
 ------
+
+ **4. MutationsHandler.java:** *Componente donde se calculan las probabiliades de que ocurran las mutaciones y donde se implementan las mismas. NO ESTA DISEÑADO TODAVIA*
+ 
+------
+------
+
+ **5. GenomaCreator.java:** *Componente donde se realizan las operaciones de calcular los atributos según la genética. De genotipo a fenotipo*
+   - **5.1 OpenChain *(static)*:** *Entrega cadena genética que representa el punto de aperta o inicio de codificación para el ARN mensajero. El inicio de un exón*
+```
+Entrega cadena (String)
+```
+
+   - **5.2 CloseChain *(static)*:** *Entrega cadena genética que representa el punto de cierre, terminación o corte de las subcadenas en el ARN mensajero*
+```
+Entrega cadena (String)
+```
+
+   - **5.3 getReleveantKeys :** *Obtiene las cadenas númericas con las que se establece el valor de los atributos, para el atributo solicitado. Estas se cargan previamente a la clase con el patrón singleton, desde el modelo baseAttributes*
+```
+Requiere key (String). Entrega Relevantkeys (List<String>).
+```
+
+   - **5.4 createNewGenoma :** *Genera un nuevo genoma en ambos cromosomas. Dejando el mismo código en ambos*
+```
+Entrega genoma (Map<String, List<String>>)
+```
+
+   - **5.5 createNewLocus *(Privada)*:** *Genera un nuevo genoma para cada locus. Genera 10 letras de exón, seguidas por un código de apertura, seguidas por 60 letras de exón, seguidas por un codigo de cierre, seguidas por 10 letras de exón.
+```
+Requiere relevantKeys (List<String>). Entrega locus (List<String>).
+```
+
+   - **5.6 StringGenerator *(Privada)*:** *Este método genera un String del largo solicitado*
+```
+Requiere length (int). Entrega cadena (String).
+```
+ 
+------
+------
+
 ## Copyright
 
 NatureEngine © LosAmigosDeMiguel, 2019.
