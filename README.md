@@ -50,10 +50,6 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 
 NatureEngine © LosAmigosDeMiguel, 2019.
 
-## Agradecimientos
-
-Enormes agradecimientos al profesor Enrique González y a su libro en francés
-
 ## Autores
 
 * **Miguel Beltrán**
