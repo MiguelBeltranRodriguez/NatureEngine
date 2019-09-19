@@ -50,7 +50,8 @@ abstract class CombinationHandler extends MutationsHandler {
         return valor;
     }
 
-    private List<String> RecombinarLocus(List<String> locus) {
+    @SuppressWarnings("unused")
+	private List<String> RecombinarLocus(List<String> locus) {
         //Se crea un molde de copia de cada ADN, en ARN y a partir de estos moldes se genera la mezcla
         List<String> moldeARNUno = this.RNAMeiosisCopy(locus.get(0));
         List<String> moldeARNDos = this.RNAMeiosisCopy(locus.get(1));

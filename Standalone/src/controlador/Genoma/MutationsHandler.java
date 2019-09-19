@@ -1,9 +1,6 @@
 package controlador.Genoma;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
 
 abstract class MutationsHandler extends AttributesCalculator {
 

@@ -1,8 +1,8 @@
-package controlador;
+package NatureEngine.NatureEngineController;
 
-import controlador.Loop;
-import utils.VarGlobalVista;
-import vista.Pantalla;
+import NatureEngine.Utils.VarGlobalVista;
+import NatureEngine.Vista.Pantalla;
+
 
 /*
  * Clase principal del simulador, inicial el loop principal, la creaci�n y carga de los componentes
