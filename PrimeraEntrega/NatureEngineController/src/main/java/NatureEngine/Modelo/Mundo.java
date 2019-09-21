@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import NatureEngine.NatureEngineController.Renderizador2D;
+import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.ManejadorArchivos;
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
@@ -13,7 +14,7 @@ import NatureEngine.Vista.PopUpInfo;
 
 
 
-public class Mundo implements Dibujable {
+public class Mundo implements Dibujable, ServiciosController{
 
 
 	private Casilla [][] objetosDelMundo;
