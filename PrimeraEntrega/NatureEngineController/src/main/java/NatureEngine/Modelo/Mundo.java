@@ -2,6 +2,9 @@ package NatureEngine.Modelo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.PopUpInfo;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
+import NatureEngine.RMI.ServiciosAdministradorAgentes;
 import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.ManejadorArchivos;
 import NatureEngine.Utils.VarGlobalGame;
@@ -27,6 +31,7 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 	private static final long serialVersionUID = 1L;
 	private Casilla [][] objetosDelMundo;
 	private List<PopUpInfo> popUpsInfo;
+	private List<ServiciosAdministradorAgentes> servidoresAgentes;
 	private int contadorAgentes;
 
 	public Mundo() throws RemoteException {
@@ -35,7 +40,7 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		setContadorAgentes(0);
 		cargarMapa();
-
+		servidoresAgentes = new ArrayList<ServiciosAdministradorAgentes>();
 	}
 	
 
@@ -213,6 +218,38 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 
 	public void setContadorAgentes(int contadorAgentes) {
 		this.contadorAgentes = contadorAgentes;
+	}
+
+
+
+	@Override
+	public void conectarAlServidorAgentes(int port) {
+		try {
+			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
+			servidoresAgentes.add(serviciosAgentes);
+			 System.out.println("Cliente de agentes ON "+port);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+
+	public List<ServiciosAdministradorAgentes> getServidoresAgentes() {
+		return servidoresAgentes;
+	}
+
+
+
+	public void setServidoresAgentes(List<ServiciosAdministradorAgentes> servidoresAgentes) {
+		this.servidoresAgentes = servidoresAgentes;
 	}
 
 

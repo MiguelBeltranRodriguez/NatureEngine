@@ -41,6 +41,7 @@ public class Loop implements Runnable {
 			 mundo = new Mundo();
 			 LocateRegistry.createRegistry(6005);
 			Naming.rebind("rmi://localhost:6005/controller", mundo);
+			  System.out.println("Servidor controller ON 6005");
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -48,7 +49,7 @@ public class Loop implements Runnable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}       
-         System.err.println("Server ready");
+       
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
 		for(int i = 0; i < 1000; i++) {
