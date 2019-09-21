@@ -6,6 +6,7 @@ package NatureEngine.NatureEngineController;
 public class Launcher {
 
 	public static void main(String[] args) {
+		System.setProperty("localhost","127.0.0.1");
 		new NatureEngine();
 	}
 }

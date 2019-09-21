@@ -3,6 +3,11 @@ package NatureEngine.NatureEngineController;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.Random;
 
 import NatureEngine.Modelo.Mundo;
@@ -32,7 +37,18 @@ public class Loop implements Runnable {
 	private void inicio() {
 		setPantalla(Pantalla.getPantalla());
 		render2D = new Renderizador2D();
-		mundo = new Mundo();
+		 try {
+			 mundo = new Mundo();
+			 LocateRegistry.createRegistry(6005);
+			Naming.rebind("rmi://localhost:6005/controller", mundo);
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}       
+         System.err.println("Server ready");
 		Random aleatorio = new Random(System.currentTimeMillis());
 		int aux = aleatorio.nextInt(255);
 		for(int i = 0; i < 1000; i++) {

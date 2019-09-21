@@ -2,6 +2,8 @@ package NatureEngine.Modelo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,22 +18,26 @@ import NatureEngine.Utils.VarGlobalVista;
 
 
 
-public class Mundo implements Dibujable, ServiciosController{
+public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosController{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Casilla [][] objetosDelMundo;
 	private List<PopUpInfo> popUpsInfo;
 	private int contadorAgentes;
 
-	public Mundo() {
-
+	public Mundo() throws RemoteException {
+		super();  
 		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		setContadorAgentes(0);
 		cargarMapa();
 
 	}
-
+	
 
 
 	private void cargarMapa() {
