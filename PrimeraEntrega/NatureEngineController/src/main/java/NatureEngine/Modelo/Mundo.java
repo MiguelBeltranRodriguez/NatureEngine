@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import NatureEngine.NatureEngineController.Renderizador2D;
+import NatureEngine.NatureEngineAgente.Agente;
+import NatureEngine.NatureEngineGUI.Dibujable;
+import NatureEngine.NatureEngineGUI.PopUpInfo;
+import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.ManejadorArchivos;
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
-import NatureEngine.Vista.PopUpInfo;
 
 
 

@@ -3,21 +3,26 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>NatureEngine</groupId>
-  <artifactId>NatureEngineController</artifactId>
+  <artifactId>NatureEngineAgente</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>NatureEngineController</name>
+  <name>NatureEngineAgente</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-	 <dependencies>
-  
+
+  <dependencies>
     <dependency>
       <groupId>NatureEngine</groupId>
-      <artifactId>NatureEngineAgente</artifactId>
+      <artifactId>NatureEngineCommons</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>NatureEngine</groupId>
+      <artifactId>NatureEngineGUI</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

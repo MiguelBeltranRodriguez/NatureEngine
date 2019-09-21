@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import NatureEngine.NatureEngineController.Renderizador2D;
+import NatureEngine.NatureEngineGUI.Dibujable;
+import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.Utils.VarGlobalVista;
 
 

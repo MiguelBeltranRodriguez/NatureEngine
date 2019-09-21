@@ -1,7 +1,7 @@
 package NatureEngine.NatureEngineController;
 
+import NatureEngine.NatureEngineGUI.Pantalla;
 import NatureEngine.Utils.VarGlobalVista;
-import NatureEngine.Vista.Pantalla;
 
 
 /*

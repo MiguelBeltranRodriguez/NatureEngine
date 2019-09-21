@@ -5,11 +5,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-import NatureEngine.Modelo.Agente;
 import NatureEngine.Modelo.Mundo;
+import NatureEngine.NatureEngineAgente.Agente;
+import NatureEngine.NatureEngineGUI.Menu;
+import NatureEngine.NatureEngineGUI.Pantalla;
+import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.Utils.VarGlobalGame;
-import NatureEngine.Vista.Menu;
-import NatureEngine.Vista.Pantalla;
 
 
 
