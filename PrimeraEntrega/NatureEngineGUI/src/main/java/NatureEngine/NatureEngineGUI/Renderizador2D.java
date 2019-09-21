@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
-import NatureEngine.Modelo.Mundo;
+
 import NatureEngine.Utils.VarGlobalVista;
-import NatureEngine.Vista.Menu;
-import NatureEngine.Vista.Pantalla;
+
 
 
 public class Renderizador2D {
@@ -20,7 +19,7 @@ public class Renderizador2D {
 		pantalla = Pantalla.getPantalla();
 	}
 	
-	public void renderizar(Mundo mundo, Menu menu) {
+	public void renderizar(Dibujable mundo, Menu menu) {
 		bs = pantalla.getCanvas().getBufferStrategy();
 		if(bs == null) {
 			pantalla.getCanvas().createBufferStrategy(2);

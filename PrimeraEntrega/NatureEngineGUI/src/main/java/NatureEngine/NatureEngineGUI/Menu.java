@@ -2,18 +2,18 @@ package NatureEngine.NatureEngineGUI;
 
 import java.awt.Color;
 
-import NatureEngine.Modelo.Dibujable;
-import NatureEngine.Modelo.Mundo;
+
+
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
 
 
 public class Menu implements Dibujable {
 	
-	private Mundo mundo;
+	private Dibujable mundo;
 	private int indiceString = 0;
 	
-	public Menu(Mundo mundo) {
+	public Menu(Dibujable mundo) {
 		this.mundo = mundo;
 	}
 

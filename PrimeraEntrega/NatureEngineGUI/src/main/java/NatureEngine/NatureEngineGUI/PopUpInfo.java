@@ -2,7 +2,7 @@ package NatureEngine.NatureEngineGUI;
 
 import java.awt.Color;
 
-import NatureEngine.Modelo.Dibujable;
+
 
 
 public class PopUpInfo implements Dibujable {
