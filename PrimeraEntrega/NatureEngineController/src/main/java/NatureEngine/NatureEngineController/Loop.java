@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,59 +46,59 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	private Renderizador2D render2D;
 	private Mundo mundo;
 	private Menu menu;
-	
-	
+
+
 	//Parte encargada de inicializar todo lo necesario
 	private void inicio() {
 		setPantalla(Pantalla.getPantalla());
 		render2D = new Renderizador2D();
 		mundo = new Mundo();
-       corriendo = true;
-		
+		corriendo = true;
+
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				seleccionar(e);
 			}
 		});
-		
+
 		mundo.init();
 		menu = new Menu(mundo);
 	}	
-	
+
 	protected void seleccionar(MouseEvent e) {
 		if(!mundo.addPopUp(e.getX(), e.getY())) {
 			mundo.limpiarPopUp();
 		}
 	}
 
-	//Parte l�gica
 	private synchronized void update() {
+
 		for (ServiciosAdministradorAgentes servidor : servidoresAgentes) {
 			try {
 				servidor.update();
@@ -108,30 +107,30 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				e.printStackTrace();
 			}
 		}
-		
+		mundo.update();
 	}
-	//Parte visual
+
 	private void renderizar() {
 		render2D.renderizar(mundo, menu);
 	}
-	
+
 	@Override
 	public void run() {
 		inicio();
-		
+
 		double timerPerTick = 200000000 / VarGlobalGame.FPS;
-		
+
 		long now;
 		long lastTime = System.nanoTime();
 		long timer = 0;
 		int ticks = 0;
-		
+
 		while(corriendo) {
 			now = System.nanoTime();
 			VarGlobalGame.DELTA += (now -lastTime)/timerPerTick;
 			timer += now - lastTime;
 			lastTime = now;
-			
+
 			if(VarGlobalGame.DELTA>=1) {
 				update();
 				renderizar();
@@ -140,17 +139,16 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			}
 			if(timer > 200000000) {
 				VarGlobalGame.TICKS_S = ticks;
-				System.out.println(ticks);
 				ticks = 0;	
 				timer = 0;
-				
+
 			}
-			
+
 		}		
 	}
-	
-	
-	
+
+
+
 
 	public Pantalla getPantalla() {
 		return pantalla;
@@ -165,31 +163,25 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		try {
 			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
 			servidoresAgentes.add(serviciosAgentes);
-			 System.out.println("Cliente de agentes ON "+port);
-			 Random aleatorio = new Random(System.currentTimeMillis());
+			System.out.println("Controller conectado al servidor agentes: "+port);
+			Random aleatorio = new Random(System.currentTimeMillis());
 			int aux = aleatorio.nextInt(255);
-			for(int i = 0; i < 250; i++) {
+			for(int i = 0; i < 10; i++) {
 				Long ID = new Long(i);
 				Agente ag = new Agente(ID,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
 				addAgente(ag);
 				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
 			}
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		} 
+
 	}
 
 	@Override
-	public boolean  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
-		return mundo.moverAgente(x2, y2, agente);
+	public void  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+		mundo.moverAgente(x2, y2, agente);
 	}
 
 	@Override
@@ -199,6 +191,6 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 
 	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
 		mundo.addAgente(ag);
-		
+
 	}
 }

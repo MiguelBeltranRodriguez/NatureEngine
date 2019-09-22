@@ -16,11 +16,13 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 	
 	private Map<Long, Agente> agentes;
 	private ServiciosController serviciosController;
+	private String port;
 	
-	protected AdministradorAgentesServidorController(ServiciosController serviciosController) throws RemoteException {
+	protected AdministradorAgentesServidorController(ServiciosController serviciosController, String port) throws RemoteException {
 		super();
 		this.serviciosController = serviciosController;
 		agentes = new HashMap<Long, Agente>();
+		this.setPort(port);
 	}
 
 	/**
@@ -46,7 +48,18 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 
 	@Override
 	public void update() throws RemoteException {
-		agentes.forEach((k, v) -> v.run());
+		
+		agentes.forEach((k, v) -> {
+			v.update();
+		});
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
 	}
 	
 }

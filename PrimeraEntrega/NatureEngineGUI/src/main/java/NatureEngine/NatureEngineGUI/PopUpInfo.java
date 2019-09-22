@@ -57,6 +57,12 @@ public class PopUpInfo implements Dibujable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

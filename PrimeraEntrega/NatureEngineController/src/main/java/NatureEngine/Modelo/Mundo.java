@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -26,12 +25,24 @@ public class Mundo implements Dibujable{
 
 
 	private Dibujable [][] dibujablesDelMundo;
-	private Casilla [][] objetosDelMundo;
+	private Casilla [][] casillasDelMundo;
 	private List<PopUpInfo> popUpsInfo;
 	private int contadorAgentes;
-
+	private float energiaMaxima;
+	private float energiaActual;
+	private float estacion;
+	private float estacionMinima;
+	private float estacionMaxima;
+	private int numeroDePlantasMaxima;
+	private int numeroDePlantasActual;
+	private int frecuenciaEstacion;
+	private int tiempoActual;
+	private int direccionCambioEstacion;
+	private float velocidadCambio;
+	
+	
 	public Mundo() {
-		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
+		casillasDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
 		dibujablesDelMundo = new Dibujable[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
 			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
@@ -40,6 +51,11 @@ public class Mundo implements Dibujable{
 		}
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		setContadorAgentes(0);
+		energiaActual = 0;
+		numeroDePlantasActual = 0;
+		estacion = 1.0f;
+		tiempoActual = 0;
+		direccionCambioEstacion = -1;
 		cargarMapa();
 	}
 
@@ -54,18 +70,37 @@ public class Mundo implements Dibujable{
 			int widht = Integer.parseInt(sTamano[1]);
 			int heigth = Integer.parseInt(sTamano[2]);
 			line = br.readLine();
+			String sEnergiaMaxia[] = line.split(ManejadorArchivos.SEPARADOR);
+			energiaMaxima = Float.parseFloat(sEnergiaMaxia[1]);
+			line = br.readLine();
+			String sEstacionMinima[] = line.split(ManejadorArchivos.SEPARADOR);
+			estacionMinima = Float.parseFloat(sEstacionMinima[1]);
+			line = br.readLine();
+			String sEstacionMaxima[] = line.split(ManejadorArchivos.SEPARADOR);
+			estacionMaxima = Float.parseFloat(sEstacionMaxima[1]);
+			line = br.readLine();
+			String sPlantasMaxima[] = line.split(ManejadorArchivos.SEPARADOR);
+			numeroDePlantasMaxima = Integer.parseInt(sPlantasMaxima[1]);
+			line = br.readLine();
+			String sFrecuencua[] = line.split(ManejadorArchivos.SEPARADOR);
+			frecuenciaEstacion = Integer.parseInt(sFrecuencua[1]);
+			line = br.readLine();
+			String sVelocidadCambio[] = line.split(ManejadorArchivos.SEPARADOR);
+			velocidadCambio = Float.parseFloat(sVelocidadCambio[1]);
+			line = br.readLine();
+			System.out.println(line);
 			for(int i = 1; i <= (heigth/VarGlobalVista.TAMANO_TEXTURA); i++) {
 				line = br.readLine();		
 				String sLinea[] = line.split(ManejadorArchivos.SEPARADOR);
 				for(int j = 1; j <= (widht/VarGlobalVista.TAMANO_TEXTURA); j++) {
-					Float humedad = Float.parseFloat(sLinea[j-1]);
-					int humedadI = (int) (humedad*100);
+					float humedad = Float.parseFloat(sLinea[j-1]);
+					float humedadI = (humedad*100);
 					for(int x = (j*VarGlobalVista.TAMANO_TEXTURA)-VarGlobalVista.TAMANO_TEXTURA; x<(j*VarGlobalVista.TAMANO_TEXTURA);x++ ) {
 						for(int y = (i*VarGlobalVista.TAMANO_TEXTURA)-VarGlobalVista.TAMANO_TEXTURA; y<(i*VarGlobalVista.TAMANO_TEXTURA);y++ ) {
-							if(humedadI>=100) {
-								objetosDelMundo[x][y] = new CasillaAgua(x, y, 100);
+							if(humedadI>=80) {
+								casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadI);
 							}else {
-								objetosDelMundo[x][y] = new CasillaTierra(x, y, humedadI);
+								casillasDelMundo[x][y] = new CasillaTierra(x, y, humedadI);
 							}
 
 						}
@@ -86,12 +121,40 @@ public class Mundo implements Dibujable{
 	}
 
 
-
+	@Override
+	public void update() {
+			tiempoActual++;
+			if(tiempoActual%frecuenciaEstacion==0) {
+				estacion = estacion+(velocidadCambio*direccionCambioEstacion);
+				if(estacion >= estacionMaxima) {
+					direccionCambioEstacion = -1;
+				}else if(estacion <= estacionMinima){
+					direccionCambioEstacion = 1;
+				}
+				for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
+					for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+						casillasDelMundo[x][y].cambiarHumedad(estacion);
+						float humedadAnterior = casillasDelMundo[x][y].getHumedadAnterior();
+						float humedadActual = casillasDelMundo[x][y].getHumedadActual();
+						float humedadBase = casillasDelMundo[x][y].getHumedadBase();
+						if(humedadAnterior<80f&&humedadActual>=80f) {
+							casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadBase);
+							casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
+							casillasDelMundo[x][y].setHumedadActual(humedadActual);
+						}else if(humedadAnterior>=80f&&humedadActual<80f) {
+							casillasDelMundo[x][y] = new CasillaTierra(x, y, humedadBase);
+							casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
+							casillasDelMundo[x][y].setHumedadActual(humedadActual);
+						}
+					}
+				}
+			}
+	}
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; x++) {
 			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; y++) {
-				objetosDelMundo[x*8][y*8].dibujarCasillas(r);
+				casillasDelMundo[x*8][y*8].dibujarCasillas(r);
 			}
 		}
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
@@ -114,18 +177,6 @@ public class Mundo implements Dibujable{
 
 
 
-	@Override
-	public int getX() {
-		return 0;
-	}
-
-
-
-	@Override
-	public int getY() {
-		return 0;
-	}
-
 
 
 
@@ -137,7 +188,7 @@ public class Mundo implements Dibujable{
 
 
 
-	public boolean celdaVacia(int newX, int newY) {
+	public synchronized boolean celdaVacia(int newX, int newY) {
 		if(dibujablesDelMundo[newX][newY]==null) {
 			return true;
 		}else {
@@ -188,6 +239,27 @@ public class Mundo implements Dibujable{
 
 
 
+
+	public synchronized void moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+
+		Agente ag = (Agente) agente;	
+		Agente ag2 = (Agente) dibujablesDelMundo[ag.getX()][ag.getY()];
+
+		if(celdaVacia(x2, y2)) {
+			dibujablesDelMundo[ag.getX()][ag.getY()] = null;
+			dibujablesDelMundo[x2][y2] = ag2;
+			ag2.setX(x2);
+			ag2.setY(y2);
+		}
+		
+		
+		
+
+	}
+
+
+
+	
 	@Override
 	public void Resaltar() {	
 	}
@@ -202,8 +274,16 @@ public class Mundo implements Dibujable{
 
 	@Override
 	public String info() {
+		String cambioClima = "Normal";
+		if(direccionCambioEstacion==1) {
+			cambioClima = "Aumentando";
+		}else if(direccionCambioEstacion==-1) {
+			cambioClima = "Disminuyendo";
+		}
 		return "N�mero de agentes en el mundo: "+contadorAgentes+
-				"#Tama�o del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME;
+				"#Tama�o del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME+
+				"#Tiempo actual "+this.tiempoActual+"años"+
+				"#CambioHumedad: "+cambioClima;
 	}
 
 
@@ -220,38 +300,187 @@ public class Mundo implements Dibujable{
 
 
 
-	public boolean moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
-
-		Agente ag = (Agente) agente;	
-		Agente ag2 = (Agente) dibujablesDelMundo[ag.getX()][ag.getY()];
 
 
-		synchronized (dibujablesDelMundo) {
-			synchronized (dibujablesDelMundo) {
-				if(celdaVacia(x2, y2)&&dibujablesDelMundo[ag.getX()][ag.getY()] != null) {
-					dibujablesDelMundo[ag.getX()][ag.getY()] = null;
-					dibujablesDelMundo[x2][y2] = ag2;
-					ag2.setX(x2);
-					ag2.setY(y2);
-					return true;
-				}
-				return false;
-			}
-		}
-
-
-
-
-
-
+	public Dibujable[][] getDibujablesDelMundo() {
+		return dibujablesDelMundo;
 	}
 
 
 
+	public void setDibujablesDelMundo(Dibujable[][] dibujablesDelMundo) {
+		this.dibujablesDelMundo = dibujablesDelMundo;
+	}
 
 
 
+	public Casilla[][] getObjetosDelMundo() {
+		return casillasDelMundo;
+	}
 
 
 
+	public void setObjetosDelMundo(Casilla[][] objetosDelMundo) {
+		this.casillasDelMundo = objetosDelMundo;
+	}
+
+
+
+	public List<PopUpInfo> getPopUpsInfo() {
+		return popUpsInfo;
+	}
+
+
+
+	public void setPopUpsInfo(List<PopUpInfo> popUpsInfo) {
+		this.popUpsInfo = popUpsInfo;
+	}
+
+
+
+	public float getEnergiaMaxima() {
+		return energiaMaxima;
+	}
+
+
+
+	public void setEnergiaMaxima(float energiaMaxima) {
+		this.energiaMaxima = energiaMaxima;
+	}
+
+
+
+	public float getEnergiaActual() {
+		return energiaActual;
+	}
+
+
+
+	public void setEnergiaActual(float energiaActual) {
+		this.energiaActual = energiaActual;
+	}
+
+
+
+	public float getEstacion() {
+		return estacion;
+	}
+
+
+
+	public void setEstacion(float estacion) {
+		this.estacion = estacion;
+	}
+
+
+
+	public int getNumeroDePlantasMaxima() {
+		return numeroDePlantasMaxima;
+	}
+
+
+
+	public void setNumeroDePlantasMaxima(int numeroDePlantasMaxima) {
+		this.numeroDePlantasMaxima = numeroDePlantasMaxima;
+	}
+
+
+
+	public int getNumeroDePlantasActual() {
+		return numeroDePlantasActual;
+	}
+
+
+
+	public void setNumeroDePlantasActual(int numeroDePlantasActual) {
+		this.numeroDePlantasActual = numeroDePlantasActual;
+	}
+
+
+
+	@Override
+	public int getX() {
+		return 0;
+	}
+
+
+
+	@Override
+	public int getY() {
+		return 0;
+	}
+
+
+
+	public float getEstacionMinima() {
+		return estacionMinima;
+	}
+
+
+
+	public void setEstacionMinima(float estacionMinima) {
+		this.estacionMinima = estacionMinima;
+	}
+
+
+
+	public float getEstacionMaxima() {
+		return estacionMaxima;
+	}
+
+
+
+	public void setEstacionMaxima(float estacionMaxima) {
+		this.estacionMaxima = estacionMaxima;
+	}
+
+
+
+	public int getFrecuenciaEstacion() {
+		return frecuenciaEstacion;
+	}
+
+
+
+	public void setFrecuenciaEstacion(int frecuenciaEstacion) {
+		this.frecuenciaEstacion = frecuenciaEstacion;
+	}
+
+
+
+	public int getTiempoActual() {
+		return tiempoActual;
+	}
+
+
+
+	public void setTiempoActual(int tiempoActual) {
+		this.tiempoActual = tiempoActual;
+	}
+
+
+
+	public int getDireccionCambioEstacion() {
+		return direccionCambioEstacion;
+	}
+
+
+
+	public void setDireccionCambioEstacion(int direccionCambioEstacion) {
+		this.direccionCambioEstacion = direccionCambioEstacion;
+	}
+
+
+
+	public float getVelocidadCambio() {
+		return velocidadCambio;
+	}
+
+
+
+	public void setVelocidadCambio(float velocidadCambio) {
+		this.velocidadCambio = velocidadCambio;
+	}
+
+		
 }

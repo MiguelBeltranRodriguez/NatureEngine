@@ -60,6 +60,12 @@ public class Menu implements Dibujable {
 		return null;
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 }

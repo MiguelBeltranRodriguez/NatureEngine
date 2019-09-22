@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 import NatureEngine.RMI.ServiciosController;
+import NatureEngine.Utils.VarGlobalGame;
 
 public class AdministradorAgentesClienteController implements Serializable{
 	
@@ -16,42 +17,33 @@ public class AdministradorAgentesClienteController implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static ServiciosController serviciosController;
-	public AdministradorAgentesClienteController() {
+	public AdministradorAgentesClienteController(String port) {
 		try {
-			serviciosController = (ServiciosController) Naming.lookup("rmi://localhost:6005/controller");
-			 System.out.println("Cliente de controller ON 6005");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
+			serviciosController = (ServiciosController) Naming.lookup("rmi://localhost:"+VarGlobalGame.PORT_CONTROLLER+"/controller");
+			 System.out.println("Cliente del servidor controller ON "+VarGlobalGame.PORT_CONTROLLER);
+		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		try {
-			AdministradorAgentesServidorController aasc = new AdministradorAgentesServidorController(serviciosController);
-			LocateRegistry.createRegistry(6006);
-			Naming.rebind("rmi://localhost:6006/controller", aasc);
-			System.out.println("Servidor agentes ON 6006");
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
+			AdministradorAgentesServidorController aasc = new AdministradorAgentesServidorController(serviciosController, port);
+			LocateRegistry.createRegistry(Integer.parseInt(port));
+			Naming.rebind("rmi://localhost:"+port+"/controller", aasc);
+			System.out.println("Servidor de agentes ON "+port);
+		} catch (RemoteException | MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			serviciosController.conectarAlServidorAgentes(6006);
+			serviciosController.conectarAlServidorAgentes(Integer.parseInt(port));
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public static void main(String args[]) {
-		new AdministradorAgentesClienteController();
+		new AdministradorAgentesClienteController(args[0]);
 	}
 	public static ServiciosController getLook_up() {
 		return serviciosController;

@@ -1,14 +1,13 @@
 package NatureEngine.Modelo;
 
-import java.awt.Color;
+
 
 
 public class CasillaAgua extends Casilla {
 
 	
-	public CasillaAgua(int x, int y, int humedad) {
-		super(x, y, humedad);
-		color = new Color(19,36,240,160);
+	public CasillaAgua(int x, int y, float humedadBase) {
+		super(x, y, humedadBase);
 	}
 
 

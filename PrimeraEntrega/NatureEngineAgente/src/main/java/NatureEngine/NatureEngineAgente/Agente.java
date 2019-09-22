@@ -11,7 +11,7 @@ import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.VarGlobalVista;
 
-public class Agente extends ObjetoDistribuido implements Dibujable, Runnable, Serializable  {
+public class Agente extends ObjetoDistribuido implements Dibujable, Serializable  {
 
 	private static final long serialVersionUID = 1L;
 	private Color color;  //prueba
@@ -49,7 +49,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Runnable, Se
 
 
 	@Override
-	public void run() {
+	public void update() {
 
 
 		if(delX == 0 && delY == 0) {
@@ -150,14 +150,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Runnable, Se
 			direccionY = -1;
 		}
 	}
-	private void cambiarPosicion(int x2, int y2) {
+	private synchronized  void cambiarPosicion(int x2, int y2) {
 		try {
 			
-			boolean moverse = servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
-			if(moverse) {
-				this.x = x2;
-				this.y = y2;
-			}
+			servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
+			this.x = x2;
+			this.y = y2;
+			
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

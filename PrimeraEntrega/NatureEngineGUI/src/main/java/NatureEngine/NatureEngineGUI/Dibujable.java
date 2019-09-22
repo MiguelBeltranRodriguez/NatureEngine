@@ -8,4 +8,5 @@ public interface Dibujable  {
 	public int getY();
 	public void  init();
 	public String info();
+	public void update();
 }

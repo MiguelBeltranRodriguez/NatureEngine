@@ -5,8 +5,9 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-import NatureEngine.Modelo.Mundo;
+
 import NatureEngine.NatureEngineGUI.Pantalla;
+import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
 
 
@@ -18,20 +19,16 @@ public class NatureEngine{
 	private Pantalla pantalla;
 	private Loop loop;
 	
+	
 	public NatureEngine() {
-		
-		
-		
-		
-		
 		crearPantalla();
 		
 		System.setProperty("sun.java2d.opengl", "true");
 		 try {
 			 loop = new Loop();
-			 LocateRegistry.createRegistry(6005);
-			Naming.rebind("rmi://localhost:6005/controller", loop);
-			  System.out.println("Servidor controller ON 6005");
+			 LocateRegistry.createRegistry(VarGlobalGame.PORT_CONTROLLER);
+			Naming.rebind("rmi://localhost:"+VarGlobalGame.PORT_CONTROLLER+"/controller", loop);
+			  System.out.println("Servidor del controller ON "+VarGlobalGame.PORT_CONTROLLER);
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
