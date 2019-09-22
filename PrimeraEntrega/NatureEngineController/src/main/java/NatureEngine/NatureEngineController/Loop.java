@@ -1,20 +1,27 @@
 package NatureEngine.NatureEngineController;
 
+
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import NatureEngine.Modelo.Mundo;
 import NatureEngine.NatureEngineAgente.Agente;
+import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Menu;
 import NatureEngine.NatureEngineGUI.Pantalla;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
+import NatureEngine.RMI.ServiciosAdministradorAgentes;
+import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.VarGlobalGame;
 
 
@@ -23,9 +30,18 @@ import NatureEngine.Utils.VarGlobalGame;
 /*
  * Loop principal
  */
-public class Loop implements Runnable {
+public class Loop extends UnicastRemoteObject implements Runnable, ServiciosController {
 
-	private Thread thread;
+	private List<ServiciosAdministradorAgentes> servidoresAgentes;
+	protected Loop() throws RemoteException {
+		super();
+		servidoresAgentes = new ArrayList<ServiciosAdministradorAgentes>();
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean corriendo = false;
 	private Pantalla pantalla;
 	private Renderizador2D render2D;
@@ -37,24 +53,9 @@ public class Loop implements Runnable {
 	private void inicio() {
 		setPantalla(Pantalla.getPantalla());
 		render2D = new Renderizador2D();
-		 try {
-			 mundo = new Mundo();
-			 LocateRegistry.createRegistry(6005);
-			Naming.rebind("rmi://localhost:6005/controller", mundo);
-			  System.out.println("Servidor controller ON 6005");
-		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}       
-       
-		Random aleatorio = new Random(System.currentTimeMillis());
-		int aux = aleatorio.nextInt(255);
-		for(int i = 0; i < 1000; i++) {
-			mundo.agregarAgente(new Agente(new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i/2), 150+(i/2), 5+i%5, 20, 10+i%5));
-		}
+		mundo = new Mundo();
+       corriendo = true;
+		
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
 			
 			@Override
@@ -98,8 +99,15 @@ public class Loop implements Runnable {
 	}
 
 	//Parte l�gica
-	private void update() {
-
+	private synchronized void update() {
+		for (ServiciosAdministradorAgentes servidor : servidoresAgentes) {
+			try {
+				servidor.update();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	//Parte visual
@@ -132,33 +140,17 @@ public class Loop implements Runnable {
 			}
 			if(timer > 1000000000) {
 				VarGlobalGame.TICKS_S = ticks;
+				System.out.println(ticks);
 				ticks = 0;	
 				timer = 0;
+				
 			}
 			
-		}
-		stop();
-		
+		}		
 	}
 	
-	public synchronized void start() {
-		if(corriendo) {
-			return;
-		}	
-		thread = new Thread(this);
-		thread.start();
-		corriendo = true;
-	}
-	public synchronized void stop() {
-		if(!corriendo) {
-			return;
-		}
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	
+	
 
 	public Pantalla getPantalla() {
 		return pantalla;
@@ -166,5 +158,47 @@ public class Loop implements Runnable {
 
 	public void setPantalla(Pantalla pantalla) {
 		this.pantalla = pantalla;
+	}
+
+	@Override
+	public synchronized   void conectarAlServidorAgentes(int port) throws RemoteException {
+		try {
+			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
+			servidoresAgentes.add(serviciosAgentes);
+			 System.out.println("Cliente de agentes ON "+port);
+			 Random aleatorio = new Random(System.currentTimeMillis());
+			int aux = aleatorio.nextInt(255);
+			for(int i = 0; i < 10; i++) {
+				Long ID = new Long(i);
+				Agente ag = new Agente(ID,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
+				addAgente(ag);
+				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public boolean  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+		return mundo.moverAgente(x2, y2, agente);
+	}
+
+	@Override
+	public boolean celdaVacia(int i, int j) throws RemoteException {
+		return mundo.celdaVacia(i, j);
+	}
+
+	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
+		mundo.addAgente(ag);
+		
 	}
 }

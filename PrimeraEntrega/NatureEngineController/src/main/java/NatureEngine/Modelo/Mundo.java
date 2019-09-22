@@ -1,48 +1,48 @@
 package NatureEngine.Modelo;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
+
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import NatureEngine.NatureEngineAgente.Agente;
+import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.PopUpInfo;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
-import NatureEngine.RMI.ServiciosAdministradorAgentes;
-import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.ManejadorArchivos;
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
 
 
 
-public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosController{
+public class Mundo implements Dibujable{
 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private Dibujable [][] dibujablesDelMundo;
 	private Casilla [][] objetosDelMundo;
 	private List<PopUpInfo> popUpsInfo;
-	private List<ServiciosAdministradorAgentes> servidoresAgentes;
 	private int contadorAgentes;
 
-	public Mundo() throws RemoteException {
-		super();  
+	public Mundo() {
 		objetosDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
+		dibujablesDelMundo = new Dibujable[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+				dibujablesDelMundo[x][y] = null;
+			}
+		}
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		setContadorAgentes(0);
 		cargarMapa();
-		servidoresAgentes = new ArrayList<ServiciosAdministradorAgentes>();
 	}
-	
+
 
 
 	private void cargarMapa() {
@@ -96,15 +96,19 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 		}
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
 			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
-				objetosDelMundo[x][y].dibujar(r);
+				if(dibujablesDelMundo[x][y] != null) {
+					dibujablesDelMundo[x][y].dibujar(r);
+				}
+
 			}
 		}
 		for (PopUpInfo popUp : popUpsInfo) {
 			popUp.dibujar(r);
 		}
 	}
-	public void agregarAgente(Agente ag) {
-		objetosDelMundo[ag.getX()][ag.getY()].agregarDibujable(ag);
+	public  void addAgente(ObjetoDistribuido agente) {
+		Agente ag = (Agente) agente;
+		dibujablesDelMundo[ag.getX()][ag.getY()] = (Dibujable) ag;
 		setContadorAgentes(getContadorAgentes() + 1);
 	}
 
@@ -124,25 +128,21 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 
 
 
-	public synchronized  void moverAgente(int x, int y, Agente ag) {
-		objetosDelMundo[ag.getX()][ag.getY()].quitarDibujable(ag);
-		objetosDelMundo[x][y].agregarDibujable(ag);
-	}
 
 	@Override
-	public synchronized  void init() {
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
-				objetosDelMundo[x][y].init();
-			}
-		}
+	public void init() {
+
 
 	}
 
 
 
 	public boolean celdaVacia(int newX, int newY) {
-		return objetosDelMundo[newX][newY].esVacia();
+		if(dibujablesDelMundo[newX][newY]==null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 
@@ -167,11 +167,9 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 		}
 		for(int i = d0x; i < d1x; i++) {
 			for(int j = d0y; j < d1y; j++) {
-				if(!objetosDelMundo[i][j].esVacia()) {
-					List<Dibujable> listO = objetosDelMundo[i][j].getObjetosEnCasilla();
-					for (Dibujable dibujable : listO) {
-						popUpsInfo.add(new PopUpInfo(dibujable));
-					}
+				if(dibujablesDelMundo[i][j]!=null) {
+					Dibujable dibu = dibujablesDelMundo[i][j];
+					popUpsInfo.add(new PopUpInfo(dibu));
 					return true;
 				}
 			}
@@ -222,35 +220,35 @@ public class Mundo extends UnicastRemoteObject implements Dibujable, ServiciosCo
 
 
 
-	@Override
-	public void conectarAlServidorAgentes(int port) {
-		try {
-			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
-			servidoresAgentes.add(serviciosAgentes);
-			 System.out.println("Cliente de agentes ON "+port);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public boolean moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+
+		Agente ag = (Agente) agente;	
+		Agente ag2 = (Agente) dibujablesDelMundo[ag.getX()][ag.getY()];
+
+
+		synchronized (dibujablesDelMundo) {
+			synchronized (dibujablesDelMundo) {
+				if(celdaVacia(x2, y2)&&dibujablesDelMundo[ag.getX()][ag.getY()] != null) {
+					dibujablesDelMundo[ag.getX()][ag.getY()] = null;
+					dibujablesDelMundo[x2][y2] = ag2;
+					ag2.setX(x2);
+					ag2.setY(y2);
+					return true;
+				}
+				return false;
+			}
 		}
+
+
+
+
+
+
 	}
 
 
 
-	public List<ServiciosAdministradorAgentes> getServidoresAgentes() {
-		return servidoresAgentes;
-	}
 
-
-
-	public void setServidoresAgentes(List<ServiciosAdministradorAgentes> servidoresAgentes) {
-		this.servidoresAgentes = servidoresAgentes;
-	}
 
 
 

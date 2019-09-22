@@ -1,5 +1,11 @@
 package NatureEngine.NatureEngineController;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+
+import NatureEngine.Modelo.Mundo;
 import NatureEngine.NatureEngineGUI.Pantalla;
 import NatureEngine.Utils.VarGlobalVista;
 
@@ -19,9 +25,21 @@ public class NatureEngine{
 		
 		
 		crearPantalla();
-		loop = new Loop();
+		
 		System.setProperty("sun.java2d.opengl", "true");
-		loop.start();
+		 try {
+			 loop = new Loop();
+			 LocateRegistry.createRegistry(6005);
+			Naming.rebind("rmi://localhost:6005/controller", loop);
+			  System.out.println("Servidor controller ON 6005");
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}    
+		loop.run();
 	}
 
 

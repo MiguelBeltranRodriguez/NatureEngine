@@ -1,24 +1,25 @@
 package NatureEngine.NatureEngineAgente;
 
 import java.awt.Color;
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.Random;
 
-
+import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
-import NatureEngine.Utils.VarGlobalGame;
+import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.VarGlobalVista;
 
-public class Agente implements Dibujable, Runnable {
+public class Agente extends ObjetoDistribuido implements Dibujable, Runnable, Serializable  {
 
-
-	private Thread thread;
+	private static final long serialVersionUID = 1L;
 	private Color color;  //prueba
 	private int x;	//prueba
 	private int y; //prueba
 	private int radio;  //prueba
 	private int percepcion;
-	//private Mundo mundo;
+	private ServiciosController servicios;
 	private boolean resaltado;
 	private int delX;
 	private int delY;
@@ -26,14 +27,15 @@ public class Agente implements Dibujable, Runnable {
 	private int direccionY;
 	private int velocidadPXs;
 	private int timeOutBloqueo;
-
-	public Agente(Color color, int x, int y, int radio, int percepcion/*, Mundo mundo*/, int velocidad) {
+	private int moverse;
+	public Agente(Long ID, Color color, int x, int y, int radio, int percepcion, int velocidad,ServiciosController servicios) throws RemoteException {
+		super(ID);
 		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.radio = radio;
 		this.percepcion = percepcion+radio;
-		//this.mundo = mundo;
+		this.servicios = servicios;
 		this.direccionX = 0;
 		this.direccionY = 0;
 		this.delX = 0;
@@ -41,95 +43,71 @@ public class Agente implements Dibujable, Runnable {
 		resaltado = false;
 		this.velocidadPXs = velocidad;
 		this.timeOutBloqueo = 3;
-	}
-	public synchronized void start() {
-
-		thread = new Thread(this);
-
-		thread.start();
+		moverse = 0;
 	}
 
-	public synchronized void stop() {
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+
+
 	@Override
 	public void run() {
-		int moverse = 0;
-		long newTime = 0;
-		long oldTime = System.currentTimeMillis();
-		long time = 0;
-		while(true) {
-			try {
-				newTime = System.currentTimeMillis();
-				time = newTime-oldTime;
-				oldTime = time;
-				if(delX == 0 && delY == 0) {
-					//movimientoAleatorio();
-				}
-				else {
-					if(moverse>=25) {
-						//moverse();
-						moverse = moverse-25;
-					}else {
-						moverse += velocidadPXs;
-					}
 
+
+		if(delX == 0 && delY == 0) {
+			movimientoAleatorio();
+		}
+		else {
+			if(moverse>=100) {
+				try {
+					moverse();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				if(time>VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS) {
-					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS);
-				}else {
-					Thread.sleep(VarGlobalGame.UNIDAD_DE_TIEMPO_BASE_MS-time);
-				}
-			}
-			catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				moverse = moverse-100;
+			}else {
+				moverse += velocidadPXs;
 			}
 
 		}
 
+
 	}
 
-	/*
-	private void moverse() {
+	private void moverse() throws RemoteException {
 		if(delX>0 && delY >0) {
-			if(mundo.celdaVacia(x+(direccionX), y+(direccionY))) {
+			if(servicios.celdaVacia(x+(direccionX), y+(direccionY))) {
 				cambiarPosicion(x+(direccionX), y+(direccionY));
 				delX--;
 				delY--;
 			}else {
 				timeOutBloqueo--;
 			}if(timeOutBloqueo==0) {
-				if(mundo.celdaVacia(x-(direccionX), y-(direccionY))) {
+				if(servicios.celdaVacia(x-(direccionX), y-(direccionY))) {
 					cambiarPosicion(x-(direccionX), y-(direccionY));
 				}
 				timeOutBloqueo = 4;
 			}
 		}else if(delX>0) {
-			if(mundo.celdaVacia(x+(direccionX), y)) {
+			if(servicios.celdaVacia(x+(direccionX), y)) {
 				cambiarPosicion(x+(direccionX), y);
 				delX--;
 			}else {
 				timeOutBloqueo--;
 			}if(timeOutBloqueo==0) {
-				if(mundo.celdaVacia(x-(direccionX), y)) {
+				if(servicios.celdaVacia(x-(direccionX), y)) {
 					cambiarPosicion(x-(direccionX), y);
 				}
 				timeOutBloqueo = 4;
 			}
 		}else if(delY>0) {
-			if(mundo.celdaVacia(x, y+(direccionY))) {
+			if(servicios.celdaVacia(x, y+(direccionY))) {
 				cambiarPosicion(x, y+(direccionY));
 				delY--;
 			}else {
 				timeOutBloqueo--;
 			}
 			if(timeOutBloqueo==0) {
-				if(mundo.celdaVacia(x, y-(direccionY))) {
+				if(servicios.celdaVacia(x, y-(direccionY))) {
 					cambiarPosicion(x, y-(direccionY));
 				}
 				timeOutBloqueo = 3;
@@ -173,12 +151,20 @@ public class Agente implements Dibujable, Runnable {
 		}
 	}
 	private void cambiarPosicion(int x2, int y2) {
-		synchronized (mundo) {
-			mundo.moverAgente(x2, y2, this);
+		try {
+			
+			boolean moverse = servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
+			if(moverse) {
+				this.x = x2;
+				this.y = y2;
+			}
+			
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		this.x = x2;
-		this.y = y2;
-	}*/
+		
+	}
 	@Override
 	public  void dibujar(Renderizador2D r) {
 		r.dibujarRectangulo(color, x-(radio/2), y-(radio/2), radio, radio);
@@ -187,12 +173,7 @@ public class Agente implements Dibujable, Runnable {
 			r.dibujarContornoRectangular(Color.BLACK, x-percepcion, y-percepcion, percepcion*2, percepcion*2);
 		}
 	}
-	public Thread getThread() {
-		return thread;
-	}
-	public void setThread(Thread thread) {
-		this.thread = thread;
-	}
+
 	public int getX() {
 		return x;
 	}
@@ -207,10 +188,8 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public void init() {
-		start();
-
 	}
-	
+
 	public int getRadio() {
 		return radio;
 	}
@@ -227,11 +206,25 @@ public class Agente implements Dibujable, Runnable {
 	}
 	@Override
 	public String info() {
-		return this.thread.getName()+ 
+		return ID+ 
 				"#x: "+ this.x + " y: "+this.y+
 				"#velocidad: "+velocidadPXs+
 				"#percepci�n: "+percepcion+
 				"#tama�o: "+this.radio;
+	}
+
+	public Long getID() {
+		return ID;
+	}
+
+	public void setID(Long iD) {
+		ID = iD;
+	}
+	public ServiciosController getServicios() {
+		return servicios;
+	}
+	public void setServicios(ServiciosController servicios) {
+		this.servicios = servicios;
 	}
 
 }

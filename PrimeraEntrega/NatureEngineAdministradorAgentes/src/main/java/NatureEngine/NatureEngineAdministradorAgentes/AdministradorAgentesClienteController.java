@@ -1,16 +1,20 @@
 package NatureEngine.NatureEngineAdministradorAgentes;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-import NatureEngine.RMI.ServiciosAdministradorAgentes;
 import NatureEngine.RMI.ServiciosController;
 
-public class AdministradorAgentesClienteController implements ServiciosAdministradorAgentes {
+public class AdministradorAgentesClienteController implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static ServiciosController serviciosController;
 	public AdministradorAgentesClienteController() {
 		try {
@@ -28,10 +32,10 @@ public class AdministradorAgentesClienteController implements ServiciosAdministr
 		}
 		
 		try {
-			AdministradorAgentesServidorController aasc = new AdministradorAgentesServidorController();
+			AdministradorAgentesServidorController aasc = new AdministradorAgentesServidorController(serviciosController);
 			LocateRegistry.createRegistry(6006);
 			Naming.rebind("rmi://localhost:6006/controller", aasc);
-			System.err.println("Servidor agentes ON 6006");
+			System.out.println("Servidor agentes ON 6006");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,6 +59,7 @@ public class AdministradorAgentesClienteController implements ServiciosAdministr
 	public static void setLook_up(ServiciosController look_up) {
 		AdministradorAgentesClienteController.serviciosController = look_up;
 	}
+	
 	
 	
 	

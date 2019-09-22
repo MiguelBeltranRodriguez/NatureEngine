@@ -25,6 +25,11 @@
 			<artifactId>NatureEngineCommons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		 <dependency>
+      <groupId>NatureEngine</groupId>
+      <artifactId>NatureEngineAdministradorAgentes</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
 	</dependencies>
 	<build>
 		<plugins>
