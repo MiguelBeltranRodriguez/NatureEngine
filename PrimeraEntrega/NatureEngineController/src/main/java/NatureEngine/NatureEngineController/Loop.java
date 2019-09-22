@@ -119,7 +119,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void run() {
 		inicio();
 		
-		double timerPerTick = 1000000000 / VarGlobalGame.FPS;
+		double timerPerTick = 200000000 / VarGlobalGame.FPS;
 		
 		long now;
 		long lastTime = System.nanoTime();
@@ -138,7 +138,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				ticks++;
 				VarGlobalGame.DELTA--;
 			}
-			if(timer > 1000000000) {
+			if(timer > 200000000) {
 				VarGlobalGame.TICKS_S = ticks;
 				System.out.println(ticks);
 				ticks = 0;	
@@ -168,7 +168,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			 System.out.println("Cliente de agentes ON "+port);
 			 Random aleatorio = new Random(System.currentTimeMillis());
 			int aux = aleatorio.nextInt(255);
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < 250; i++) {
 				Long ID = new Long(i);
 				Agente ag = new Agente(ID,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
 				addAgente(ag);
