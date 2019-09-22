@@ -22,6 +22,7 @@ public class VarGlobalGame {
 			new Color(0, 2, 71), //80-90
 			new Color(0, 2, 71), //90-100
 			new Color(0, 2, 71), //100
+			new Color(0, 2, 71), //100
 	};
 	
 }
