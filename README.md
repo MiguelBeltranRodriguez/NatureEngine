@@ -11,7 +11,7 @@ Versión ??
 
 ### Pasos de instalación
  1. Clonar el repositorio
- 2. Importar como proyecto maven todos los proyectos de la carpeta "Primera entrega"
+ 2. Importar como proyecto maven todos los proyectos de la carpeta "PrimeraEntrega"
  3. Instalar el componente NatureEngineCommon (mvn install)
  4. Instalar el componente NatureEngineGUI (mvn install)
  5. Instalar el componente NatureEngineAgente (mvn install)
