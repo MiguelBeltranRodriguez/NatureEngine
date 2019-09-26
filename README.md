@@ -5,12 +5,20 @@ Versión ??
 ## Instalación
 
 ### Pre-requisitos
-
-```
-
-```
+ 1. Java JDK 1.8: [https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+ 2. Eclipse, para esta instalación se uso JEE  2019-06 (4.12.0)
+ 3. Maven: [https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi). Instalar el plugin de Maven en eclipse
 
 ### Pasos de instalación
+ 1. Clonar el repositorio
+ 2. Importar como proyecto maven todos los proyectos de la carpeta "Primera entrega"
+ 3. Instalar el componente NatureEngineCommon (mvn install)
+ 4. Instalar el componente NatureEngineGUI (mvn install)
+ 5. Instalar el componente NatureEngineAgente (mvn install)
+ 6. Instalar el componente NatureEngineAdministradorAgentes (mvn install)
+ 7. Instalar el componente NatureEngineController (mvn install)
+ 8. Ejecutar el proyecto NatureEngineController (Aplicación)
+ 9. Ejecutar el proyecto NatureEngineAdministradorAgentes con parámetro de entrada: El puerto al que se le va a asignar (Aplicación)
 
 ## Proyecto
 
