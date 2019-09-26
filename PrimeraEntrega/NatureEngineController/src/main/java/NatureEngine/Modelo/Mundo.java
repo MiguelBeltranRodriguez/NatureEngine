@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Random;
 
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -27,6 +27,7 @@ public class Mundo implements Dibujable{
 	private Dibujable [][] dibujablesDelMundo;
 	private Casilla [][] casillasDelMundo;
 	private List<PopUpInfo> popUpsInfo;
+	private List<Planta> plantasMundo;
 	private int contadorAgentes;
 	private float energiaMaxima;
 	private float energiaActual;
@@ -34,12 +35,12 @@ public class Mundo implements Dibujable{
 	private float estacionMinima;
 	private float estacionMaxima;
 	private int numeroDePlantasMaxima;
-	private int numeroDePlantasActual;
 	private int frecuenciaEstacion;
 	private int tiempoActual;
 	private int direccionCambioEstacion;
 	private float velocidadCambio;
-	
+	private float energiaMaximaPorPlanta;
+	private float consumoEnergiaPlanta;
 	
 	public Mundo() {
 		casillasDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
@@ -50,9 +51,9 @@ public class Mundo implements Dibujable{
 			}
 		}
 		popUpsInfo = new ArrayList<PopUpInfo>();
+		plantasMundo = new ArrayList<Planta>();
 		setContadorAgentes(0);
 		energiaActual = 0;
-		numeroDePlantasActual = 0;
 		estacion = 1.0f;
 		tiempoActual = 0;
 		direccionCambioEstacion = -1;
@@ -88,6 +89,9 @@ public class Mundo implements Dibujable{
 			String sVelocidadCambio[] = line.split(ManejadorArchivos.SEPARADOR);
 			velocidadCambio = Float.parseFloat(sVelocidadCambio[1]);
 			line = br.readLine();
+			String sVelocidadConsumoPlanta[] = line.split(ManejadorArchivos.SEPARADOR);
+			consumoEnergiaPlanta = Float.parseFloat(sVelocidadConsumoPlanta[1]);
+			line = br.readLine();
 			System.out.println(line);
 			for(int i = 1; i <= (heigth/VarGlobalVista.TAMANO_TEXTURA); i++) {
 				line = br.readLine();		
@@ -108,7 +112,9 @@ public class Mundo implements Dibujable{
 				}
 
 			}
-
+			energiaMaximaPorPlanta = energiaMaxima / numeroDePlantasMaxima;
+			dibujablesDelMundo[20][50] = new Planta(energiaMaximaPorPlanta, 20, 50);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -117,39 +123,111 @@ public class Mundo implements Dibujable{
 
 
 		ManejadorArchivos.cerrarArchivo(br);
-
+		generarPlantas();
 	}
+
+
+	private void generarPlantas() {
+		while(plantasMundo.size()<numeroDePlantasMaxima) {
+			ponerPlantaAleatoria();		
+		}
+	}
+
+
+
+	private void ponerPlantaAleatoria() {
+		Random rX = new Random();
+		Random rY = new Random();
+		int x = rX.nextInt(VarGlobalVista.WIDHT_PANTALLA_GAME);
+		int y = rY.nextInt(VarGlobalVista.HEIGTH_PANTALLA_GAME);
+		if(dibujablesDelMundo[x][y]==null) {
+			Casilla c = casillasDelMundo[x][y];
+			Random rP = new Random();
+			int probabilidad = rP.nextInt(100);
+			if(c instanceof CasillaAgua) {
+				if(probabilidad<c.humedadActual-90) {
+					agregarPlanta(x,y);
+				}
+			}else {
+				if(probabilidad<c.humedadActual) {
+					agregarPlanta(x, y);
+				}
+			}
+			
+		}
+	}
+
+
+
+	private void agregarPlanta(int x, int y) {
+		Planta planta = new Planta(energiaMaximaPorPlanta, x, y);
+		dibujablesDelMundo[x][y]= planta;
+		energiaActual = energiaActual + energiaMaximaPorPlanta;
+		plantasMundo.add(planta);
+	}
+
 
 
 	@Override
 	public void update() {
 			tiempoActual++;
+			
 			if(tiempoActual%frecuenciaEstacion==0) {
-				estacion = estacion+(velocidadCambio*direccionCambioEstacion);
-				if(estacion >= estacionMaxima) {
-					direccionCambioEstacion = -1;
-				}else if(estacion <= estacionMinima){
-					direccionCambioEstacion = 1;
-				}
-				for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-					for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
-						casillasDelMundo[x][y].cambiarHumedad(estacion);
-						float humedadAnterior = casillasDelMundo[x][y].getHumedadAnterior();
-						float humedadActual = casillasDelMundo[x][y].getHumedadActual();
-						float humedadBase = casillasDelMundo[x][y].getHumedadBase();
-						if(humedadAnterior<80f&&humedadActual>=80f) {
-							casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadBase);
-							casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
-							casillasDelMundo[x][y].setHumedadActual(humedadActual);
-						}else if(humedadAnterior>=80f&&humedadActual<80f) {
-							casillasDelMundo[x][y] = new CasillaTierra(x, y, humedadBase);
-							casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
-							casillasDelMundo[x][y].setHumedadActual(humedadActual);
-						}
-					}
-				}
+				cambioHumedad();
+			}
+			reducirEnergíaPlantaAlAzar();
+			if(energiaActual<=energiaMaxima-energiaMaximaPorPlanta) {
+				ponerPlantaAleatoria();
 			}
 	}
+	private void reducirEnergíaPlantaAlAzar() {
+		Random r = new Random();
+		int indice = r.nextInt(plantasMundo.size());
+		Planta plantaAReducir = plantasMundo.get(indice);
+		boolean murio = plantaAReducir.reducirEnergia(consumoEnergiaPlanta);
+		energiaActual = energiaActual - consumoEnergiaPlanta;
+		if(murio) {
+			matarPlanta(plantaAReducir);
+		}
+	}
+
+
+
+	private void matarPlanta(Planta plantaAReducir) {
+		plantasMundo.remove(plantaAReducir);
+		dibujablesDelMundo[plantaAReducir.getX()][plantaAReducir.getY()] = null;
+	}
+
+
+
+	private void cambioHumedad() {
+		estacion = estacion+(velocidadCambio*direccionCambioEstacion);
+		if(estacion >= estacionMaxima) {
+			direccionCambioEstacion = -1;
+		}else if(estacion <= estacionMinima){
+			direccionCambioEstacion = 1;
+		}
+		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
+			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+				casillasDelMundo[x][y].cambiarHumedad(estacion);
+				float humedadAnterior = casillasDelMundo[x][y].getHumedadAnterior();
+				float humedadActual = casillasDelMundo[x][y].getHumedadActual();
+				float humedadBase = casillasDelMundo[x][y].getHumedadBase();
+				if(humedadAnterior<80f&&humedadActual>=80f) {
+					casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadBase);
+					casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
+					casillasDelMundo[x][y].setHumedadActual(humedadActual);
+				}else if(humedadAnterior>=80f&&humedadActual<80f) {
+					casillasDelMundo[x][y] = new CasillaTierra(x, y, humedadBase);
+					casillasDelMundo[x][y].setHumedadAnterior(humedadAnterior);
+					casillasDelMundo[x][y].setHumedadActual(humedadActual);
+				}
+			}
+		}
+	}
+
+
+
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
 		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; x++) {
@@ -198,7 +276,7 @@ public class Mundo implements Dibujable{
 
 
 
-	public synchronized boolean addPopUp(int x, int y) {
+	public boolean addPopUp(int x, int y) {
 		int d0x = x - 15;
 		int d1x = x + 15;
 		int d0y = y - 15;
@@ -280,10 +358,12 @@ public class Mundo implements Dibujable{
 		}else if(direccionCambioEstacion==-1) {
 			cambioClima = "Disminuyendo";
 		}
-		return "N�mero de agentes en el mundo: "+contadorAgentes+
-				"#Tama�o del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME+
+		return "Número de agentes en el mundo: "+contadorAgentes+
+				"#Tamaño del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME+
 				"#Tiempo actual "+this.tiempoActual+"años"+
-				"#CambioHumedad: "+cambioClima;
+				"#CambioHumedad: "+cambioClima+
+				"#Número de plantas: "+plantasMundo.size()+
+				"#Energía actual: "+energiaActual;
 	}
 
 
@@ -384,17 +464,6 @@ public class Mundo implements Dibujable{
 		this.numeroDePlantasMaxima = numeroDePlantasMaxima;
 	}
 
-
-
-	public int getNumeroDePlantasActual() {
-		return numeroDePlantasActual;
-	}
-
-
-
-	public void setNumeroDePlantasActual(int numeroDePlantasActual) {
-		this.numeroDePlantasActual = numeroDePlantasActual;
-	}
 
 
 

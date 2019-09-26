@@ -24,5 +24,5 @@ public class VarGlobalGame {
 			new Color(0, 2, 71), //100
 			new Color(0, 2, 71), //100
 	};
-	
+	public final static Color colorPlantas = new Color(0,220,0);	
 }

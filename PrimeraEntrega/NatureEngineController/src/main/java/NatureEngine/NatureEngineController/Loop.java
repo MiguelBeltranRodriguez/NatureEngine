@@ -103,7 +103,6 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			try {
 				servidor.update();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -173,7 +172,6 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
 			}
 		} catch (MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 
