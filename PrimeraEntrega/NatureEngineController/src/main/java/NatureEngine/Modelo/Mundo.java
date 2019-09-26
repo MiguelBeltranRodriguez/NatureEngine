@@ -43,10 +43,10 @@ public class Mundo implements Dibujable{
 	private float consumoEnergiaPlanta;
 	
 	public Mundo() {
-		casillasDelMundo = new Casilla[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
-		dibujablesDelMundo = new Dibujable[VarGlobalVista.WIDHT_PANTALLA_GAME][VarGlobalVista.HEIGTH_PANTALLA_GAME];
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+		casillasDelMundo = new Casilla[VarGlobalVista.widht_pantalla_map][VarGlobalVista.heigth_pantalla_map];
+		dibujablesDelMundo = new Dibujable[VarGlobalVista.widht_pantalla_map][VarGlobalVista.heigth_pantalla_map];
+		for(int x = 0; x < VarGlobalVista.widht_pantalla_map; x++) {
+			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map; y++) {
 				dibujablesDelMundo[x][y] = null;
 			}
 		}
@@ -63,7 +63,7 @@ public class Mundo implements Dibujable{
 
 
 	private void cargarMapa() {
-		BufferedReader br = ManejadorArchivos.getManejadorArchivos().cargarArchivo(VarGlobalGame.RUTA_MAPA);
+		BufferedReader br = ManejadorArchivos.getManejadorArchivos().cargarArchivoLectura(VarGlobalGame.RUTA_MAPA);
 
 		try {
 			String line = br.readLine();
@@ -93,14 +93,14 @@ public class Mundo implements Dibujable{
 			consumoEnergiaPlanta = Float.parseFloat(sVelocidadConsumoPlanta[1]);
 			line = br.readLine();
 			System.out.println(line);
-			for(int i = 1; i <= (heigth/VarGlobalVista.TAMANO_TEXTURA); i++) {
+			for(int i = 1; i <= (heigth/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA); i++) {
 				line = br.readLine();		
 				String sLinea[] = line.split(ManejadorArchivos.SEPARADOR);
-				for(int j = 1; j <= (widht/VarGlobalVista.TAMANO_TEXTURA); j++) {
+				for(int j = 1; j <= (widht/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA); j++) {
 					float humedad = Float.parseFloat(sLinea[j-1]);
 					float humedadI = (humedad*100);
-					for(int x = (j*VarGlobalVista.TAMANO_TEXTURA)-VarGlobalVista.TAMANO_TEXTURA; x<(j*VarGlobalVista.TAMANO_TEXTURA);x++ ) {
-						for(int y = (i*VarGlobalVista.TAMANO_TEXTURA)-VarGlobalVista.TAMANO_TEXTURA; y<(i*VarGlobalVista.TAMANO_TEXTURA);y++ ) {
+					for(int x = (j*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA)-VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; x<(j*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA);x++ ) {
+						for(int y = (i*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA)-VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; y<(i*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA);y++ ) {
 							if(humedadI>=80) {
 								casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadI);
 							}else {
@@ -138,8 +138,8 @@ public class Mundo implements Dibujable{
 	private void ponerPlantaAleatoria() {
 		Random rX = new Random();
 		Random rY = new Random();
-		int x = rX.nextInt(VarGlobalVista.WIDHT_PANTALLA_GAME);
-		int y = rY.nextInt(VarGlobalVista.HEIGTH_PANTALLA_GAME);
+		int x = rX.nextInt(VarGlobalVista.widht_pantalla_map);
+		int y = rY.nextInt(VarGlobalVista.heigth_pantalla_map);
 		if(dibujablesDelMundo[x][y]==null) {
 			Casilla c = casillasDelMundo[x][y];
 			Random rP = new Random();
@@ -207,8 +207,8 @@ public class Mundo implements Dibujable{
 		}else if(estacion <= estacionMinima){
 			direccionCambioEstacion = 1;
 		}
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+		for(int x = 0; x < VarGlobalVista.widht_pantalla_map; x++) {
+			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map; y++) {
 				casillasDelMundo[x][y].cambiarHumedad(estacion);
 				float humedadAnterior = casillasDelMundo[x][y].getHumedadAnterior();
 				float humedadActual = casillasDelMundo[x][y].getHumedadActual();
@@ -230,13 +230,13 @@ public class Mundo implements Dibujable{
 
 	@Override
 	public synchronized  void dibujar(Renderizador2D r) {
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME/VarGlobalVista.TAMANO_TEXTURA; y++) {
+		for(int x = 0; x < VarGlobalVista.widht_pantalla_map/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; x++) {
+			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; y++) {
 				casillasDelMundo[x*8][y*8].dibujarCasillas(r);
 			}
 		}
-		for(int x = 0; x < VarGlobalVista.WIDHT_PANTALLA_GAME; x++) {
-			for(int y = 0; y < VarGlobalVista.HEIGTH_PANTALLA_GAME; y++) {
+		for(int x = 0; x < VarGlobalVista.widht_pantalla_map; x++) {
+			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map; y++) {
 				if(dibujablesDelMundo[x][y] != null) {
 					dibujablesDelMundo[x][y].dibujar(r);
 				}
@@ -285,14 +285,14 @@ public class Mundo implements Dibujable{
 		if(d0x<0) {
 			d0x = 0;
 		}
-		else if(d1x>=VarGlobalVista.WIDHT_PANTALLA_GAME) {
-			d1x = VarGlobalVista.WIDHT_PANTALLA_GAME-1;
+		else if(d1x>=VarGlobalVista.widht_pantalla_map) {
+			d1x = VarGlobalVista.widht_pantalla_map-1;
 		}
 		if(d0y<0) {
 			d0y = 0;
 		}
-		else if(d1y>=VarGlobalVista.HEIGTH_PANTALLA_GAME) {
-			d1y = VarGlobalVista.HEIGTH_PANTALLA_GAME-1;
+		else if(d1y>=VarGlobalVista.heigth_pantalla_map) {
+			d1y = VarGlobalVista.heigth_pantalla_map-1;
 		}
 		for(int i = d0x; i < d1x; i++) {
 			for(int j = d0y; j < d1y; j++) {
@@ -359,7 +359,7 @@ public class Mundo implements Dibujable{
 			cambioClima = "Disminuyendo";
 		}
 		return "Número de agentes en el mundo: "+contadorAgentes+
-				"#Tamaño del mundo: "+VarGlobalVista.WIDHT_PANTALLA_GAME+"x"+VarGlobalVista.HEIGTH_PANTALLA_GAME+
+				"#Tamaño del mundo: "+VarGlobalVista.widht_pantalla_map+"x"+VarGlobalVista.heigth_pantalla_map+
 				"#Tiempo actual "+this.tiempoActual+"años"+
 				"#CambioHumedad: "+cambioClima+
 				"#Número de plantas: "+plantasMundo.size()+

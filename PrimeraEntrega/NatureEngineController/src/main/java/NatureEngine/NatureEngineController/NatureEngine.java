@@ -42,7 +42,7 @@ public class NatureEngine{
 
 	private void crearPantalla() {
 		Pantalla pantalla = Pantalla.getPantalla();
-		pantalla.setTitle(VarGlobalVista.TITULO_JUEGO);
+		pantalla.setTitle(VarGlobalVista.TITULO_APP);
 		pantalla.setSize(VarGlobalVista.WIDHT_PANTALLA,VarGlobalVista.HEIGTH_PANTALLA);
 		pantalla.crearPantalla();
 		this.pantalla = pantalla;

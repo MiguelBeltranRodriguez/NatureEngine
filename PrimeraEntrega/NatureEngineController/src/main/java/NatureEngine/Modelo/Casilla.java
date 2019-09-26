@@ -27,7 +27,7 @@ public class Casilla implements Dibujable {
 
 	public void dibujarCasillas(Renderizador2D r) {
 		int texturaHumedad = (int) (humedadActual/10);
-		r.dibujarRectangulo(VarGlobalGame.dibujoCasillas[texturaHumedad], x, y, VarGlobalVista.TAMANO_TEXTURA, VarGlobalVista.TAMANO_TEXTURA);
+		r.dibujarRectangulo(VarGlobalGame.dibujoCasillas[texturaHumedad], x, y, VarGlobalVista.TAMANO_TEXTURA_CUADRICULA, VarGlobalVista.TAMANO_TEXTURA_CUADRICULA);
 		
 		
 	}

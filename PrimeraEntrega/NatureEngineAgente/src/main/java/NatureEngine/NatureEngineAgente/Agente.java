@@ -75,39 +75,39 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	private void moverse() throws RemoteException {
 		if(delX>0 && delY >0) {
-			if(servicios.celdaVacia(x+(direccionX), y+(direccionY))) {
+			if(servicios.esCeldaVacia(x+(direccionX), y+(direccionY))) {
 				cambiarPosicion(x+(direccionX), y+(direccionY));
 				delX--;
 				delY--;
 			}else {
 				timeOutBloqueo--;
 			}if(timeOutBloqueo==0) {
-				if(servicios.celdaVacia(x-(direccionX), y-(direccionY))) {
+				if(servicios.esCeldaVacia(x-(direccionX), y-(direccionY))) {
 					cambiarPosicion(x-(direccionX), y-(direccionY));
 				}
 				timeOutBloqueo = 4;
 			}
 		}else if(delX>0) {
-			if(servicios.celdaVacia(x+(direccionX), y)) {
+			if(servicios.esCeldaVacia(x+(direccionX), y)) {
 				cambiarPosicion(x+(direccionX), y);
 				delX--;
 			}else {
 				timeOutBloqueo--;
 			}if(timeOutBloqueo==0) {
-				if(servicios.celdaVacia(x-(direccionX), y)) {
+				if(servicios.esCeldaVacia(x-(direccionX), y)) {
 					cambiarPosicion(x-(direccionX), y);
 				}
 				timeOutBloqueo = 4;
 			}
 		}else if(delY>0) {
-			if(servicios.celdaVacia(x, y+(direccionY))) {
+			if(servicios.esCeldaVacia(x, y+(direccionY))) {
 				cambiarPosicion(x, y+(direccionY));
 				delY--;
 			}else {
 				timeOutBloqueo--;
 			}
 			if(timeOutBloqueo==0) {
-				if(servicios.celdaVacia(x, y-(direccionY))) {
+				if(servicios.esCeldaVacia(x, y-(direccionY))) {
 					cambiarPosicion(x, y-(direccionY));
 				}
 				timeOutBloqueo = 3;
@@ -119,7 +119,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		int newX = 0;
 		do {
 			newX =  x + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
-			if(newX>=VarGlobalVista.WIDHT_PANTALLA_GAME || newX <0) {
+			if(newX>=VarGlobalVista.widht_pantalla_map || newX <0) {
 				newX =  x + rnd.nextInt(percepcion + 1 + percepcion) - percepcion;
 			}else {
 				break;
@@ -128,7 +128,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		int newY = 0;
 		do {
 			newY =  y + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
-			if(newY>=VarGlobalVista.HEIGTH_PANTALLA_GAME || newY<0) {
+			if(newY>=VarGlobalVista.heigth_pantalla_map || newY<0) {
 				newY =  y +  rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
 			}else {
 				break;

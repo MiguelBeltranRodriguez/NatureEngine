@@ -183,7 +183,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 
 	@Override
-	public boolean celdaVacia(int i, int j) throws RemoteException {
+	public boolean esCeldaVacia(int i, int j) throws RemoteException {
 		return mundo.celdaVacia(i, j);
 	}
 

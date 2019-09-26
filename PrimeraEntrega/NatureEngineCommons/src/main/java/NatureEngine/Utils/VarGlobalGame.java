@@ -2,15 +2,29 @@ package NatureEngine.Utils;
 
 import java.awt.Color;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Clase de variables utilizadas por todos los paquetes.
+ */
 public class VarGlobalGame {
 
+	/** FPS */
 	public final static int FPS =30; 
+	
+	/** Delta de los FPS */
 	public static double DELTA = 0;
+	
+	/** Ticks por segundo */
 	public static int TICKS_S = 0;
-	public final static long UNIDAD_DE_TIEMPO_BASE_MS = 10;
+	
+	
+	/** Ruta del mapa por defecto. */
 	public final static String RUTA_MAPA = "./assets/mapa1.csv";
+	
+	/** Puerto del NatureEngineController */
 	public final static int PORT_CONTROLLER = 6005;
 	
+	/** Colores para dibujar las casillas con humedad del 0-100 */
 	public final static Color[] dibujoCasillas = {
 			new Color(241, 243, 25), //0-10
 			new Color(223, 222, 25), //10-20
@@ -24,5 +38,7 @@ public class VarGlobalGame {
 			new Color(0, 2, 71), //100
 			new Color(0, 2, 71), //100
 	};
+	
+	/** Color de las plantas */
 	public final static Color colorPlantas = new Color(0,220,0);	
 }
