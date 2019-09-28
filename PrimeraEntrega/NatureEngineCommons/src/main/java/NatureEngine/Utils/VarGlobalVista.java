@@ -11,10 +11,10 @@ public class VarGlobalVista {
 	public final static String TITULO_APP = "NatureEngine";
 	
 	/** El ancho de la visualización del mapa */
-	public int widht_pantalla_map = 720;
+	public static int widht_pantalla_map = 720;
 	
 	/** El alto de la visualización del mapa */
-	public int heigth_pantalla_map = 720;
+	public static int heigth_pantalla_map = 720;
 	
 	/** El ancho de la pantalla */
 	public final static int WIDHT_PANTALLA = 1080;
