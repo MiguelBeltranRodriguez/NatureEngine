@@ -53,4 +53,5 @@ public interface Dibujable  {
 	 * Actualiza el objeto, para visualizar su siguiente estado
 	 */
 	public void update();
+	
 }

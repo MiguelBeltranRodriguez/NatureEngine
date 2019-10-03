@@ -28,6 +28,8 @@ public abstract class ObjetoDistribuido implements Serializable{
 		super();
 		this.ID = ID;
 	}
-
+	public Long getID() {
+		return this.ID;
+	}
 
 }

@@ -1,21 +1,27 @@
 package NatureEngine.Modelo;
 
 import java.awt.Color;
+import java.rmi.RemoteException;
 
+import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.Utils.VarGlobalGame;
 
-public class Planta implements Dibujable {
+public class Planta extends ObjetoDistribuido implements Dibujable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private float energiaActual;
 	private int x;
 	private int y;
 	
 	
 	
-	public Planta(float energiaActual, int x, int y) {
-		super();
+	public Planta(Long ID, float energiaActual, int x, int y) throws RemoteException {
+		super(ID);
 		this.energiaActual = energiaActual;
 		this.x = x;
 		this.y = y;

@@ -11,7 +11,7 @@ import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.VarGlobalVista;
 
-public class Agente extends ObjetoDistribuido implements Dibujable, Serializable  {
+public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
 
 	private static final long serialVersionUID = 1L;
 	private Color color;  //prueba
@@ -72,7 +72,35 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 
 	}
+	public void run() {
+		while(true) {
+			
+			if(delX == 0 && delY == 0) {
+				movimientoAleatorio();
+			}
+			else {
+				if(moverse>=100) {
+					try {
+						moverse();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					moverse = moverse-100;
+				}else {
+					moverse += velocidadPXs;
+				}
 
+			}
+			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	private void moverse() throws RemoteException {
 		if(delX>0 && delY >0) {
 			if(servicios.esCeldaVacia(x+(direccionX), y+(direccionY))) {
@@ -187,6 +215,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 	@Override
 	public void init() {
+		Thread th = new Thread(this);
+		th.start();
 	}
 
 	public int getRadio() {
@@ -212,13 +242,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				"#tama�o: "+this.radio;
 	}
 
-	public Long getID() {
-		return ID;
-	}
 
-	public void setID(Long iD) {
-		ID = iD;
-	}
 	public ServiciosController getServicios() {
 		return servicios;
 	}
