@@ -1,4 +1,4 @@
-package NatureEngine.Modelo;
+package Modelo;
 
 import java.awt.Color;
 import java.rmi.RemoteException;

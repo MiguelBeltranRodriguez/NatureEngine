@@ -1,6 +1,8 @@
-package NatureEngine.Modelo;
+package Modelo;
 
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +17,7 @@ import NatureEngine.Utils.VarGlobalVista;
 
 
 
-public class Casilla implements Dibujable {
+public class Casilla extends ObjetoDistribuido implements Dibujable, Serializable {
 
 	protected int x;
 	protected int y;
@@ -24,7 +26,8 @@ public class Casilla implements Dibujable {
 	protected float humedadAnterior;
 	protected Map<Long, Dibujable> dibujablesCasilla;
 	
-	public Casilla(int x, int y, float humedad) {
+	public Casilla(int x, int y, float humedad) throws RemoteException {
+		super((long)0);
 		dibujablesCasilla = new HashMap<Long, Dibujable>();
 		this.x = x;
 		this.y = y;

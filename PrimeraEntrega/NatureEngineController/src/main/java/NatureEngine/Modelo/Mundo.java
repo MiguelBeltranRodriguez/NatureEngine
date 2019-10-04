@@ -7,9 +7,14 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import Modelo.Casilla;
+import Modelo.CasillaAgua;
+import Modelo.CasillaTierra;
+import Modelo.Planta;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
@@ -143,11 +148,11 @@ public class Mundo implements Dibujable{
 			Random rP = new Random();
 			int probabilidad = rP.nextInt(100);
 			if(c instanceof CasillaAgua) {
-				if(probabilidad<c.humedadActual-90) {
+				if(probabilidad<c.getHumedadActual()-90) {
 					agregarPlanta(x,y);
 				}
 			}else {
-				if(probabilidad<c.humedadActual) {
+				if(probabilidad<c.getHumedadActual()) {
 					agregarPlanta(x, y);
 				}
 			}
@@ -171,7 +176,12 @@ public class Mundo implements Dibujable{
 			tiempoActual++;
 			
 			if(tiempoActual%frecuenciaEstacion==0) {
-				cambioHumedad();
+				try {
+					cambioHumedad();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			reducirEnergíaPlantaAlAzar();
 			if(energiaActual<=energiaMaxima-energiaMaximaPorPlanta) {
@@ -203,7 +213,7 @@ public class Mundo implements Dibujable{
 
 
 
-	private void cambioHumedad() {
+	private void cambioHumedad() throws RemoteException {
 		estacion = estacion+(velocidadCambio*direccionCambioEstacion);
 		if(estacion >= estacionMaxima) {
 			direccionCambioEstacion = -1;
@@ -533,6 +543,41 @@ public class Mundo implements Dibujable{
 
 	public void setVelocidadCambio(float velocidadCambio) {
 		this.velocidadCambio = velocidadCambio;
+	}
+
+
+
+	public synchronized List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) {
+		Agente agenteMismo = (Agente)casillasDelMundo[x][y].findAgente(idAgente);
+		int widht_pantalla_map = VarGlobalVista.widht_pantalla_map;
+		int heigth_pantalla_map = VarGlobalVista.heigth_pantalla_map;
+		int xAgente = agenteMismo.getX();
+		int yAgente = agenteMismo.getY();
+		int distanciaPercepcion = agenteMismo.getDistanciaPercepcion();
+
+		int minX = xAgente - distanciaPercepcion;
+		if(minX < 0) minX=0;
+		int minY = yAgente - distanciaPercepcion;
+		if(minY < 0) minY=0;
+		int maxX = xAgente + distanciaPercepcion;
+		if(maxX > widht_pantalla_map) maxX=widht_pantalla_map;
+		int maxY = yAgente + distanciaPercepcion;
+		if(maxY > heigth_pantalla_map) maxY=heigth_pantalla_map;
+
+		return obtenerRegion(minX, minY, maxX, maxY); 
+	}
+
+
+
+	private List<ObjetoDistribuido> obtenerRegion(int minX, int minY, int maxX, int maxY) {
+		List<ObjetoDistribuido> casillasPercibidas = new ArrayList<ObjetoDistribuido>();
+		
+		for (int i = minX; i < maxX; i++) {
+			for (int j = minY; j < maxY; j++) {
+				casillasPercibidas.add(casillasDelMundo[i][j]);
+			}
+		}
+		return casillasPercibidas;
 	}
 
 		

@@ -2,7 +2,7 @@ package NatureEngine.RMI;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-
+import java.util.List;
 
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 
@@ -39,8 +39,6 @@ public interface ServiciosController extends Remote{
 	 */
 	public boolean esCeldaVacia(int x, int y) throws RemoteException;
 
-	
-
-	
+	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException;
 
 }
