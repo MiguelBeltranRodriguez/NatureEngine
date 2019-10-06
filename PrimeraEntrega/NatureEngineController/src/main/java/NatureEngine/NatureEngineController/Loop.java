@@ -158,7 +158,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			Random aleatorio = new Random(System.currentTimeMillis());
 			int aux = aleatorio.nextInt(255);
 			for(int i = 0; i < 1; i++) {
-				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
+				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 50, 10,(ServiciosController)this);
 				addAgente(ag);
 				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
 			}

@@ -6,8 +6,11 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
-import Modelo.Casilla;
+import NatureEngine.Modelo.Casilla;
+import NatureEngine.Modelo.Desire;
+import NatureEngine.Modelo.Desires.DesireAlimentarme;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
@@ -32,7 +35,9 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int velocidadPXs;
 	private int timeOutBloqueo;
 	private int moverse;
+	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
+	private Desire desireAnterior;
 	
 	public Agente(Long ID, Color color, int x, int y, int radio, int distanciaPercepcion, int velocidad,ServiciosController servicios) throws RemoteException {
 		super(ID);
@@ -51,6 +56,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.timeOutBloqueo = 3;
 		moverse = 0;
 		this.percepcion = new ArrayList<ObjetoDistribuido>();
+		this.desireAnterior = null;
 	}
 
 
@@ -127,10 +133,25 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 	private void pensar() {
 		try {
-			percepcion = servicios.percibir(this.ID, this.x, this.y);
-			for (int i = 0; i < percepcion.size(); i++) {
+			percepcion = servicios.percibir(this.ID, this.x, this.y); // BRF
+			/* for (int i = 0; i < percepcion.size(); i++) {
 				Casilla temporal = (Casilla) percepcion.get(i);
 				System.out.println(temporal.getHumedad());
+			} */
+			Stack<Desire> desires = new Stack<Desire>();
+			desires.push(new DesireAlimentarme(this));
+			
+			// TODO: crear dssirePorDefecto
+			// TODO: pasar a función OPTION + FILTER
+			Desire desireSeleccionado = null;
+			
+			while(!desires.isEmpty()) {
+				desireSeleccionado = desires.pop();
+				if(desireSeleccionado.tengoCapacidad()) {
+					desireSeleccionado.init(this.desireAnterior);
+					desireSeleccionado.ejecutar();
+					break;
+				}
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -180,6 +201,77 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			}
 		}	
 	}
+	
+	public int getDelX() {
+		return delX;
+	}
+
+
+	public void setDelX(int delX) {
+		this.delX = delX;
+	}
+
+
+	public int getDelY() {
+		return delY;
+	}
+
+
+	public void setDelY(int delY) {
+		this.delY = delY;
+	}
+
+
+	public int getDireccionX() {
+		return direccionX;
+	}
+
+
+	public void setDireccionX(int direccionX) {
+		this.direccionX = direccionX;
+	}
+
+
+	public int getDireccionY() {
+		return direccionY;
+	}
+
+
+	public void setDireccionY(int direccionY) {
+		this.direccionY = direccionY;
+	}
+
+
+	public int getVelocidadPXs() {
+		return velocidadPXs;
+	}
+
+
+	public void setVelocidadPXs(int velocidadPXs) {
+		this.velocidadPXs = velocidadPXs;
+	}
+
+
+	public int getTimeOutBloqueo() {
+		return timeOutBloqueo;
+	}
+
+
+	public void setTimeOutBloqueo(int timeOutBloqueo) {
+		this.timeOutBloqueo = timeOutBloqueo;
+	}
+
+
+	public int getMoverse() {
+		return moverse;
+	}
+
+
+	public void setMoverse(int moverse) {
+		this.moverse = moverse;
+	}
+
+
 	private void movimientoAleatorio() {
 		Random rnd = new Random();
 		int newX = 0;
@@ -288,4 +380,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.servicios = servicios;
 	}
 
+
+	public List<ObjetoDistribuido> getPercepcion() {
+		return percepcion;
+	}
+
+
+	public void setPercepcion(List<ObjetoDistribuido> percepcion) {
+		this.percepcion = percepcion;
+	}
+	
+	
 }

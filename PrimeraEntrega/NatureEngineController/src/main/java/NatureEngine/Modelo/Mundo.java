@@ -11,10 +11,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import Modelo.Casilla;
-import Modelo.CasillaAgua;
-import Modelo.CasillaTierra;
-import Modelo.Planta;
+import NatureEngine.Modelo.Casilla;
+import NatureEngine.Modelo.CasillaAgua;
+import NatureEngine.Modelo.CasillaTierra;
+import NatureEngine.Modelo.Planta;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
