@@ -1,4 +1,4 @@
-package Modelo;
+package NatureEngine.Modelo;
 
 /**
  * Representacion general de una caracteristica heredable de un agente. 

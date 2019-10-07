@@ -87,7 +87,7 @@ public class DesireAlimentarme extends Desire {
 			// TODO agregar esta palabra al diccionario en commons	
 			Planta planta = (Planta)casilla.getElementoTipo("planta");
 			if(planta!=null) {
-			if (this.objetivo==null) {
+			if (this.objetivo==null || (planta.getX()!=agente.getX() && planta.getY()!=agente.getY())) {
 				this.objetivo = planta;
 			} else if (calcularDistancia(planta) < calcularDistancia(this.objetivo)) {
 				this.objetivo = planta;

@@ -38,7 +38,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-	
+
 	public Agente(Long ID, Color color, int x, int y, int radio, int distanciaPercepcion, int velocidad,ServiciosController servicios) throws RemoteException {
 		super(ID);
 		this.color = color;
@@ -60,7 +60,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 
 
-  public int getDistanciaPercepcion() {
+	public int getDistanciaPercepcion() {
 		return distanciaPercepcion;
 	}
 
@@ -101,7 +101,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 		while(true) {
 			t_0 = System.currentTimeMillis();
-			
+
 			/*if(delX == 0 && delY == 0) {
 				movimientoAleatorio();
 			} else {
@@ -118,7 +118,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				}
 			}*/
 			pensar();
-			
+
 			t_1 = System.currentTimeMillis();
 			delta = t_1 - t_0;
 			if(!(delta >= DELAY)) {
@@ -140,11 +140,11 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			} */
 			Stack<Desire> desires = new Stack<Desire>();
 			desires.push(new DesireAlimentarme(this));
-			
+
 			// TODO: crear dssirePorDefecto
 			// TODO: pasar a función OPTION + FILTER
 			Desire desireSeleccionado = null;
-			
+
 			while(!desires.isEmpty()) {
 				desireSeleccionado = desires.pop();
 				if(desireSeleccionado.tengoCapacidad()) {
@@ -162,46 +162,19 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	private void moverse() throws RemoteException {
 		if(delX>0 && delY >0) {
-			if(servicios.esCeldaVacia(x+(direccionX), y+(direccionY))) {
-				cambiarPosicion(x+(direccionX), y+(direccionY));
-				delX--;
-				delY--;
-			}else {
-				timeOutBloqueo--;
-			}if(timeOutBloqueo==0) {
-				if(servicios.esCeldaVacia(x-(direccionX), y-(direccionY))) {
-					cambiarPosicion(x-(direccionX), y-(direccionY));
-				}
-				timeOutBloqueo = 4;
-			}
+			cambiarPosicion(x+(direccionX), y+(direccionY));
+			delX--;
+			delY--;
+			cambiarPosicion(x-(direccionX), y-(direccionY));
 		}else if(delX>0) {
-			if(servicios.esCeldaVacia(x+(direccionX), y)) {
-				cambiarPosicion(x+(direccionX), y);
-				delX--;
-			}else {
-				timeOutBloqueo--;
-			}if(timeOutBloqueo==0) {
-				if(servicios.esCeldaVacia(x-(direccionX), y)) {
-					cambiarPosicion(x-(direccionX), y);
-				}
-				timeOutBloqueo = 4;
-			}
+			cambiarPosicion(x+(direccionX), y);
+			delX--;
 		}else if(delY>0) {
-			if(servicios.esCeldaVacia(x, y+(direccionY))) {
-				cambiarPosicion(x, y+(direccionY));
-				delY--;
-			}else {
-				timeOutBloqueo--;
-			}
-			if(timeOutBloqueo==0) {
-				if(servicios.esCeldaVacia(x, y-(direccionY))) {
-					cambiarPosicion(x, y-(direccionY));
-				}
-				timeOutBloqueo = 3;
-			}
+			cambiarPosicion(x, y+(direccionY));
+			delY--;
 		}	
 	}
-	
+
 	public int getDelX() {
 		return delX;
 	}
@@ -310,17 +283,17 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 	private synchronized  void cambiarPosicion(int x2, int y2) {
 		try {
-			
+
 			servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
 			this.x = x2;
 			this.y = y2;
-			
-			
+
+
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	@Override
 	public  void dibujar(Renderizador2D r) {
@@ -389,6 +362,6 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public void setPercepcion(List<ObjetoDistribuido> percepcion) {
 		this.percepcion = percepcion;
 	}
-	
-	
+
+
 }

@@ -47,49 +47,20 @@ public class MoverseA extends Intention {
 				direccionY = -1;
 			}
 			
-			
-			int timeOutBloqueo = this.agente.getTimeOutBloqueo();
-			ServiciosController servicios = agente.getServicios();
 			if(delX>0 && delY >0) {
-				if(servicios.esCeldaVacia(x+(direccionX), y+(direccionY))) {
 					cambiarPosicion(x+(direccionX), y+(direccionY));
 					delX--;
 					delY--;
-				}else {
-					timeOutBloqueo--;
-				}if(timeOutBloqueo==0) {
-					if(servicios.esCeldaVacia(x-(direccionX), y-(direccionY))) {
-						cambiarPosicion(x-(direccionX), y-(direccionY));
-					}
-					timeOutBloqueo = 4;
-				}
 			}else if(delX>0) {
-				if(servicios.esCeldaVacia(x+(direccionX), y)) {
+				
 					cambiarPosicion(x+(direccionX), y);
 					delX--;
-				}else {
-					timeOutBloqueo--;
-				}if(timeOutBloqueo==0) {
-					if(servicios.esCeldaVacia(x-(direccionX), y)) {
-						cambiarPosicion(x-(direccionX), y);
-					}
-					timeOutBloqueo = 4;
-				}
+				
 			}else if(delY>0) {
-				if(servicios.esCeldaVacia(x, y+(direccionY))) {
+				
 					cambiarPosicion(x, y+(direccionY));
 					delY--;
-				}else {
-					timeOutBloqueo--;
-				}
-				if(timeOutBloqueo==0) {
-					if(servicios.esCeldaVacia(x, y-(direccionY))) {
-						cambiarPosicion(x, y-(direccionY));
-					}
-					timeOutBloqueo = 3;
-				}
 			}
-			
 		}else {
 			int vel = moverse + velocidadPXs;
 			this.agente.setMoverse(vel);

@@ -157,8 +157,8 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			System.out.println("Controller conectado al servidor agentes: "+port);
 			Random aleatorio = new Random(System.currentTimeMillis());
 			int aux = aleatorio.nextInt(255);
-			for(int i = 0; i < 1; i++) {
-				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 50, 10,(ServiciosController)this);
+			for(int i = 0; i <30; i++) {
+				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i*6), 150+(i*6), 5+i%5, 30, 50,(ServiciosController)this);
 				addAgente(ag);
 				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
 			}
@@ -171,11 +171,6 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	@Override
 	public synchronized void  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
 		mundo.moverAgente(x2, y2, agente);
-	}
-
-	@Override
-	public boolean esCeldaVacia(int i, int j) throws RemoteException {
-		return mundo.celdaVacia(i, j);
 	}
 
 	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
