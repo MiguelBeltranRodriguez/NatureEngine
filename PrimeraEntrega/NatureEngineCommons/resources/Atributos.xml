@@ -1,0 +1,106 @@
+<Atributos>
+	<atributo>
+		<id>1</id>
+		<nombre>Energia maxima</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>2</id>
+		<nombre>Agua maxima</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>1.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>3</id>
+		<nombre>Velocidad maxima</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>4</id>
+		<nombre>Tamano maximo</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>1</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>5</id>
+		<nombre>Percepcion</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>0</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>6</id>
+		<nombre>Sexo</nombre>
+		<tipo>java.lang.Boolean</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo></valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>7</id>
+		<nombre>Capacidad reproductiva</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>0</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>8</id>
+		<nombre>Ansiedad</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo>100</valorMaximo>
+		<valorMinimo>0</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>9</id>
+		<nombre>Humedad ideal</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo>1.0f</valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>10</id>
+		<nombre>Tolerancia humedad</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo>1.0f</valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>11</id>
+		<nombre>Digestion vegetal</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo>1.0f</valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>12</id>
+		<nombre>Agresividad</nombre>
+		<tipo>java.lang.Float</tipo>
+		<valorMaximo>1.0f</valorMaximo>
+		<valorMinimo>0.0f</valorMinimo>
+	</atributo>
+	
+	<atributo>
+		<id>13</id>
+		<nombre>Longevidad</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>1</valorMinimo>
+	</atributo>
+	
+</Atributos>
