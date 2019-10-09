@@ -91,21 +91,13 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		menu = new Menu(mundo);
 	}	
 
-	protected void seleccionar(MouseEvent e) {
+	protected synchronized void seleccionar(MouseEvent e) {
 		if(!mundo.addPopUp(e.getX(), e.getY())) {
 			mundo.limpiarPopUp();
 		}
 	}
 
-	private synchronized void update() {
-
-		for (ServiciosAdministradorAgentes servidor : servidoresAgentes) {
-			try {
-				servidor.update();
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-		}
+	private void update() {
 		mundo.update();
 	}
 
@@ -117,7 +109,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void run() {
 		inicio();
 
-		double timerPerTick = 200000000 / VarGlobalGame.FPS;
+		double timerPerTick = 1000000000 / VarGlobalGame.FPS;
 
 		long now;
 		long lastTime = System.nanoTime();
@@ -136,7 +128,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				ticks++;
 				VarGlobalGame.DELTA--;
 			}
-			if(timer > 200000000) {
+			if(timer > 1000000000) {
 				VarGlobalGame.TICKS_S = ticks;
 				ticks = 0;	
 				timer = 0;
@@ -165,9 +157,8 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			System.out.println("Controller conectado al servidor agentes: "+port);
 			Random aleatorio = new Random(System.currentTimeMillis());
 			int aux = aleatorio.nextInt(255);
-			for(int i = 0; i < 10; i++) {
-				Long ID = new Long(i);
-				Agente ag = new Agente(ID,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
+			for(int i = 0; i < 1; i++) {
+				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i), 150+(i), 5+i%5, 20, 50+i%5,(ServiciosController)this);
 				addAgente(ag);
 				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
 			}
@@ -178,7 +169,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 
 	@Override
-	public void  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+	public synchronized void  moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
 		mundo.moverAgente(x2, y2, agente);
 	}
 
@@ -190,5 +181,10 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
 		mundo.addAgente(ag);
 
+	}
+
+	@Override
+	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException {
+		return mundo.percibir(idAgente, x, y);
 	}
 }

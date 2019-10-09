@@ -7,9 +7,14 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import Modelo.Casilla;
+import Modelo.CasillaAgua;
+import Modelo.CasillaTierra;
+import Modelo.Planta;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
@@ -24,7 +29,6 @@ import NatureEngine.Utils.VarGlobalVista;
 public class Mundo implements Dibujable{
 
 
-	private Dibujable [][] dibujablesDelMundo;
 	private Casilla [][] casillasDelMundo;
 	private List<PopUpInfo> popUpsInfo;
 	private List<Planta> plantasMundo;
@@ -41,15 +45,10 @@ public class Mundo implements Dibujable{
 	private float velocidadCambio;
 	private float energiaMaximaPorPlanta;
 	private float consumoEnergiaPlanta;
+	public static Long ID_ACTUAL = (long) 0;
 	
 	public Mundo() {
 		casillasDelMundo = new Casilla[VarGlobalVista.widht_pantalla_map][VarGlobalVista.heigth_pantalla_map];
-		dibujablesDelMundo = new Dibujable[VarGlobalVista.widht_pantalla_map][VarGlobalVista.heigth_pantalla_map];
-		for(int x = 0; x < VarGlobalVista.widht_pantalla_map; x++) {
-			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map; y++) {
-				dibujablesDelMundo[x][y] = null;
-			}
-		}
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		plantasMundo = new ArrayList<Planta>();
 		setContadorAgentes(0);
@@ -113,7 +112,6 @@ public class Mundo implements Dibujable{
 
 			}
 			energiaMaximaPorPlanta = energiaMaxima / numeroDePlantasMaxima;
-			dibujablesDelMundo[20][50] = new Planta(energiaMaximaPorPlanta, 20, 50);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,27 +127,32 @@ public class Mundo implements Dibujable{
 
 	private void generarPlantas() {
 		while(plantasMundo.size()<numeroDePlantasMaxima) {
-			ponerPlantaAleatoria();		
+			try {
+				ponerPlantaAleatoria();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
 		}
 	}
 
 
 
-	private void ponerPlantaAleatoria() {
+	private void ponerPlantaAleatoria() throws RemoteException {
 		Random rX = new Random();
 		Random rY = new Random();
 		int x = rX.nextInt(VarGlobalVista.widht_pantalla_map);
 		int y = rY.nextInt(VarGlobalVista.heigth_pantalla_map);
-		if(dibujablesDelMundo[x][y]==null) {
+		if(casillasDelMundo[x][y].esVacia()) {
 			Casilla c = casillasDelMundo[x][y];
 			Random rP = new Random();
 			int probabilidad = rP.nextInt(100);
 			if(c instanceof CasillaAgua) {
-				if(probabilidad<c.humedadActual-90) {
+				if(probabilidad<c.getHumedadActual()-90) {
 					agregarPlanta(x,y);
 				}
 			}else {
-				if(probabilidad<c.humedadActual) {
+				if(probabilidad<c.getHumedadActual()) {
 					agregarPlanta(x, y);
 				}
 			}
@@ -159,9 +162,9 @@ public class Mundo implements Dibujable{
 
 
 
-	private void agregarPlanta(int x, int y) {
-		Planta planta = new Planta(energiaMaximaPorPlanta, x, y);
-		dibujablesDelMundo[x][y]= planta;
+	private void agregarPlanta(int x, int y) throws RemoteException {
+		Planta planta = new Planta(Mundo.ID_ACTUAL++, energiaMaximaPorPlanta, x, y);
+		casillasDelMundo[x][y].agregarDibujable(planta);
 		energiaActual = energiaActual + energiaMaximaPorPlanta;
 		plantasMundo.add(planta);
 	}
@@ -173,11 +176,21 @@ public class Mundo implements Dibujable{
 			tiempoActual++;
 			
 			if(tiempoActual%frecuenciaEstacion==0) {
-				cambioHumedad();
+				try {
+					cambioHumedad();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			reducirEnergíaPlantaAlAzar();
 			if(energiaActual<=energiaMaxima-energiaMaximaPorPlanta) {
-				ponerPlantaAleatoria();
+				try {
+					ponerPlantaAleatoria();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 	}
 	private void reducirEnergíaPlantaAlAzar() {
@@ -195,12 +208,12 @@ public class Mundo implements Dibujable{
 
 	private void matarPlanta(Planta plantaAReducir) {
 		plantasMundo.remove(plantaAReducir);
-		dibujablesDelMundo[plantaAReducir.getX()][plantaAReducir.getY()] = null;
+		casillasDelMundo[plantaAReducir.getX()][plantaAReducir.getY()].eliminarDibujable(plantaAReducir.getID());
 	}
 
 
 
-	private void cambioHumedad() {
+	private void cambioHumedad() throws RemoteException {
 		estacion = estacion+(velocidadCambio*direccionCambioEstacion);
 		if(estacion >= estacionMaxima) {
 			direccionCambioEstacion = -1;
@@ -229,7 +242,7 @@ public class Mundo implements Dibujable{
 
 
 	@Override
-	public synchronized  void dibujar(Renderizador2D r) {
+	public void dibujar(Renderizador2D r) {
 		for(int x = 0; x < VarGlobalVista.widht_pantalla_map/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; x++) {
 			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; y++) {
 				casillasDelMundo[x*8][y*8].dibujarCasillas(r);
@@ -237,10 +250,7 @@ public class Mundo implements Dibujable{
 		}
 		for(int x = 0; x < VarGlobalVista.widht_pantalla_map; x++) {
 			for(int y = 0; y < VarGlobalVista.heigth_pantalla_map; y++) {
-				if(dibujablesDelMundo[x][y] != null) {
-					dibujablesDelMundo[x][y].dibujar(r);
-				}
-
+				casillasDelMundo[x][y].dibujarObjetos(r);
 			}
 		}
 		for (PopUpInfo popUp : popUpsInfo) {
@@ -249,7 +259,7 @@ public class Mundo implements Dibujable{
 	}
 	public  void addAgente(ObjetoDistribuido agente) {
 		Agente ag = (Agente) agente;
-		dibujablesDelMundo[ag.getX()][ag.getY()] = (Dibujable) ag;
+		casillasDelMundo[ag.getX()][ag.getY()].agregarDibujable((Dibujable)agente);;
 		setContadorAgentes(getContadorAgentes() + 1);
 	}
 
@@ -267,11 +277,7 @@ public class Mundo implements Dibujable{
 
 
 	public synchronized boolean celdaVacia(int newX, int newY) {
-		if(dibujablesDelMundo[newX][newY]==null) {
-			return true;
-		}else {
-			return false;
-		}
+		return casillasDelMundo[newX][newY].esVacia();
 	}
 
 
@@ -296,9 +302,8 @@ public class Mundo implements Dibujable{
 		}
 		for(int i = d0x; i < d1x; i++) {
 			for(int j = d0y; j < d1y; j++) {
-				if(dibujablesDelMundo[i][j]!=null) {
-					Dibujable dibu = dibujablesDelMundo[i][j];
-					popUpsInfo.add(new PopUpInfo(dibu));
+				if(!casillasDelMundo[i][j].esVacia()) {
+					popUpsInfo.add(new PopUpInfo(casillasDelMundo[i][j].obtenerFirst()));
 					return true;
 				}
 			}
@@ -321,14 +326,15 @@ public class Mundo implements Dibujable{
 	public synchronized void moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
 
 		Agente ag = (Agente) agente;	
-		Agente ag2 = (Agente) dibujablesDelMundo[ag.getX()][ag.getY()];
-
-		if(celdaVacia(x2, y2)) {
-			dibujablesDelMundo[ag.getX()][ag.getY()] = null;
-			dibujablesDelMundo[x2][y2] = ag2;
-			ag2.setX(x2);
-			ag2.setY(y2);
-		}
+		
+		Agente ag2 = (Agente) casillasDelMundo[ag.getX()][ag.getY()].findAgente(agente.getID());
+		
+		
+		casillasDelMundo[ag.getX()][ag.getY()].eliminarDibujable(ag.getID());
+		casillasDelMundo[x2][y2].agregarDibujable(ag2);
+		ag2.setX(x2);
+		ag2.setY(y2);
+		
 		
 		
 		
@@ -379,18 +385,6 @@ public class Mundo implements Dibujable{
 	}
 
 
-
-
-
-	public Dibujable[][] getDibujablesDelMundo() {
-		return dibujablesDelMundo;
-	}
-
-
-
-	public void setDibujablesDelMundo(Dibujable[][] dibujablesDelMundo) {
-		this.dibujablesDelMundo = dibujablesDelMundo;
-	}
 
 
 
@@ -549,6 +543,41 @@ public class Mundo implements Dibujable{
 
 	public void setVelocidadCambio(float velocidadCambio) {
 		this.velocidadCambio = velocidadCambio;
+	}
+
+
+
+	public synchronized List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) {
+		Agente agenteMismo = (Agente)casillasDelMundo[x][y].findAgente(idAgente);
+		int widht_pantalla_map = VarGlobalVista.widht_pantalla_map;
+		int heigth_pantalla_map = VarGlobalVista.heigth_pantalla_map;
+		int xAgente = agenteMismo.getX();
+		int yAgente = agenteMismo.getY();
+		int distanciaPercepcion = agenteMismo.getDistanciaPercepcion();
+
+		int minX = xAgente - distanciaPercepcion;
+		if(minX < 0) minX=0;
+		int minY = yAgente - distanciaPercepcion;
+		if(minY < 0) minY=0;
+		int maxX = xAgente + distanciaPercepcion;
+		if(maxX > widht_pantalla_map) maxX=widht_pantalla_map;
+		int maxY = yAgente + distanciaPercepcion;
+		if(maxY > heigth_pantalla_map) maxY=heigth_pantalla_map;
+
+		return obtenerRegion(minX, minY, maxX, maxY); 
+	}
+
+
+
+	private List<ObjetoDistribuido> obtenerRegion(int minX, int minY, int maxX, int maxY) {
+		List<ObjetoDistribuido> casillasPercibidas = new ArrayList<ObjetoDistribuido>();
+		
+		for (int i = minX; i < maxX; i++) {
+			for (int j = minY; j < maxY; j++) {
+				casillasPercibidas.add(casillasDelMundo[i][j]);
+			}
+		}
+		return casillasPercibidas;
 	}
 
 		

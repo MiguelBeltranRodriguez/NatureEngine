@@ -36,6 +36,7 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 		
 		agentes.put(ag.getID(), ag);
 		ag.setServicios(serviciosController);
+		ag.init();
 	}
 
 	public Map<Long, Agente> getAgentes() {
@@ -49,9 +50,6 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 	@Override
 	public void update() throws RemoteException {
 		
-		agentes.forEach((k, v) -> {
-			v.update();
-		});
 	}
 
 	public String getPort() {

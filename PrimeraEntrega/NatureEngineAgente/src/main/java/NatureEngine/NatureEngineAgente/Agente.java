@@ -3,22 +3,26 @@ package NatureEngine.NatureEngineAgente;
 import java.awt.Color;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import Modelo.Casilla;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.RMI.ServiciosController;
+import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
 
-public class Agente extends ObjetoDistribuido implements Dibujable, Serializable  {
+public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
 
 	private static final long serialVersionUID = 1L;
 	private Color color;  //prueba
 	private int x;	//prueba
 	private int y; //prueba
 	private int radio;  //prueba
-	private int percepcion;
+	private int distanciaPercepcion;
 	private ServiciosController servicios;
 	private boolean resaltado;
 	private int delX;
@@ -28,13 +32,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int velocidadPXs;
 	private int timeOutBloqueo;
 	private int moverse;
-	public Agente(Long ID, Color color, int x, int y, int radio, int percepcion, int velocidad,ServiciosController servicios) throws RemoteException {
+	private List<ObjetoDistribuido> percepcion;
+	
+	public Agente(Long ID, Color color, int x, int y, int radio, int distanciaPercepcion, int velocidad,ServiciosController servicios) throws RemoteException {
 		super(ID);
 		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.radio = radio;
-		this.percepcion = percepcion+radio;
+		this.distanciaPercepcion = distanciaPercepcion;
 		this.servicios = servicios;
 		this.direccionX = 0;
 		this.direccionY = 0;
@@ -44,13 +50,23 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.velocidadPXs = velocidad;
 		this.timeOutBloqueo = 3;
 		moverse = 0;
+		this.percepcion = new ArrayList<ObjetoDistribuido>();
 	}
 
 
+  public int getDistanciaPercepcion() {
+		return distanciaPercepcion;
+	}
 
+
+	public void setDistanciaPercepcion(int distanciaPercepcion) {
+		this.distanciaPercepcion = distanciaPercepcion;
+	}
+
+
+	// No activo =============================================================================
 	@Override
 	public void update() {
-
 
 		if(delX == 0 && delY == 0) {
 			movimientoAleatorio();
@@ -67,11 +83,61 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			}else {
 				moverse += velocidadPXs;
 			}
-
 		}
-
-
 	}
+
+	public void run() {
+		int DELAY = VarGlobalGame.DELAY;
+		int VELOCIDAD_MAX_CASILLA = VarGlobalGame.VELOCIDAD_MAX_CASILLA;
+		long t_0 = 0;
+		long t_1 = 0;
+		long delta = 0;
+
+		while(true) {
+			t_0 = System.currentTimeMillis();
+			
+			/*if(delX == 0 && delY == 0) {
+				movimientoAleatorio();
+			} else {
+				if(moverse>=VELOCIDAD_MAX_CASILLA) {
+					try {
+						moverse();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					moverse = moverse-VELOCIDAD_MAX_CASILLA;
+				} else {
+					moverse += velocidadPXs;
+				}
+			}*/
+			pensar();
+			
+			t_1 = System.currentTimeMillis();
+			delta = t_1 - t_0;
+			if(!(delta >= DELAY)) {
+				try {
+					Thread.sleep(DELAY-delta);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	private void pensar() {
+		try {
+			percepcion = servicios.percibir(this.ID, this.x, this.y);
+			for (int i = 0; i < percepcion.size(); i++) {
+				Casilla temporal = (Casilla) percepcion.get(i);
+				System.out.println(temporal.getHumedad());
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 	private void moverse() throws RemoteException {
 		if(delX>0 && delY >0) {
@@ -118,18 +184,18 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		Random rnd = new Random();
 		int newX = 0;
 		do {
-			newX =  x + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
+			newX =  x + rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
 			if(newX>=VarGlobalVista.widht_pantalla_map || newX <0) {
-				newX =  x + rnd.nextInt(percepcion + 1 + percepcion) - percepcion;
+				newX =  x + rnd.nextInt(distanciaPercepcion + 1 + distanciaPercepcion) - distanciaPercepcion;
 			}else {
 				break;
 			}
 		}while(true);
 		int newY = 0;
 		do {
-			newY =  y + rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
+			newY =  y + rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
 			if(newY>=VarGlobalVista.heigth_pantalla_map || newY<0) {
-				newY =  y +  rnd.nextInt(percepcion + 1 +percepcion) - percepcion;
+				newY =  y +  rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
 			}else {
 				break;
 			}
@@ -169,7 +235,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		r.dibujarRectangulo(color, x-(radio/2), y-(radio/2), radio, radio);
 		if(resaltado) {
 			r.dibujarContornoRectangular(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
-			r.dibujarContornoRectangular(Color.BLACK, x-percepcion, y-percepcion, percepcion*2, percepcion*2);
+			r.dibujarContornoRectangular(Color.BLACK, x-distanciaPercepcion, y-distanciaPercepcion, distanciaPercepcion*2, distanciaPercepcion*2);
 		}
 	}
 
@@ -187,6 +253,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 	@Override
 	public void init() {
+		Thread th = new Thread(this);
+		th.start();
 	}
 
 	public int getRadio() {
@@ -208,17 +276,11 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		return ID+ 
 				"#x: "+ this.x + " y: "+this.y+
 				"#velocidad: "+velocidadPXs+
-				"#percepci�n: "+percepcion+
+				"#percepci�n: "+distanciaPercepcion+
 				"#tama�o: "+this.radio;
 	}
 
-	public Long getID() {
-		return ID;
-	}
 
-	public void setID(Long iD) {
-		ID = iD;
-	}
 	public ServiciosController getServicios() {
 		return servicios;
 	}

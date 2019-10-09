@@ -1,6 +1,14 @@
-package NatureEngine.Modelo;
+package Modelo;
 
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.Utils.VarGlobalGame;
@@ -9,14 +17,18 @@ import NatureEngine.Utils.VarGlobalVista;
 
 
 
-public class Casilla implements Dibujable {
+public class Casilla extends ObjetoDistribuido implements Dibujable, Serializable {
 
 	protected int x;
 	protected int y;
 	protected float humedadBase;
 	protected float humedadActual;
 	protected float humedadAnterior;
-	public Casilla(int x, int y, float humedad) {
+	protected Map<Long, Dibujable> dibujablesCasilla;
+	
+	public Casilla(int x, int y, float humedad) throws RemoteException {
+		super((long)0);
+		dibujablesCasilla = new HashMap<Long, Dibujable>();
 		this.x = x;
 		this.y = y;
 		this.humedadBase = humedad;
@@ -122,6 +134,48 @@ public class Casilla implements Dibujable {
 
 	public void setHumedadAnterior(float humedadAnterior) {
 		this.humedadAnterior = humedadAnterior;
+	}
+
+
+	public void agregarDibujable(Dibujable dibujable) {
+		ObjetoDistribuido ob = (ObjetoDistribuido) dibujable;
+		if(dibujable == null) {
+			System.out.println("ERRRRROOOOO");
+		}
+		Long ID = ob.getID();
+		dibujablesCasilla.put(ID, dibujable);
+	}
+
+	public void dibujarObjetos(Renderizador2D r) {
+		if(!dibujablesCasilla.isEmpty()) {
+			Collection<Dibujable> c = dibujablesCasilla.values();
+			for (Dibujable dibujable : c) {
+				dibujable.dibujar(r);
+			}
+		}
+		
+	}
+
+
+	public boolean esVacia() {
+		return dibujablesCasilla.isEmpty();
+	}
+
+	public void eliminarDibujable(Long id) {
+		dibujablesCasilla.remove(id);
+	}
+
+	public Dibujable obtenerFirst() {
+		Collection<Dibujable> c = dibujablesCasilla.values();
+		for (Dibujable dibujable : c) {
+			return dibujable;
+		}
+		return null;
+		
+	}
+
+	public Dibujable findAgente(Long id) {
+		return dibujablesCasilla.get(id);
 	}
 	
 }
