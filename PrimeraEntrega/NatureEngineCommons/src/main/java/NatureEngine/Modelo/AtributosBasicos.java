@@ -28,7 +28,7 @@ public class AtributosBasicos {
 	//Si nuevos atributos son agregados, su nombre debe ser incluido aqui
 	public static final String ENERGIA_MAXIMA_ = "Energia maxima";
 	public static final String AGUA_MAXIMA_ = "Agua maxima";
-	public static final String VELOCIDAD_MAXIMA_= "Velocidad maxima";
+	public static final String POTENCIA_MAXIMA_= "Potencia maxima";
 	public static final String TAMANO_MAXIMO_ = "Tamano maximo";
 	public static final String PERCEPCION_ = "Percepcion";
 	public static final String SEXO_ = "Sexo";
@@ -45,7 +45,7 @@ public class AtributosBasicos {
 	public static final String TIPO_INTEGER_ = "java.lang.Integer";
 	public static final String TIPO_BOOLEAN_ = "java.lang.Boolean";
 		
-	public static final String PATH_ATRIBUTOS_ = "resources/Atributos.xml";
+	public static final String PATH_ATRIBUTOS_ = "../NatureEngineCommons/resources/Atributos.xml";
 	public static final String TAG_ATRIBUTO_ = "atributo";
 	public static final String TAG_ID_ = "id";
 	public static final String TAG_TIPO_ = "tipo";
@@ -76,7 +76,7 @@ public class AtributosBasicos {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	protected static void loadAtributosXML() throws ParserConfigurationException, SAXException, IOException {
+	public static void loadAtributosXML() throws ParserConfigurationException, SAXException, IOException {
 		File xmlFile = new File(PATH_ATRIBUTOS_);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();	

@@ -14,10 +14,10 @@
 		<valorMaximo></valorMaximo>
 		<valorMinimo>1.0f</valorMinimo>
 	</atributo>
-	
+
 	<atributo>
 		<id>3</id>
-		<nombre>Velocidad maxima</nombre>
+		<nombre>Potencia maxima</nombre>
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>

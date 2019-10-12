@@ -5,9 +5,12 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Stack;
 
+import NatureEngine.Modelo.AtributosBasicos;
+import NatureEngine.Modelo.CaracteristicaHeredableAgente;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
@@ -24,35 +27,38 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private Color color;  //prueba
 	private int x;	//prueba
 	private int y; //prueba
-	private int radio;  //prueba
-	private int distanciaPercepcion;
 	private ServiciosController servicios;
 	private boolean resaltado;
 	private int delX;
 	private int delY;
 	private int direccionX;
 	private int direccionY;
-	private int velocidadPXs;
+	private float potenciaActual;
 	private int timeOutBloqueo;
-	private int moverse;
+	private float moverse;
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-
-	public Agente(Long ID, Color color, int x, int y, int radio, int distanciaPercepcion, int velocidad,ServiciosController servicios) throws RemoteException {
+	private Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente;
+	private int tamañoActual;
+	private int edadActual;  
+	
+	public Agente(Long ID, Color color, int x, int y,
+			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
 		super(ID);
+		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 		this.color = color;
 		this.x = x;
 		this.y = y;
-		this.radio = radio;
-		this.distanciaPercepcion = distanciaPercepcion;
 		this.servicios = servicios;
 		this.direccionX = 0;
 		this.direccionY = 0;
 		this.delX = 0;
 		this.delY = 0;
 		resaltado = false;
-		this.velocidadPXs = velocidad;
+		this.potenciaActual = (float)getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
+		this.tamañoActual = (int)getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
+		this.edadActual = 0;
 		this.timeOutBloqueo = 3;
 		moverse = 0;
 		this.percepcion = new ArrayList<ObjetoDistribuido>();
@@ -61,21 +67,14 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 
 	public int getDistanciaPercepcion() {
-		return distanciaPercepcion;
+		return (int)getCaracteristicaHeredable(AtributosBasicos.PERCEPCION_);
 	}
-
-
-	public void setDistanciaPercepcion(int distanciaPercepcion) {
-		this.distanciaPercepcion = distanciaPercepcion;
-	}
-
 
 	// No activo =============================================================================
 	@Override
 	public void update() {
 
 		if(delX == 0 && delY == 0) {
-			movimientoAleatorio();
 		}
 		else {
 			if(moverse>=100) {
@@ -87,7 +86,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				}
 				moverse = moverse-100;
 			}else {
-				moverse += velocidadPXs;
+				moverse += potenciaActual;
 			}
 		}
 	}
@@ -215,13 +214,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 
 
-	public int getVelocidadPXs() {
-		return velocidadPXs;
+	public float getVelocidadPXs() {
+		return potenciaActual;
 	}
 
 
-	public void setVelocidadPXs(int velocidadPXs) {
-		this.velocidadPXs = velocidadPXs;
+	public void setVelocidadPXs(float velocidadPXs) {
+		this.potenciaActual = velocidadPXs;
 	}
 
 
@@ -235,38 +234,16 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 
 
-	public int getMoverse() {
+	public float getMoverse() {
 		return moverse;
 	}
 
 
-	public void setMoverse(int moverse) {
+	public void setMoverse(float moverse) {
 		this.moverse = moverse;
 	}
 
 
-	private void movimientoAleatorio() {
-		Random rnd = new Random();
-		int newX = 0;
-		do {
-			newX =  x + rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
-			if(newX>=VarGlobalVista.widht_pantalla_map || newX <0) {
-				newX =  x + rnd.nextInt(distanciaPercepcion + 1 + distanciaPercepcion) - distanciaPercepcion;
-			}else {
-				break;
-			}
-		}while(true);
-		int newY = 0;
-		do {
-			newY =  y + rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
-			if(newY>=VarGlobalVista.heigth_pantalla_map || newY<0) {
-				newY =  y +  rnd.nextInt(distanciaPercepcion + 1 +distanciaPercepcion) - distanciaPercepcion;
-			}else {
-				break;
-			}
-		}while(true);
-		decisionIrA(newX, newY);
-	}
 	private void decisionIrA(int newX, int newY) {
 		delX = Math.abs(newX-x);
 		delY = Math.abs(newY-y);
@@ -296,10 +273,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	}
 	@Override
-	public  void dibujar(Renderizador2D r) {
-		r.dibujarRectangulo(color, x-(radio/2), y-(radio/2), radio, radio);
+	public void dibujar(Renderizador2D r) {
+		int tamañoActual = this.tamañoActual;
+		int distanciaPercepcion = this.getDistanciaPercepcion();
+		r.dibujarRectangulo(color, x-(tamañoActual/2), y-(tamañoActual/2), tamañoActual, tamañoActual);
+		r.dibujarLinea(Color.BLACK, this.x, this.y, this.direccionX, this.direccionY, distanciaPercepcion);
 		if(resaltado) {
-			r.dibujarContornoRectangular(Color.darkGray, x-(radio/2), y-(radio/2), radio, radio);
+			r.dibujarContornoRectangular(Color.darkGray, x-(tamañoActual/2), y-(tamañoActual/2), tamañoActual, tamañoActual);
 			r.dibujarContornoRectangular(Color.BLACK, x-distanciaPercepcion, y-distanciaPercepcion, distanciaPercepcion*2, distanciaPercepcion*2);
 		}
 	}
@@ -322,12 +302,6 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		th.start();
 	}
 
-	public int getRadio() {
-		return radio;
-	}
-	public void setRadio(int radio) {
-		this.radio = radio;
-	}
 	@Override
 	public void Resaltar() {
 		resaltado = true;
@@ -340,9 +314,9 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public String info() {
 		return ID+ 
 				"#x: "+ this.x + " y: "+this.y+
-				"#velocidad: "+velocidadPXs+
-				"#percepci�n: "+distanciaPercepcion+
-				"#tama�o: "+this.radio;
+				"#velocidad: "+this.potenciaActual+
+				"#percepción: "+this.getPercepcion()+
+				"#tamaño: "+this.tamañoActual;
 	}
 
 
@@ -363,5 +337,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.percepcion = percepcion;
 	}
 
-
+	public Object getCaracteristicaHeredable(String nombre) {
+		return this.caracteristicasHeredablesAgente.get(nombre).getValorCaracteristica();
+	}
 }

@@ -26,8 +26,8 @@ public class MoverseA extends Intention {
 
 	@Override
 	public void ejecutar() throws RemoteException {
-		int moverse = this.agente.getMoverse();
-		int velocidadPXs = this.agente.getVelocidadPXs();
+		float moverse = this.agente.getMoverse();
+		float velocidadPXs = this.agente.getVelocidadPXs();
 		
 		if(moverse>=100) {
 			moverse = moverse-100;
@@ -36,17 +36,27 @@ public class MoverseA extends Intention {
 			int y = this.agente.getY();
 			int direccionX = this.agente.getDireccionX();
 			int direccionY = this.agente.getDireccionY();
-			if(objetivoX > x) {
+			
+			// Vector dirección
+			if (objetivoX > x) {
 				direccionX = 1;
-			}else {
+			} else if(objetivoX < x) {
 				direccionX = -1;
+			} else {
+				direccionX = 0;
 			}
-			if(objetivoY > y) {
+			if (objetivoY > y) {
 				direccionY = 1;
-			}else {
+			} else if(objetivoY < y){
 				direccionY = -1;
 			}
-			
+			else {
+				direccionY = 0;
+			}
+
+			this.agente.setDireccionX(direccionX);
+			this.agente.setDireccionY(direccionY);
+
 			if(delX>0 && delY >0) {
 					cambiarPosicion(x+(direccionX), y+(direccionY));
 					delX--;
@@ -62,7 +72,7 @@ public class MoverseA extends Intention {
 					delY--;
 			}
 		}else {
-			int vel = moverse + velocidadPXs;
+			float vel = moverse + velocidadPXs;
 			this.agente.setMoverse(vel);
 		}
 		if(delX == 0 && delY == 0) {

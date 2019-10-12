@@ -1,14 +1,20 @@
 package NatureEngine.NatureEngineAdministradorAgentes;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.RMI.ServiciosAdministradorAgentes;
 import NatureEngine.RMI.ServiciosController;
+import NatureEngine.Modelo.AtributosBasicos;
 import NatureEngine.NatureEngineAgente.Agente;
 
 public class AdministradorAgentesServidorController extends UnicastRemoteObject implements ServiciosAdministradorAgentes, Serializable {
@@ -20,6 +26,12 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 	
 	protected AdministradorAgentesServidorController(ServiciosController serviciosController, String port) throws RemoteException {
 		super();
+		try {
+			AtributosBasicos.loadAtributosXML();
+		} catch (ParserConfigurationException | SAXException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		this.serviciosController = serviciosController;
 		agentes = new HashMap<Long, Agente>();
 		this.setPort(port);

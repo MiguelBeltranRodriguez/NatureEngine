@@ -4,15 +4,24 @@ package NatureEngine.NatureEngineController;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+import NatureEngine.Modelo.AtributosBasicos;
+import NatureEngine.Modelo.CaracteristicaHeredableAgente;
 import NatureEngine.Modelo.Mundo;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -54,6 +63,13 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		render2D = new Renderizador2D();
 		mundo = new Mundo();
 		corriendo = true;
+		
+		try {
+			AtributosBasicos.loadAtributosXML();
+		} catch (ParserConfigurationException | SAXException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		pantalla.getCanvas().addMouseListener(new MouseListener() {
 
@@ -155,13 +171,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
 			servidoresAgentes.add(serviciosAgentes);
 			System.out.println("Controller conectado al servidor agentes: "+port);
-			Random aleatorio = new Random(System.currentTimeMillis());
-			int aux = aleatorio.nextInt(255);
-			for(int i = 0; i <30; i++) {
-				Agente ag = new Agente(Mundo.ID_ACTUAL++,new Color(aleatorio.nextInt(255),  aux, aux, 255), 150+(i*6), 150+(i*6), 5+i%5, 30, 50,(ServiciosController)this);
-				addAgente(ag);
-				serviciosAgentes.agregarAgente((ObjetoDistribuido)ag);
-			}
+			crearAgentesIniciales(serviciosAgentes);
 		} catch (MalformedURLException | NotBoundException e) {
 			e.printStackTrace();
 		} 
@@ -176,6 +186,34 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
 		mundo.addAgente(ag);
 
+	}
+	
+	public Map<String, CaracteristicaHeredableAgente> crearAtributosAgentePrimitivo() {
+		Map<String, CaracteristicaHeredableAgente> fenotipo = new HashMap<String, CaracteristicaHeredableAgente>();
+		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 1000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 1000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.TAMANO_MAXIMO_, 5, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.PERCEPCION_, 50, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.SEXO_, true, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.ANSIEDAD_, 50, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.HUMEDAD_IDEAL_, 0.5f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.TOLERANCIA_HUMEDAD_, 0.5f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.DIGESTION_VEGETAL_, 1, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.AGRESIVIDAD_, 0.5f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.LONGEVIDAD_, 100, fenotipo);
+		return fenotipo;
+	}
+	
+	public void agregarCaracteristica(String nombre, Object value, Map<String, CaracteristicaHeredableAgente> fenotipo) {
+		fenotipo.put(nombre, new CaracteristicaHeredableAgente(nombre, value));
+	}
+	
+	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
+		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, this.crearAtributosAgentePrimitivo());
+		addAgente(agenteNuevo);
+		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevo);
 	}
 
 	@Override

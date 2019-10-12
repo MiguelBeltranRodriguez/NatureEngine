@@ -1,5 +1,6 @@
 package NatureEngine.Modelo;
 
+import java.io.Serializable;
 
 /**
  * Representa una caracteristica heredable específica de un agente 
@@ -8,10 +9,9 @@ package NatureEngine.Modelo;
  * Fecha	Autor				Descripcion
  * 20191006	Andrea Gutierrez	Version inicial
  */
-public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype {
+public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype implements Serializable {
 	
-	protected Object valorCaracteristica;
-
+	protected Object fenotipo;
 
 	public CaracteristicaHeredableAgente(String nombreCaracteristica, Object valorCaracteristica) {
 
@@ -22,7 +22,7 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 		this.valorMaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMaximo();
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
 
-		this.valorCaracteristica = valorCaracteristica;
+		this.fenotipo = valorCaracteristica;
 	}
 
 
@@ -37,13 +37,13 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 	public Object getValorCaracteristica() {
 		Object valor = null;		
 
-		if(this.valorCaracteristica != null)
+		if(this.fenotipo != null)
 		{
 			valor = new Object();
 			
 			try {
 				Class<?> clazz = Class.forName(this.tipoCaracteristica);
-				valor = clazz.cast(this.valorCaracteristica);
+				valor = clazz.cast(this.fenotipo);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -51,5 +51,11 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 		
 		return valor;
 	}
+
+
+	public void setValorCaracteristica(Object valorCaracteristica) {
+		this.fenotipo = valorCaracteristica;
+	}
+	
 
 }
