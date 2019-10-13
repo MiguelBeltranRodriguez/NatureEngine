@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>NatureEngine</groupId>
-	<artifactId>NatureEngineController</artifactId>
+	<artifactId>NatureEngineGenoma</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>NatureEngineController</name>
+	<name>NatureEngineGenoma</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -16,27 +16,18 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineAgente</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineGenoma</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>NatureEngine</groupId>
 			<artifactId>NatureEngineCommons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineAdministradorAgentes</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
-	<build>
+		<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
