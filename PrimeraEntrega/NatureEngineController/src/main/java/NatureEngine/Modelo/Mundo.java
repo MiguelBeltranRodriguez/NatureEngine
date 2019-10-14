@@ -323,37 +323,25 @@ public class Mundo implements Dibujable{
 
 
 	public synchronized void moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
+		Agente agenteRemoto = (Agente) agente;	
+		Agente agenteMundo = (Agente) casillasDelMundo[agenteRemoto.getX()][agenteRemoto.getY()].findAgente(agente.getID());
 
-		Agente ag = (Agente) agente;	
-		
-		Agente ag2 = (Agente) casillasDelMundo[ag.getX()][ag.getY()].findAgente(agente.getID());
-		
-		
-		casillasDelMundo[ag.getX()][ag.getY()].eliminarDibujable(ag.getID());
-		casillasDelMundo[x2][y2].agregarDibujable(ag2);
-		ag2.setX(x2);
-		ag2.setY(y2);
-		
-		
-		
-		
-
+		casillasDelMundo[agenteRemoto.getX()][agenteRemoto.getY()].eliminarDibujable(agenteRemoto.getID());
+		casillasDelMundo[x2][y2].agregarDibujable(agenteMundo);
+		agenteMundo.setX(x2);
+		agenteMundo.setY(y2);
+		agenteMundo.setDireccionX(agenteRemoto.getDireccionX());
+		agenteMundo.setDireccionY(agenteRemoto.getDireccionY());
+		agenteMundo = agenteRemoto;
 	}
-
-
-
 	
 	@Override
 	public void Resaltar() {	
 	}
 
-
-
 	@Override
 	public void DesResaltar() {
 	}
-
-
 
 	@Override
 	public String info() {
@@ -370,8 +358,6 @@ public class Mundo implements Dibujable{
 				"#Número de plantas: "+plantasMundo.size()+
 				"#Energía actual: "+energiaActual;
 	}
-
-
 
 	public int getContadorAgentes() {
 		return contadorAgentes;

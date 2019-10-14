@@ -1,5 +1,7 @@
 package NatureEngine.Modelo;
 
+import java.io.Serializable;
+
 /**
  * Representacion general de una caracteristica heredable de un agente. 
  * Este tipo de caracteristicas hacen parte del proceso de reproduccion de los agentes
@@ -8,7 +10,8 @@ package NatureEngine.Modelo;
  * Fecha	Autor				Descripcion
  * 20191006	Andrea Gutierrez	Version inicial
  */
-public class CaracteristicaHeredablePrototype {
+public class CaracteristicaHeredablePrototype implements Serializable {
+
 	protected Integer id;
 	protected String nombreCaracteristica;
 	protected String tipoCaracteristica;
@@ -166,5 +169,16 @@ public class CaracteristicaHeredablePrototype {
 		
 		return valor;
 	}
+
+
+	public Object getVariabilidad() {
+		return variabilidad;
+	}
+
+
+	public void setVariabilidad(Object variabilidad) {
+		this.variabilidad = variabilidad;
+	}
+	
 	
 }

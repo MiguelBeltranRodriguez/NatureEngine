@@ -1,7 +1,10 @@
 package NatureEngine.Modelo;
 
+
 import java.util.Arrays;
 import java.util.List;
+import java.io.Serializable;
+
 
 /**
  * Representa una caracteristica heredable específica de un agente
@@ -10,9 +13,10 @@ import java.util.List;
  *
  *         Fecha Autor Descripcion 20191006 Andrea Gutierrez Version inicial
  */
-public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype {
 
-	protected Object valorCaracteristica;
+public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype implements Serializable {
+
+	protected Object fenotipo;
 	private List<Alelo> alelos;
 
 	public CaracteristicaHeredableAgente(String nombreCaracteristica, Object valorCaracteristica, List<Alelo> alelos) {
@@ -25,7 +29,9 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 				.getNombreCaracteristica();
 		this.valorMaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMaximo();
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
-		this.valorCaracteristica = valorCaracteristica;
+
+		this.fenotipo = valorCaracteristica;
+
 	}
 
 	public List<Alelo> getAlelos() {
@@ -43,18 +49,30 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 	public Object getValorCaracteristica() {
 		Object valor = null;
 
-		if (this.valorCaracteristica != null) {
-			valor = new Object();
 
-			try {
-				Class<?> clazz = Class.forName(this.tipoCaracteristica);
-				valor = clazz.cast(this.valorCaracteristica);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+		if (this.fenotipo != null) {
+
+			if(this.fenotipo != null)
+			{
+
+				valor = new Object();
+
+				try {
+					Class<?> clazz = Class.forName(this.tipoCaracteristica);
+					valor = clazz.cast(this.fenotipo);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
+			
 		}
-
 		return valor;
 	}
+
+
+	public void setValorCaracteristica(Object valorCaracteristica) {
+		this.fenotipo = valorCaracteristica;
+	}
+
 
 }
