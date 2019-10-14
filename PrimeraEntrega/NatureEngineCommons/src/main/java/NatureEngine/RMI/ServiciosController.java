@@ -32,4 +32,6 @@ public interface ServiciosController extends Remote{
 
 	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException;
 
+	public void actualizarAgente(ObjetoDistribuido agente) throws RemoteException;
+
 }

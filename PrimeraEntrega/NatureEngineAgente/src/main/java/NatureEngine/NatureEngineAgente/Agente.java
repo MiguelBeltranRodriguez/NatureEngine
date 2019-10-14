@@ -42,6 +42,9 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente;
 	private int tamañoActual;
 	private int edadActual;  
+	private int casillasMovidas;
+	private float energiaActual;
+	private float velocidadActual;
 	
 	public Agente(Long ID, Color color, int x, int y,
 			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
@@ -58,11 +61,14 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		resaltado = false;
 		this.potenciaActual = (float)getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
 		this.tamañoActual = (int)getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
+		this.energiaActual = (float)getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
 		this.edadActual = 0;
 		this.timeOutBloqueo = 3;
-		moverse = 0;
+		this.moverse = 0;
 		this.percepcion = new ArrayList<ObjetoDistribuido>();
 		this.desireAnterior = null;
+		this.casillasMovidas = 0;
+		this.velocidadActual = 0;
 	}
 
 
@@ -74,21 +80,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	@Override
 	public void update() {
 
-		if(delX == 0 && delY == 0) {
-		}
-		else {
-			if(moverse>=100) {
-				try {
-					moverse();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				moverse = moverse-100;
-			}else {
-				moverse += potenciaActual;
-			}
-		}
+		
 	}
 
 	public void run() {
@@ -97,27 +89,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		long t_0 = 0;
 		long t_1 = 0;
 		long delta = 0;
-
+		int ticks = 0;
 		while(true) {
 			t_0 = System.currentTimeMillis();
-
-			/*if(delX == 0 && delY == 0) {
-				movimientoAleatorio();
-			} else {
-				if(moverse>=VELOCIDAD_MAX_CASILLA) {
-					try {
-						moverse();
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					moverse = moverse-VELOCIDAD_MAX_CASILLA;
-				} else {
-					moverse += velocidadPXs;
-				}
-			}*/
 			pensar();
-
+			if(ticks==(100)) {
+				ticks = 0;
+				consumo();
+				// TODO: Matar agente
+			}
 			t_1 = System.currentTimeMillis();
 			delta = t_1 - t_0;
 			if(!(delta >= DELAY)) {
@@ -128,8 +108,29 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 					e.printStackTrace();
 				}
 			}
+			ticks++;
 		}
 	}
+	private void consumo() {
+		this.velocidadActual = ActualizacionAtributosDependientes.actualizarVelocidadActual(casillasMovidas, 1000);
+		casillasMovidas = 0;
+		
+		
+		List<AtributosEnergia> atributosEnergia = new ArrayList<AtributosEnergia>();
+		atributosEnergia.add(new AtributosEnergia(VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, (float)getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_),"division"));
+		// TODO: Agregar función atributos inicial del agente
+		
+		this.energiaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(energiaActual, atributosEnergia);
+		System.out.println(energiaActual);
+		try {
+			this.servicios.actualizarAgente((ObjetoDistribuido)this);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
 	private void pensar() {
 		try {
 			percepcion = servicios.percibir(this.ID, this.x, this.y); // BRF
@@ -158,22 +159,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}
 	}
 
-
-	private void moverse() throws RemoteException {
-		if(delX>0 && delY >0) {
-			cambiarPosicion(x+(direccionX), y+(direccionY));
-			delX--;
-			delY--;
-			cambiarPosicion(x-(direccionX), y-(direccionY));
-		}else if(delX>0) {
-			cambiarPosicion(x+(direccionX), y);
-			delX--;
-		}else if(delY>0) {
-			cambiarPosicion(x, y+(direccionY));
-			delY--;
-		}	
-	}
-
+	
 	public int getDelX() {
 		return delX;
 	}
@@ -258,19 +244,19 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			direccionY = -1;
 		}
 	}
-	private synchronized  void cambiarPosicion(int x2, int y2) {
+	public synchronized  void cambiarPosicion(int x2, int y2) {
 		try {
-
+			ServiciosController servicios = getServicios();
 			servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
-			this.x = x2;
-			this.y = y2;
-
-
+			this.setX(x2);
+			this.setY(y2);
+			casillasMovidas++;
+			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 	}
 	@Override
 	public void dibujar(Renderizador2D r) {
@@ -314,6 +300,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public String info() {
 		return ID+ 
 				"#x: "+ this.x + " y: "+this.y+
+				"#energía: "+this.energiaActual+
 				"#velocidad: "+this.potenciaActual+
 				"#percepción: "+this.getPercepcion()+
 				"#tamaño: "+this.tamañoActual;
@@ -340,4 +327,111 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public Object getCaracteristicaHeredable(String nombre) {
 		return this.caracteristicasHeredablesAgente.get(nombre).getValorCaracteristica();
 	}
+
+
+	public Color getColor() {
+		return color;
+	}
+
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+
+	public boolean isResaltado() {
+		return resaltado;
+	}
+
+
+	public void setResaltado(boolean resaltado) {
+		this.resaltado = resaltado;
+	}
+
+
+	public float getPotenciaActual() {
+		return potenciaActual;
+	}
+
+
+	public void setPotenciaActual(float potenciaActual) {
+		this.potenciaActual = potenciaActual;
+	}
+
+
+	public Desire getDesireAnterior() {
+		return desireAnterior;
+	}
+
+
+	public void setDesireAnterior(Desire desireAnterior) {
+		this.desireAnterior = desireAnterior;
+	}
+
+
+	public Map<String, CaracteristicaHeredableAgente> getCaracteristicasHeredablesAgente() {
+		return caracteristicasHeredablesAgente;
+	}
+
+
+	public void setCaracteristicasHeredablesAgente(
+			Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) {
+		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
+	}
+
+
+	public int getTamañoActual() {
+		return tamañoActual;
+	}
+
+
+	public void setTamañoActual(int tamañoActual) {
+		this.tamañoActual = tamañoActual;
+	}
+
+
+	public int getEdadActual() {
+		return edadActual;
+	}
+
+
+	public void setEdadActual(int edadActual) {
+		this.edadActual = edadActual;
+	}
+
+
+	public int getCasillasMovidas() {
+		return casillasMovidas;
+	}
+
+
+	public void setCasillasMovidas(int casillasMovidas) {
+		this.casillasMovidas = casillasMovidas;
+	}
+
+
+	public float getEnergiaActual() {
+		return energiaActual;
+	}
+
+
+	public void setEnergiaActual(float energiaActual) {
+		this.energiaActual = energiaActual;
+	}
+
+
+	public float getVelocidadActual() {
+		return velocidadActual;
+	}
+
+
+	public void setVelocidadActual(float velocidadActual) {
+		this.velocidadActual = velocidadActual;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 }

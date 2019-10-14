@@ -221,4 +221,10 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException {
 		return mundo.percibir(idAgente, x, y);
 	}
+
+	@Override
+	public void actualizarAgente(ObjetoDistribuido agente) throws RemoteException {
+		mundo.actualizarAgente((Agente)agente);
+		
+	}
 }

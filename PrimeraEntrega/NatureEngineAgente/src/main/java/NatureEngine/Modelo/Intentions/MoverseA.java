@@ -58,17 +58,17 @@ public class MoverseA extends Intention {
 			this.agente.setDireccionY(direccionY);
 
 			if(delX>0 && delY >0) {
-					cambiarPosicion(x+(direccionX), y+(direccionY));
+					agente.cambiarPosicion(x+(direccionX), y+(direccionY));
 					delX--;
 					delY--;
 			}else if(delX>0) {
 				
-					cambiarPosicion(x+(direccionX), y);
+					agente.cambiarPosicion(x+(direccionX), y);
 					delX--;
 				
 			}else if(delY>0) {
 				
-					cambiarPosicion(x, y+(direccionY));
+					agente.cambiarPosicion(x, y+(direccionY));
 					delY--;
 			}
 		}else {
@@ -80,19 +80,6 @@ public class MoverseA extends Intention {
 		}
 		
 	}
-	private synchronized  void cambiarPosicion(int x2, int y2) {
-		try {
-			ServiciosController servicios = agente.getServicios();
-			servicios.moverAgente(x2, y2, (ObjetoDistribuido)this.agente);
-			this.agente.setX(x2);
-			this.agente.setY(y2);
-			
-			
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+	
 
 }
