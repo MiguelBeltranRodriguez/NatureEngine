@@ -14,6 +14,7 @@ public class CaracteristicaHeredablePrototype {
 	protected String tipoCaracteristica;
 	protected Object valorMinimo;
 	protected Object valorMaximo;
+	protected Object variabilidad;
 	
 	public CaracteristicaHeredablePrototype() {
 	}
@@ -29,10 +30,11 @@ public class CaracteristicaHeredablePrototype {
 	}
 
 	public CaracteristicaHeredablePrototype(String id, String tipoCaracteristica, String nombreCaracteristica, 
-			 String valorMaximo, String valorMinimo){
+			 String valorMaximo, String valorMinimo, String variabilidad){
 		this.id = Integer.valueOf(id);
 		this.tipoCaracteristica = tipoCaracteristica;
 		this.nombreCaracteristica = nombreCaracteristica;
+		this.variabilidad = variabilidad;
 
 		
 		if(valorMinimo != null && !"".equals(valorMinimo)) {
@@ -70,6 +72,32 @@ public class CaracteristicaHeredablePrototype {
 					break;
 				case(AtributosBasicos.TIPO_INTEGER_):
 					this.valorMaximo = Integer.parseInt(valorMaximo);			
+					break;
+				case(AtributosBasicos.TIPO_BOOLEAN_):
+					this.valorMaximo = Boolean.TRUE;			
+					break;
+			}
+		}
+		else{
+			switch (this.tipoCaracteristica){
+				case(AtributosBasicos.TIPO_FLOAT_):
+					this.valorMaximo = Float.POSITIVE_INFINITY;
+					break;
+				case(AtributosBasicos.TIPO_INTEGER_):
+					this.valorMaximo = Integer.MAX_VALUE;			
+					break;
+				case(AtributosBasicos.TIPO_BOOLEAN_):
+					this.valorMaximo = Boolean.TRUE;			
+					break;
+			}
+		}
+		if(variabilidad != null && !"".equals(variabilidad)) {
+			switch (this.tipoCaracteristica){
+				case(AtributosBasicos.TIPO_FLOAT_):
+					this.valorMaximo = Float.parseFloat(variabilidad);
+					break;
+				case(AtributosBasicos.TIPO_INTEGER_):
+					this.valorMaximo = Integer.parseInt(variabilidad);			
 					break;
 				case(AtributosBasicos.TIPO_BOOLEAN_):
 					this.valorMaximo = Boolean.TRUE;			
@@ -138,5 +166,5 @@ public class CaracteristicaHeredablePrototype {
 		
 		return valor;
 	}
-
+	
 }

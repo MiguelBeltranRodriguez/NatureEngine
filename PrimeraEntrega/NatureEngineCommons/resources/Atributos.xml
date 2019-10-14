@@ -5,6 +5,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>5.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -13,6 +14,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>1.0f</valorMinimo>
+		<variabilidad>5.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -21,6 +23,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>1.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -29,6 +32,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>1</valorMinimo>
+		<variabilidad>1</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -37,6 +41,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>0</valorMinimo>
+		<variabilidad>1</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -44,7 +49,8 @@
 		<nombre>Sexo</nombre>
 		<tipo>java.lang.Boolean</tipo>
 		<valorMaximo></valorMaximo>
-		<valorMinimo></valorMinimo>
+		<valorMinimo></valorMinimo>}
+		<variabilidad></variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -53,6 +59,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>0</valorMinimo>
+		<variabilidad>1</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -61,6 +68,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo>100</valorMaximo>
 		<valorMinimo>0</valorMinimo>
+		<variabilidad>1</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -69,6 +77,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo>1.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>2.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -77,6 +86,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo>1.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>2.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -85,6 +95,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo>1.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>1.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -93,6 +104,7 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo>1.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
+		<variabilidad>0.1f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -101,6 +113,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>1</valorMinimo>
+		<variabilidad>5</variabilidad>
 	</atributo>
 	
 </Atributos>

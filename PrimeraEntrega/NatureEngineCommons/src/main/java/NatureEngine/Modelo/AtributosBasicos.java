@@ -52,6 +52,7 @@ public class AtributosBasicos {
 	public static final String TAG_NOMBRE_ = "nombre";
 	public static final String TAG_VALOR_MAXIMO = "valorMaximo";
 	public static final String TAG_VALOR_MINIMO = "valorMinimo";
+	public static final String TAG_VARIABILIDAD = "variabilidad";
 	
 	//Contiene los atributos basicos por nombre
 	protected static HashMap<String, CaracteristicaHeredablePrototype> atributosByName = new HashMap<>();
@@ -104,7 +105,9 @@ public class AtributosBasicos {
 						eElement.getElementsByTagName(TAG_VALOR_MAXIMO).item(0) == null ? 
 								null : eElement.getElementsByTagName(TAG_VALOR_MAXIMO).item(0).getTextContent(), 
 						eElement.getElementsByTagName(TAG_VALOR_MINIMO).item(0) == null ? 
-								null : eElement.getElementsByTagName(TAG_VALOR_MINIMO).item(0).getTextContent());
+								null : eElement.getElementsByTagName(TAG_VALOR_MINIMO).item(0).getTextContent(),
+						eElement.getElementsByTagName(TAG_VARIABILIDAD).item(0) == null ? 
+								null : eElement.getElementsByTagName(TAG_VARIABILIDAD).item(0).getTextContent());
 
 				atributosByName.put(caracteristica.getNombreCaracteristica(), caracteristica);
 				atributosById.put(caracteristica.getId(), caracteristica);
