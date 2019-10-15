@@ -1,8 +1,7 @@
 package NatureEngine.Modelo;
 
 
-import java.util.Arrays;
-import java.util.List;
+
 import java.io.Serializable;
 
 
@@ -17,10 +16,10 @@ import java.io.Serializable;
 public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype implements Serializable {
 
 	protected Object fenotipo;
-	private List<Alelo> alelos;
+	private GenAtributo genatributo;
 
-	public CaracteristicaHeredableAgente(String nombreCaracteristica, Object valorCaracteristica, List<Alelo> alelos) {
-		this.alelos = alelos;
+	public CaracteristicaHeredableAgente(String nombreCaracteristica, GenAtributo genatributo) {
+		this.genatributo = genatributo;
 		this.nombreCaracteristica = nombreCaracteristica;
 		this.id = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getId();
 		this.tipoCaracteristica = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica)
@@ -29,13 +28,12 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 				.getNombreCaracteristica();
 		this.valorMaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMaximo();
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
-
-		this.fenotipo = valorCaracteristica;
+		this.fenotipo = genatributo.getValorAtributo();
 
 	}
 
-	public List<Alelo> getAlelos() {
-		return this.alelos;
+	public GenAtributo getGenAtributo() {
+		return this.genatributo;
 	}
 
 	public Object getValorMinimo() {

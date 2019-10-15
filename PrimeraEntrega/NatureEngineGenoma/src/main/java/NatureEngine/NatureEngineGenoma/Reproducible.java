@@ -1,11 +1,12 @@
 package NatureEngine.NatureEngineGenoma;
 
 import java.util.HashMap;
+import java.util.List;
 
-import NatureEngine.Modelo.CaracteristicaHeredableAgente;
+import NatureEngine.Modelo.GenAtributo;
 
 public interface Reproducible {
 	
-	public HashMap<String, CaracteristicaHeredableAgente> Reproducirse(HashMap<String,CaracteristicaHeredableAgente> genotipofenotipoPadre,HashMap<String,CaracteristicaHeredableAgente> genotipofenotipoMadre);
+	public List<HashMap<String, GenAtributo>> Reproducirse(Integer numerohijos, HashMap<String, GenAtributo> genomaMadre, HashMap<String, GenAtributo> genomaPadre);
 
 }

@@ -1,8 +1,10 @@
 package NatureEngine.NatureEngineGenoma.Reproduction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import NatureEngine.Modelo.CaracteristicaHeredableAgente;
+import NatureEngine.Modelo.GenAtributo;
 
 public class ReproductionHandler extends ReproduccionBasica{
 	
@@ -21,9 +23,28 @@ public class ReproductionHandler extends ReproduccionBasica{
 		return ColaboradorDeSingleton.instancia;
 	}
 
-	public HashMap<String, CaracteristicaHeredableAgente> Reproducirse(HashMap<String,CaracteristicaHeredableAgente> genotipofenotipoPadre,HashMap<String,CaracteristicaHeredableAgente> genotipofenotipoMadre) {
-		HashMap<String,CaracteristicaHeredableAgente> genotipofenotipohijo = Reproduccion(genotipofenotipoPadre, genotipofenotipoMadre);
-		return genotipofenotipohijo;
+	public List<HashMap<String, GenAtributo>> CrearListaDeGenAtributosParaHijos(Integer numerohijos, HashMap<String, GenAtributo> genomaMadre, HashMap<String, GenAtributo> genomaPadre) {
+		List<HashMap<String, GenAtributo>> listadeGenAtributoshijos = new ArrayList<HashMap<String, GenAtributo>>();
+		Boolean primeravuelta = true;
+		for (HashMap.Entry<String, GenAtributo> entry : genomaMadre.entrySet()) {
+			String nombreAtributo = entry.getKey();
+			GenAtributo genatributomadre = entry.getValue();
+			GenAtributo genatributopadre = genomaPadre.get(nombreAtributo);
+			List<GenAtributo> listadealelosdeindividuos = CrearListaDeGenAtributosParaHijosInner(numerohijos, nombreAtributo, genatributomadre,genatributopadre);
+			if(primeravuelta==true) {
+				for (int index = 0; index < listadealelosdeindividuos.size(); index++) {
+					HashMap<String, GenAtributo> IndividuoActual = new HashMap<String, GenAtributo>();
+					listadeGenAtributoshijos.add(IndividuoActual);
+				}	
+				primeravuelta=false;
+			}
+			for (int index = 0; index < listadealelosdeindividuos.size(); index++) {
+				HashMap<String, GenAtributo> IndividuoActual =listadeGenAtributoshijos.get(index); 
+				IndividuoActual.put(nombreAtributo,listadealelosdeindividuos.get(index));
+				listadeGenAtributoshijos.set(index, IndividuoActual);
+			}
+		}
+		return listadeGenAtributoshijos;
 	}
 
 }

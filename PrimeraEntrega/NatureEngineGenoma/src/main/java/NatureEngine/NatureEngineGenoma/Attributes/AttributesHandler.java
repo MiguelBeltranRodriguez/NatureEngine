@@ -1,12 +1,11 @@
 package NatureEngine.NatureEngineGenoma.Attributes;
 
-import java.util.HashMap;
 import java.util.List;
 
-import NatureEngine.Modelo.Alelo;
+import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.NatureEngineGenoma.Commons.ReproductionLogger;
 
-public class AttributesHandler extends AttributesVariator {
+public class AttributesHandler extends AttributesSupport {
 
 	// constructor privado para evitar ser llamado sin singleton
 	private AttributesHandler() {
@@ -22,25 +21,28 @@ public class AttributesHandler extends AttributesVariator {
 	public static AttributesHandler Singleton() {
 		return ColaboradorDeSingleton.instancia;
 	}
-	
-	public static Object CalcularValorAtributo(HashMap<String,Object> tipoYLimitesDelAtributo, List<Alelo> alelos){
-		Object fenotiponuevo = CalcularValorAtributoInner(tipoYLimitesDelAtributo,alelos);
-		return fenotiponuevo;
-	}
-	
-	public static List<Alelo> CalcularGen(HashMap<String,Object> tipoYLimitesDelAtributo,Object valorAtributo){
-		List<Alelo> gen = CalcularGenInner(tipoYLimitesDelAtributo,valorAtributo);
-		return gen;
-	}
-	
-	public static Object VariarAtributo(HashMap<String,Object> tipoYLimitesDelAtributo, Object valorBaseAtributo){
-		Object nuevoValorAtributo=null;
+
+	public List<GenAtributo> AlelosDeIndividuosDeNuevaEspecie(Integer numeroNuevosIndividousEspecie,
+			String nombreDelAtributo, Object valorBaseAtributo) {
+		List<GenAtributo> listadealelosdeindividuos = null;
 		try {
-			nuevoValorAtributo = VariarAtributoInner(tipoYLimitesDelAtributo, valorBaseAtributo);
+			listadealelosdeindividuos = AlelosDeIndividuosDeNuevaEspecieInner(numeroNuevosIndividousEspecie,
+					nombreDelAtributo, valorBaseAtributo);
 		} catch (Exception ex) {
-			ReproductionLogger.ReproductionError("AttributesHandler", ex);
+			ReproductionLogger.ReproductionError("AttributesHandlerCrearNuevaspp", ex);
 		}
-		return nuevoValorAtributo;
+		return listadealelosdeindividuos;
+	}
+
+	public List<GenAtributo> AlelosDeHijos(Integer numeroDeHijos, String nombreDelAtributo, GenAtributo genpadre,
+			GenAtributo genmadre) {
+		List<GenAtributo> listadealelosdeindividuos = null;
+		try {
+			listadealelosdeindividuos = AlelosDeHijosInner(numeroDeHijos, nombreDelAtributo, genpadre, genmadre);
+		} catch (Exception ex) {
+			ReproductionLogger.ReproductionError("AttributesHandlerMutar", ex);
+		}
+		return listadealelosdeindividuos;
 	}
 
 }

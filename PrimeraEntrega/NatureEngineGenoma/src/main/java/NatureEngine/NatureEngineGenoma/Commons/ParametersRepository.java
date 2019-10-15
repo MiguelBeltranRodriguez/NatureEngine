@@ -1,16 +1,26 @@
 package NatureEngine.NatureEngineGenoma.Commons;
 
-import java.util.Collections;
 import java.util.HashMap;
+
+import NatureEngine.NatureEngineGenoma.Integration.IntegrationHandler;
 
 public abstract class ParametersRepository {
 
 	private static HashMap<String, Object> parameters;
 	static {
 		HashMap<String, Object> parametersSet = new HashMap<String, Object>();
-		parametersSet.put("TasaDeMutacion", 0.05);
-
-		setParameters((HashMap<String, Object>) Collections.unmodifiableMap(parametersSet));
+		parametersSet.put("TasaDeMutacion", 0.05f);
+		parametersSet.put("GradosDeDominancia", 4);
+		parametersSet.put("ProbabilidadMutarDominancia", 0.2f);
+		parametersSet.put("MultiplicadorDeVariacionPorMutacion", 1f);
+		parametersSet.put("MinimoAlelosPorAtributo", 1);
+		parametersSet.put("MaximoAlelosPorAtributo", 3);
+		 HashMap<String,HashMap<String,Object>> listaatributos = ListaDeAtributos();
+		for (HashMap.Entry<String,HashMap<String,Object>> entry : listaatributos.entrySet()) {
+			String attibuteName = entry.getKey();
+			HashMap<String,Object> attributeData = entry.getValue();
+			parametersSet.put(attibuteName,attributeData);
+		}
 
 	}
 
@@ -38,5 +48,10 @@ public abstract class ParametersRepository {
 		ReproductionLogger.ReproductionWarning("ParameterRepository", "Parameter doesnt exist: " + parameterName);
 		return false;
 	}
-
+	
+	final private static HashMap<String,HashMap<String,Object>> ListaDeAtributos(){
+		HashMap<String,HashMap<String,Object>> listadeTiposMinimosYMaximosDeCadaAtributo = IntegrationHandler.ObtenerTipoMinimoYMaximoDeCadaAtributo();
+		return listadeTiposMinimosYMaximosDeCadaAtributo;
+	}
+	
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import NatureEngine.Modelo.Alelo;
 import NatureEngine.Modelo.CaracteristicaHeredableAgente;
 
-public class IntegrationHandler extends IntegrationSupport{
+public class IntegrationHandler{
 
 	// constructor privado para evitar ser llamado sin singleton
 	private IntegrationHandler() {
@@ -25,16 +25,6 @@ public class IntegrationHandler extends IntegrationSupport{
 	
 	final public static Boolean NatureEngineSecurity(Object usuario) {
 		return true;
-	}
-	
-	final public static List<Alelo> getAlelosDelAtributo(CaracteristicaHeredableAgente caracteristicasDelAtributo) {
-		List<Alelo> alelos = caracteristicasDelAtributo.getAlelos();
-		return alelos;
-	}
-	
-	final public static HashMap<String, CaracteristicaHeredableAgente> ConstruirGenotipoFenotipoNuevo(HashMap<String, List<Alelo>> genotipo, HashMap<String, Object> fenotipo){
-		HashMap<String, CaracteristicaHeredableAgente> genotipofenotiponuevo = ConstruirGenotipoFenotipoIntegracion(genotipo, fenotipo);
-		return genotipofenotiponuevo;
 	}
 	
 	final public static HashMap<String,HashMap<String,Object>> ObtenerTipoMinimoYMaximoDeCadaAtributo(){
