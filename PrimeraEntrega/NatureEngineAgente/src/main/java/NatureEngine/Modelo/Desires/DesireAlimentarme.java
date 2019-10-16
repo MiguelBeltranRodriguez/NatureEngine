@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Stack;
 
 import NatureEngine.Modelo.Casilla;
-import NatureEngine.Modelo.Desire;
-import NatureEngine.Modelo.Intention;
 import NatureEngine.Modelo.Planta;
+import NatureEngine.Modelo.Intentions.Intention;
 import NatureEngine.Modelo.Intentions.MoverseA;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -44,29 +43,27 @@ public class DesireAlimentarme extends Desire {
 
 	@Override
 	public void ejecutar() throws RemoteException {
-		Intention intention = this.intenciones.firstElement();
-		if (!intention.isCompletado()) {
-			intention.ejecutar();
+		Intention intencion = this.intenciones.firstElement();
+		if (!intencion.isFinalizado()) {
+			intencion.ejecutar();
 		} else {
 			this.intenciones.pop();
 		}
 	}
 
 	@Override
-	public boolean tengoCapacidad() {
-		List<ObjetoDistribuido> algo = agente.getPercepcion();
-		// TODO: agregar logica cuando agente tiene hambre de planta
-		boolean esHerviboro = true;
-		// TODO: agregar logica cuando agente tiene hambre de agente
-		boolean esCarnivoro = false;
-		// Mocks
-		boolean tengoHambre = true;
+	public boolean tengoHabilidad() {
+		List<ObjetoDistribuido> percepciones = agente.getPercepciones();
+
+		boolean esHerviboro = true; // Depende de las caracteristicas heredables
+
+		boolean esCarnivoro = false; // Depende de las caracteristicas heredables
+
+		boolean tengoHambre = true; // Eso va en believes
 		
 		if (tengoHambre) {
-			if(esHerviboro && esCarnivoro) {
-				// TODO: logica
-			} else if (esHerviboro) {
-				plantaObjetivo(algo);
+			if (esHerviboro) {
+				this.plantaObjetivo(percepciones);
 				if(this.objetivo == null) {
 					return false;
 				} else {
@@ -74,24 +71,26 @@ public class DesireAlimentarme extends Desire {
 				}
 			} else if (esCarnivoro) {
 				// TODO: logica
-			}	
+			} else {
+				// TODO: logica cuando es obniboro depende de que tanta habre tiene
+			}
 		} else {
 			return false;
 		}
 		return false;
 	}
 
-	private void plantaObjetivo(List<ObjetoDistribuido> percepcion) {
-		for (ObjetoDistribuido c : percepcion) {
+	private void plantaObjetivo(List<ObjetoDistribuido> percepciones) {
+		for (ObjetoDistribuido c : percepciones) {
 			Casilla casilla = (Casilla)c;
 			// TODO agregar esta palabra al diccionario en commons	
 			Planta planta = (Planta)casilla.getElementoTipo("planta");
 			if(planta!=null) {
-			if (this.objetivo==null) {
-				this.objetivo = planta;
-			} else if (calcularDistancia(planta) < calcularDistancia(this.objetivo)) {
-				this.objetivo = planta;
-			}
+				if (this.objetivo==null) {
+					this.objetivo = planta;
+				} else if (calcularDistancia(planta) < calcularDistancia(this.objetivo)) {
+					this.objetivo = planta;
+				}
 			}
 			// TODO: heuristica quien me da mas energia incluyendo la distancia
 		}

@@ -1,15 +1,16 @@
-package NatureEngine.Modelo;
+package NatureEngine.Modelo.Desires;
 
 import java.rmi.RemoteException;
 import java.util.Stack;
 
+import NatureEngine.Modelo.Intentions.Intention;
 import NatureEngine.NatureEngineAgente.Agente;
 
 public abstract class Desire {
 	protected int prioridad;
 	protected Agente agente;
 	protected Stack<Intention> intenciones;
-	public abstract boolean tengoCapacidad();
+	public abstract boolean tengoHabilidad();
 	public abstract void init(Desire desireAnterior);
 	public Stack<Intention> getIntenciones() {
 		return intenciones;

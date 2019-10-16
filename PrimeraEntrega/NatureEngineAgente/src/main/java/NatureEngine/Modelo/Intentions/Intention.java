@@ -1,4 +1,4 @@
-package NatureEngine.Modelo;
+package NatureEngine.Modelo.Intentions;
 
 import java.rmi.RemoteException;
 
@@ -6,14 +6,12 @@ import NatureEngine.NatureEngineAgente.Agente;
 
 public abstract class Intention {
 	protected Agente agente;
-	protected boolean completado;
+	protected boolean finalizado;
 	public abstract void ejecutar() throws RemoteException;
-
-	public boolean isCompletado() {
-		return completado;
+	public boolean isFinalizado() {
+		return finalizado;
 	}
-	public void setCompletado(boolean completado) {
-		this.completado = completado;
+	public void setFinalizado(boolean finalizado) {
+		this.finalizado = finalizado;
 	}
-	
 }

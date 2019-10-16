@@ -19,7 +19,7 @@ public class VarGlobalGame {
 	
 	public static int DELAY = 10;
 	
-	public static int VELOCIDAD_MAX_CASILLA = 100;
+	public static int MIU_DE_FRICCION = 100;
 	
 	/** Ruta del mapa por defecto. */
 	public final static String RUTA_MAPA = "./assets/mapa1.csv";

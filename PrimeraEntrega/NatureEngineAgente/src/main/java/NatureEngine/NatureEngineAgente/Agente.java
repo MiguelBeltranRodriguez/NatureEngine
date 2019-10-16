@@ -12,7 +12,7 @@ import java.util.Stack;
 import NatureEngine.Modelo.AtributosBasicos;
 import NatureEngine.Modelo.CaracteristicaHeredableAgente;
 import NatureEngine.Modelo.Casilla;
-import NatureEngine.Modelo.Desire;
+import NatureEngine.Modelo.Desires.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
@@ -24,9 +24,9 @@ import NatureEngine.Utils.VarGlobalVista;
 public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
 
 	private static final long serialVersionUID = 1L;
-	private Color color;  //prueba
-	private int x;	//prueba
-	private int y; //prueba
+	private Color color;  //prueba <- ??
+	private int x;	//prueba <- ??
+	private int y; //prueba <- ??
 	private ServiciosController servicios;
 	private boolean resaltado;
 	private int delX;
@@ -80,19 +80,19 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	@Override
 	public void update() {
 
-		
 	}
 
 	public void run() {
 		int DELAY = VarGlobalGame.DELAY;
-		int VELOCIDAD_MAX_CASILLA = VarGlobalGame.VELOCIDAD_MAX_CASILLA;
+		int VELOCIDAD_MAX_CASILLA = VarGlobalGame.MIU_DE_FRICCION;
 		long t_0 = 0;
 		long t_1 = 0;
 		long delta = 0;
 		int ticks = 0;
 		while(true) {
 			t_0 = System.currentTimeMillis();
-			pensar();
+			this.pensar();
+			// this.belief.pensar();
 			if(ticks==(100)) {
 				ticks = 0;
 				consumo();
@@ -147,7 +147,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 			while(!desires.isEmpty()) {
 				desireSeleccionado = desires.pop();
-				if(desireSeleccionado.tengoCapacidad()) {
+				if(desireSeleccionado.tengoHabilidad()) {
 					desireSeleccionado.init(this.desireAnterior);
 					desireSeleccionado.ejecutar();
 					break;
@@ -302,7 +302,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				"#x: "+ this.x + " y: "+this.y+
 				"#energía: "+this.energiaActual+
 				"#velocidad: "+this.potenciaActual+
-				"#percepción: "+this.getPercepcion()+
+				"#percepción: "+this.getPercepciones()+
 				"#tamaño: "+this.tamañoActual;
 	}
 
@@ -315,7 +315,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 
 
-	public List<ObjetoDistribuido> getPercepcion() {
+	public List<ObjetoDistribuido> getPercepciones() {
 		return percepcion;
 	}
 
