@@ -31,7 +31,6 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
 
 		this.fenotipo = valorCaracteristica;
-
 	}
 
 	public List<Alelo> getAlelos() {
@@ -48,7 +47,6 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 
 	public Object getValorCaracteristica() {
 		Object valor = null;
-
 
 		if (this.fenotipo != null) {
 

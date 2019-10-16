@@ -110,7 +110,7 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 		else{
 			switch (this.tipoCaracteristica){
 				case(AtributosBasicos.TIPO_FLOAT_):
-					this.valorMaximo = Float.POSITIVE_INFINITY;
+					this.valorMaximo = Float.MAX_VALUE;
 					break;
 				case(AtributosBasicos.TIPO_INTEGER_):
 					this.valorMaximo = Integer.MAX_VALUE;			

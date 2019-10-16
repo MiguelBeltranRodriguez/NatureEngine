@@ -84,7 +84,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	public void run() {
 		int DELAY = VarGlobalGame.DELAY;
-		int VELOCIDAD_MAX_CASILLA = VarGlobalGame.MIU_DE_FRICCION;
+		int MIU_DE_FRICCION = VarGlobalGame.MIU_DE_FRICCION; // TODO: revisar donde se usa
 		long t_0 = 0;
 		long t_1 = 0;
 		long delta = 0;
@@ -93,7 +93,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			t_0 = System.currentTimeMillis();
 			this.pensar();
 			// this.belief.pensar();
-			if(ticks==(100)) {
+			if(ticks==(VarGlobalGame.FRECUENCIA_TICKS_CONSUMO)) {
 				ticks = 0;
 				consumo();
 				// TODO: Matar agente
@@ -112,22 +112,27 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}
 	}
 	private void consumo() {
-		this.velocidadActual = ActualizacionAtributosDependientes.actualizarVelocidadActual(casillasMovidas, 1000);
-		casillasMovidas = 0;
-		
-		
+		this.velocidadActual = ActualizacionAtributosDependientes
+				.actualizarVelocidadActual(casillasMovidas, VarGlobalGame.UNIDAD_TIEMPO_VELOCIDAD);
+
 		List<AtributosEnergia> atributosEnergia = new ArrayList<AtributosEnergia>();
-		atributosEnergia.add(new AtributosEnergia(VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, (float)getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_),"division"));
-		// TODO: Agregar función atributos inicial del agente
+		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_), VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, VarGlobalGame.DIVISION));
+		atributosEnergia.add(new AtributosEnergia(this.potenciaActual, VarGlobalGame.COHEFICIENTE_POTENCIA_ACTUAL, VarGlobalGame.EXPONENTE));
+		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_), VarGlobalGame.COHEFICIENTE_AGUA_MAXIMA, VarGlobalGame.DIVISION));
+		atributosEnergia.add(new AtributosEnergia(Float.parseFloat(this.getCaracteristicaHeredable(AtributosBasicos.PERCEPCION_).toString()), VarGlobalGame.COHEFICIENTE_PERCEPCION, VarGlobalGame.MULTIPLICACION));
+		atributosEnergia.add(new AtributosEnergia(this.tamañoActual, VarGlobalGame.COHEFICIENTE_TAMAÑO_ACTUAL, VarGlobalGame.EXPONENTE));
+		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_), VarGlobalGame.COHEFICIENTE_TOLERANCIA_HUMEDAD, VarGlobalGame.MULTIPLICACION));
+		atributosEnergia.add(new AtributosEnergia(this.velocidadActual, VarGlobalGame.COHEFICIENTE_VELOCIDAD_ACTUAL, VarGlobalGame.EXPONENTE));
 		
 		this.energiaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(energiaActual, atributosEnergia);
-		System.out.println(energiaActual);
+		System.out.println(energiaActual + " BANANA");
 		try {
 			this.servicios.actualizarAgente((ObjetoDistribuido)this);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		casillasMovidas = 0;
 	}
 
 

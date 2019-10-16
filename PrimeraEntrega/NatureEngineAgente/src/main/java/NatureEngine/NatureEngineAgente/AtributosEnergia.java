@@ -1,11 +1,13 @@
 package NatureEngine.NatureEngineAgente;
 
+import NatureEngine.Utils.VarGlobalGame;
+
 public class AtributosEnergia {
 	private int coheficiente;
 	private float atributo;
-	private String tipoOperacion;
+	private int tipoOperacion;
 
-	public AtributosEnergia(int coheficiente, float atributo, String tipoOperacion) {
+	public AtributosEnergia(float atributo, int coheficiente, int tipoOperacion) {
 		this.coheficiente = coheficiente;
 		this.atributo = atributo;
 		this.tipoOperacion = tipoOperacion;
@@ -13,13 +15,13 @@ public class AtributosEnergia {
 	
 	public float calcular() {
 		float resultado = 0;
-		if (tipoOperacion.equals("exponente")) {
+		if (tipoOperacion == VarGlobalGame.EXPONENTE) {
 			resultado = calcularExponente();
-		} else if (tipoOperacion.equals("inverso")) {
+		} else if (tipoOperacion == VarGlobalGame.INVERSO) {
 			resultado = calcularInverso();
-		}else if (tipoOperacion.equals("multiplicacion")) {
+		}else if (tipoOperacion == VarGlobalGame.MULTIPLICACION) {
 			resultado = calcularMultiplicacion();
-		} else if (tipoOperacion.equals("division")) {
+		} else if (tipoOperacion == VarGlobalGame.DIVISION) {
 			resultado = calcularDivision();
 		}
 		

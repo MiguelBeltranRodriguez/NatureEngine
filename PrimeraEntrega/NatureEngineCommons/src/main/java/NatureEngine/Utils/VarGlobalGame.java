@@ -14,12 +14,16 @@ public class VarGlobalGame {
 	/** Delta de los FPS */
 	public static double DELTA = 0;
 	
+	public static int FRECUENCIA_TICKS_CONSUMO = 100;
+	
 	/** Ticks por segundo */
 	public static int TICKS_S = 0;
 	
 	public static int DELAY = 10;
 	
 	public static int MIU_DE_FRICCION = 100;
+	
+	public final static int UNIDAD_TIEMPO_VELOCIDAD = DELAY * FRECUENCIA_TICKS_CONSUMO;
 	
 	/** Ruta del mapa por defecto. */
 	public final static String RUTA_MAPA = "./assets/mapa1.csv";
@@ -47,7 +51,13 @@ public class VarGlobalGame {
 	
 	/** Coheficiente de atributos Agua */
 	public final static int POTENCIA_HUMEDAD = 2;	 	
-	public final static int COHEFICIENTE_VELOCIDAD = 3;
+	public final static int COHEFICIENTE_VELOCIDAD_ACTUAL = 3;
+	
+	/** Operaciones de calculo */
+	public final static int EXPONENTE = 0;
+	public final static int INVERSO = 1;
+	public final static int MULTIPLICACION = 2;
+	public final static int DIVISION = 3;
 	
 	/** Coheficiente de atributos Energia */
 	public final static int COHEFICIENTE_ENERGIA_MAXIMA = 100;

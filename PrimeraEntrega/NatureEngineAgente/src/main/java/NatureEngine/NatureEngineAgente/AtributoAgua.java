@@ -17,7 +17,7 @@ public class AtributoAgua {
 
 	public float calcularFactorHumedad() {
 		float factorhumedad = (float) Math.pow((double) (this.HumedadCasilla - this.HumedadIdeal), (double) VarGlobalGame.POTENCIA_HUMEDAD);
-		float factorVelocidad = (float) Math.pow((double) this.velocidadActual,(double) VarGlobalGame.COHEFICIENTE_VELOCIDAD);
+		float factorVelocidad = (float) Math.pow((double) this.velocidadActual,(double) VarGlobalGame.COHEFICIENTE_VELOCIDAD_ACTUAL);
 		float toleranciaHumedadInverso = 1 / this.toleranciaHumedad;
 
 		return (factorhumedad * toleranciaHumedadInverso) + factorVelocidad;

@@ -167,7 +167,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 
 	@Override
-	public synchronized   void conectarAlServidorAgentes(int port) throws RemoteException {
+	public synchronized void conectarAlServidorAgentes(int port) throws RemoteException {
 		try {
 			ServiciosAdministradorAgentes serviciosAgentes = (ServiciosAdministradorAgentes) Naming.lookup("rmi://localhost:"+port+"/controller");
 			servidoresAgentes.add(serviciosAgentes);
@@ -186,12 +186,11 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 
 	public void addAgente(ObjetoDistribuido ag) throws RemoteException {
 		mundo.addAgente(ag);
-
 	}
 	
 	public Map<String, CaracteristicaHeredableAgente> crearAtributosAgentePrimitivo() {
 		Map<String, CaracteristicaHeredableAgente> fenotipo = new HashMap<String, CaracteristicaHeredableAgente>();
-		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 1000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 10000.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 1000.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.TAMANO_MAXIMO_, 5, fenotipo);
@@ -212,6 +211,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 	
 	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
+		// TODO: Agregar agentes en un csv o xml etc
 		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, this.crearAtributosAgentePrimitivo());
 		addAgente(agenteNuevo);
 		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevo);
