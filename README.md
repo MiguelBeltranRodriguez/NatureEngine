@@ -13,12 +13,13 @@ Versión ??
  1. Clonar el repositorio
  2. Importar como proyecto maven todos los proyectos de la carpeta "PrimeraEntrega"
  3. Instalar el componente NatureEngineCommon (mvn install)
- 4. Instalar el componente NatureEngineGUI (mvn install)
- 5. Instalar el componente NatureEngineAgente (mvn install)
- 6. Instalar el componente NatureEngineAdministradorAgentes (mvn install)
- 7. Instalar el componente NatureEngineController (mvn install)
- 8. Ejecutar el proyecto NatureEngineController (Aplicación)
- 9. Ejecutar el proyecto NatureEngineAdministradorAgentes con parámetro de entrada: El puerto al que se le va a asignar (Aplicación)
+ 4. Instalar el componente NatureEngineGenoma (mvn install)
+ 5. Instalar el componente NatureEngineGUI (mvn install)
+ 6. Instalar el componente NatureEngineAgente (mvn install)
+ 7. Instalar el componente NatureEngineAdministradorAgentes (mvn install)
+ 8. Instalar el componente NatureEngineController (mvn install)
+ 9. Ejecutar el proyecto NatureEngineController (Aplicación)
+ 10. Ejecutar el proyecto NatureEngineAdministradorAgentes con parámetro de entrada: El puerto al que se le va a asignar (Aplicación)
 
 ## Proyecto
 

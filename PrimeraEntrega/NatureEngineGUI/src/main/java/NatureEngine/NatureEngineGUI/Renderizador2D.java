@@ -124,5 +124,9 @@ public class Renderizador2D {
 		g.setColor(c);
 		g.drawString(info, x, y);
 	}
-
+	
+	public void dibujarLinea(Color c, int x, int y, int direccionX, int direccionY, int magnitud) {
+		g.setColor(c);
+		g.drawLine(x, y, x+(magnitud*direccionX), y+(magnitud*direccionY));
+	}
 }

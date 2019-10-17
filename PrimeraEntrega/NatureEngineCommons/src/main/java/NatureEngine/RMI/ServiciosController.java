@@ -29,15 +29,6 @@ public interface ServiciosController extends Remote{
 	 */
 	public void moverAgente(int newX, int newY, ObjetoDistribuido agente) throws RemoteException;
 
-	/**
-	 * Pregunta si la celda esta vacia.
-	 *
-	 * @param x el x de la celda
-	 * @param y el y de la celda
-	 * @return true, si la celda es vacia
-	 * @throws RemoteException Exepción remota
-	 */
-	public boolean esCeldaVacia(int x, int y) throws RemoteException;
 
 	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException;
 

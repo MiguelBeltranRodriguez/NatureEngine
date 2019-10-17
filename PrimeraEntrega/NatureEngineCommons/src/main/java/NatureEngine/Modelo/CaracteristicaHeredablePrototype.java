@@ -1,4 +1,6 @@
-package Modelo;
+package NatureEngine.Modelo;
+
+import java.io.Serializable;
 
 /**
  * Representacion general de una caracteristica heredable de un agente. 
@@ -8,12 +10,14 @@ package Modelo;
  * Fecha	Autor				Descripcion
  * 20191006	Andrea Gutierrez	Version inicial
  */
-public class CaracteristicaHeredablePrototype {
+public class CaracteristicaHeredablePrototype implements Serializable {
+
 	protected Integer id;
 	protected String nombreCaracteristica;
 	protected String tipoCaracteristica;
 	protected Object valorMinimo;
 	protected Object valorMaximo;
+	protected Object variabilidad;
 	
 	public CaracteristicaHeredablePrototype() {
 	}
@@ -29,10 +33,11 @@ public class CaracteristicaHeredablePrototype {
 	}
 
 	public CaracteristicaHeredablePrototype(String id, String tipoCaracteristica, String nombreCaracteristica, 
-			 String valorMaximo, String valorMinimo){
+			 String valorMaximo, String valorMinimo, String variabilidad){
 		this.id = Integer.valueOf(id);
 		this.tipoCaracteristica = tipoCaracteristica;
 		this.nombreCaracteristica = nombreCaracteristica;
+		this.variabilidad = variabilidad;
 
 		
 		if(valorMinimo != null && !"".equals(valorMinimo)) {
@@ -89,6 +94,32 @@ public class CaracteristicaHeredablePrototype {
 					break;
 			}
 		}
+		if(variabilidad != null && !"".equals(variabilidad)) {
+			switch (this.tipoCaracteristica){
+				case(AtributosBasicos.TIPO_FLOAT_):
+					this.valorMaximo = Float.parseFloat(variabilidad);
+					break;
+				case(AtributosBasicos.TIPO_INTEGER_):
+					this.valorMaximo = Integer.parseInt(variabilidad);			
+					break;
+				case(AtributosBasicos.TIPO_BOOLEAN_):
+					this.valorMaximo = Boolean.TRUE;			
+					break;
+			}
+		}
+		else{
+			switch (this.tipoCaracteristica){
+				case(AtributosBasicos.TIPO_FLOAT_):
+					this.valorMaximo = Float.POSITIVE_INFINITY;
+					break;
+				case(AtributosBasicos.TIPO_INTEGER_):
+					this.valorMaximo = Integer.MAX_VALUE;			
+					break;
+				case(AtributosBasicos.TIPO_BOOLEAN_):
+					this.valorMaximo = Boolean.TRUE;			
+					break;
+			}
+		}
 	}
 	
 	public Integer getId(){
@@ -102,6 +133,8 @@ public class CaracteristicaHeredablePrototype {
 	public String getTipoCaracteristica() {
 		return this.tipoCaracteristica;
 	}
+	
+
 	
 	public Object getValorMinimo() {
 		Object valor = null;		
@@ -139,4 +172,15 @@ public class CaracteristicaHeredablePrototype {
 		return valor;
 	}
 
+
+	public Object getVariabilidad() {
+		return variabilidad;
+	}
+
+
+	public void setVariabilidad(Object variabilidad) {
+		this.variabilidad = variabilidad;
+	}
+	
+	
 }
