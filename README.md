@@ -35,12 +35,12 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 #### Funciones core del componente
 **NuevaEspecie:** (Interfaz => CreadorDeEspecies)
  
-* **Requiere:** Número de Individuos a crear (Entero), Lista de valores de cada atributo de el individuo patrón (HashMap<String,Object>)
-* **Entrega:** Lista de individuos. Cada elemento de la lista es un hashmap con el nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica
+* **Requiere:** Número de Individuos a crear **(Integer)**, Lista de valores de cada atributo de el individuo patrón para crear la especie **(HashMap<String,Object>)**
+* **Entrega:** Lista de individuos. Cada elemento de la lista es un hashmap con el nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica (List<HashMap<String, GenAtributo>>)
 	
 **Reproducirse:** (Interfaz => Reproducible)
-* **Requiere:** Número de hijos a procrear, y genotipo y fenotipo tanto de padre como de madre: Dos Hashmap, uno de padre y otro de madre con el string nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica
-* **Entrega:** Lista de hijos. Cada elemento de la lista es un hashmap con el string nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica
+* **Requiere:** Número de hijos a procrear **(Integer)**, y genotipo y fenotipo tanto de padre como de madre: Dos Hashmap, uno de padre y otro de madre **2x (HashMap<String, GenAtributo>)** con el string nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica: 
+* **Entrega:** Lista de hijos. Cada elemento de la lista es un hashmap con el string nombre de cada atributo y el objeto GenAtributo que contiene el fenotipo y genotipo para esa característica **(List<HashMap<String, GenAtributo>>)**
 
 #### Simuladores (JUnit)
  
@@ -48,7 +48,7 @@ Se busco optimizar el componente de modo que se realizaran la menor cantidad de 
 * **Inputs modificables:** Número de sets de atributos creados a mostrar
 	
 **Clase SimuladorTest:** *Crea los atributos desde cero (Sin control del usuario), posteriormente crea una especie con n-individuos especificados por el usuario a partir de esos atributos creados y a continuación simula generación por generación la reproducción de los individuos en cada generación, la recombinación y mutación de sus genes y la creación de los hijos. No todos los individuos logran reproducirse y no todos los hijos sobreviven. Existe un número máximo de individuos por generación (Se puede exceder en una camada)*
-*	**Inputs modificables:** Número de generaciones a simular (Entero), Número de individuos iniciales en la especie (Entero), Número de individuos máximos por generación (Entero)
+* **Inputs modificables:** Número de generaciones a simular (Entero), Número de individuos iniciales en la especie (Entero), Número de individuos máximos por generación (Entero)
 * **Inputs modifcables por personalizar (Ya están implemantadas, pero no bajo control del usuario):** Tasa de individuos que se reproducen por generación (Float), Tasa de sobrevivencia de los hijos (Float), Promedio de hijos por cada individuo (Float)
 
 #### ¿Cómo incluirlo en otro componente?
@@ -68,13 +68,13 @@ public List<HashMap<String, GenAtributo>> genomahandler.Reproducirse(Integer num
 **Tests:**
  
 ```
-	import NatureEngine.NatureEngineGenoma.Tests.AtributosTest.java
- import NatureEngine.NatureEngineGenoma.Tests.SimuladorTest.java
+import NatureEngine.NatureEngineGenoma.Tests.AtributosTest.java
+import NatureEngine.NatureEngineGenoma.Tests.SimuladorTest.java
  
-	AtributosTest atributostest = new AtributosTest();
- SimuladorTest simuladortest = new SimuladorTest();
-	atributostest.TestDeAtributos();
-	simuladortest.Simuladordegeneraciones();
+AtributosTest atributostest = new AtributosTest();
+SimuladorTest simuladortest = new SimuladorTest();
+atributostest.TestDeAtributos();
+simuladortest.Simuladordegeneraciones();
 ```
 
 #### Glosario
