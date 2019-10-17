@@ -109,7 +109,6 @@ public class AtributosBasicos {
 						eElement.getElementsByTagName(TAG_VARIABILIDAD).item(0) == null ? 
 								null : eElement.getElementsByTagName(TAG_VARIABILIDAD).item(0).getTextContent());
 
-				System.out.println("Variabilidad: "+caracteristica.getVariabilidad());
 				atributosByName.put(caracteristica.getNombreCaracteristica(), caracteristica);
 				atributosById.put(caracteristica.getId(), caracteristica);
 			}

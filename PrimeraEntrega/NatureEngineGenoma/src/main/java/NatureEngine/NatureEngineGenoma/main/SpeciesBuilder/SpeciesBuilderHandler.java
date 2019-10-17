@@ -1,10 +1,10 @@
-package NatureEngine.NatureEngineGenoma.SpeciesBuilder;
+package NatureEngine.NatureEngineGenoma.main.SpeciesBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import NatureEngine.Modelo.GenAtributo;
-import NatureEngine.NatureEngineGenoma.Attributes.AttributesHandler;
+import NatureEngine.NatureEngineGenoma.main.Attributes.AttributesHandler;
 
 public class SpeciesBuilderHandler
 {
@@ -25,7 +25,7 @@ public class SpeciesBuilderHandler
 	}
 	
 	
-	public List<HashMap<String, GenAtributo>> CrearListaDeGenAtributosParaNuevaEspecie(Integer numeroIndividuos, HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie) {
+	public List<HashMap<String, GenAtributo>> CrearListaDeGenAtributosParaNuevaEspecie(Integer numeroIndividuos, HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie) throws Exception {
 	
 		List<HashMap<String, GenAtributo>> listadeGenAtributosdeindividuos = new ArrayList<HashMap<String, GenAtributo>>();
 		AttributesHandler manejadoratributos = AttributesHandler.Singleton(); 

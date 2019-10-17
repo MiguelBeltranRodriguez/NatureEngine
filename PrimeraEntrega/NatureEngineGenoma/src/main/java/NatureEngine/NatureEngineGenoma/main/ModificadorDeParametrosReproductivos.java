@@ -1,4 +1,4 @@
-package NatureEngine.NatureEngineGenoma;
+package NatureEngine.NatureEngineGenoma.main;
 
 import java.util.HashMap;
 

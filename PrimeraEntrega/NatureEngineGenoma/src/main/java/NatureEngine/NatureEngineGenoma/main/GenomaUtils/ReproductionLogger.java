@@ -1,4 +1,4 @@
-package NatureEngine.NatureEngineGenoma.Commons;
+package NatureEngine.NatureEngineGenoma.main.GenomaUtils;
 
 public class ReproductionLogger {
 	
@@ -25,5 +25,5 @@ public class ReproductionLogger {
 	public static void ReproductionError(String component, Exception exception) {
 		System.out.println("[Error - "+component+"] "+exception.getMessage()+exception.getStackTrace()[0]);
 	}
-
+	
 }

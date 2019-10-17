@@ -1,9 +1,8 @@
-package NatureEngine.NatureEngineGenoma.Attributes;
+package NatureEngine.NatureEngineGenoma.main.Attributes;
 
 import java.util.List;
 
 import NatureEngine.Modelo.GenAtributo;
-import NatureEngine.NatureEngineGenoma.Commons.ReproductionLogger;
 
 public class AttributesHandler extends AttributesSupport {
 
@@ -23,25 +22,17 @@ public class AttributesHandler extends AttributesSupport {
 	}
 
 	public List<GenAtributo> AlelosDeIndividuosDeNuevaEspecie(Integer numeroNuevosIndividousEspecie,
-			String nombreDelAtributo, Object valorBaseAtributo) {
+			String nombreDelAtributo, Object valorBaseAtributo) throws Exception {
 		List<GenAtributo> listadealelosdeindividuos = null;
-		try {
 			listadealelosdeindividuos = AlelosDeIndividuosDeNuevaEspecieInner(numeroNuevosIndividousEspecie,
 					nombreDelAtributo, valorBaseAtributo);
-		} catch (Exception ex) {
-			ReproductionLogger.ReproductionError("AttributesHandlerCrearNuevaspp", ex);
-		}
 		return listadealelosdeindividuos;
 	}
 
 	public List<GenAtributo> AlelosDeHijos(Integer numeroDeHijos, String nombreDelAtributo, GenAtributo genpadre,
-			GenAtributo genmadre) {
+			GenAtributo genmadre) throws Exception {
 		List<GenAtributo> listadealelosdeindividuos = null;
-		try {
-			listadealelosdeindividuos = AlelosDeHijosInner(numeroDeHijos, nombreDelAtributo, genpadre, genmadre);
-		} catch (Exception ex) {
-			ReproductionLogger.ReproductionError("AttributesHandlerMutar", ex);
-		}
+		listadealelosdeindividuos = AlelosDeHijosInner(numeroDeHijos, nombreDelAtributo, genpadre, genmadre);
 		return listadealelosdeindividuos;
 	}
 

@@ -1,6 +1,5 @@
-package NatureEngine.NatureEngineGenoma.AlelesAndComparison;
+package NatureEngine.NatureEngineGenoma.main.AlelesAndComparison;
 
-import java.util.List;
 
 import NatureEngine.Modelo.Alelo;
 
@@ -21,10 +20,10 @@ public class AlelesAndComparisonHandler extends AlelesAndComparisonSupport{
 		return ColaboradorDeSingleton.instancia;
 	}
 	
-	public Float GradoDeSimilitudEntreDosIndividuos(List<Alelo> alelosIndividuoUno,List<Alelo> alelosIndividuoDos){
-		Float gradodesimilitud = GradoDeSimilitudEntreDosIndividuosInner(alelosIndividuoUno, alelosIndividuoDos);
-		return gradodesimilitud;
-	}
+	//public Float GradoDeSimilitudEntreDosIndividuos(List<Alelo> alelosIndividuoUno,List<Alelo> alelosIndividuoDos){
+		//Float gradodesimilitud = GradoDeSimilitudEntreDosIndividuosInner(alelosIndividuoUno, alelosIndividuoDos);
+		//	return gradodesimilitud;
+	//}
 	
 	public Alelo CrearNuevoAlelo(Integer dominancia, Object valorAtributo, String alelopadreNameId){
 		Alelo alelonuevo = CrearNuevoAleloInner(dominancia, valorAtributo, alelopadreNameId);

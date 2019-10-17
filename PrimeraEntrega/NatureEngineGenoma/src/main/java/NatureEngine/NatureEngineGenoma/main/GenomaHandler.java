@@ -1,13 +1,12 @@
-package NatureEngine.NatureEngineGenoma;
+package NatureEngine.NatureEngineGenoma.main;
 
 import java.util.HashMap;
 import java.util.List;
 
 import NatureEngine.Modelo.GenAtributo;
-import NatureEngine.NatureEngineGenoma.Reproduction.ReproductionHandler;
-import NatureEngine.NatureEngineGenoma.SpeciesBuilder.SpeciesBuilderHandler;
-import NatureEngine.NatureEngineGenoma.Commons.ReproductionLogger;
-import NatureEngine.NatureEngineGenoma.Commons.ParametersHandler;
+import NatureEngine.NatureEngineGenoma.main.GenomaUtils.ParametersHandler;
+import NatureEngine.NatureEngineGenoma.main.Reproduction.ReproductionHandler;
+import NatureEngine.NatureEngineGenoma.main.SpeciesBuilder.SpeciesBuilderHandler;
 
 public class GenomaHandler implements Reproducible,CreadorDeEspecies, ModificadorDeParametrosReproductivos {
 
@@ -28,10 +27,10 @@ public class GenomaHandler implements Reproducible,CreadorDeEspecies, Modificado
 	
 	public void ModificarParametros(Object usuario, HashMap<String, Object> parameters){
 		ParametersHandler parametrizador = ParametersHandler.Singleton();
-		parametrizador.ModificarParametros(usuario, parameters);
+		//parametrizador.ModificarParametros(usuario, parameters);
 	}
 	
-	public List<HashMap<String, GenAtributo>> NuevaEspecie(Integer numeroIndividuos, HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie){
+	public List<HashMap<String, GenAtributo>> NuevaEspecie(Integer numeroIndividuos, HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie) throws Exception{
 		SpeciesBuilderHandler especiador = SpeciesBuilderHandler.Singleton();
 		List<HashMap<String, GenAtributo>> listaDeAtributosDeIndividuosDeNuevaEspecie = especiador.CrearListaDeGenAtributosParaNuevaEspecie(numeroIndividuos,listaDeValoresDeAtributosDeLaEspecie);
 		return listaDeAtributosDeIndividuosDeNuevaEspecie;

@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ArbolEvolutivo<String> implements Iterable<ArbolEvolutivo<String>> {
+public class ArbolEvolutivo<string> implements Iterable<ArbolEvolutivo<string>> {
 
-	String data;
-    ArbolEvolutivo<String> parent;
-    List<ArbolEvolutivo<String>> children;
+	string data;
+    ArbolEvolutivo<string> parent;
+    List<ArbolEvolutivo<string>> children;
 
-    public ArbolEvolutivo(String data) {
-        this.data = data;
-        this.children = new ArrayList<ArbolEvolutivo<String>>();
+    public ArbolEvolutivo(string child) {
+        this.data = child;
+        this.children = new ArrayList<ArbolEvolutivo<string>>();
     }
 
-    public ArbolEvolutivo<String> addChild(String child) {
-    	ArbolEvolutivo<String> childNode = new ArbolEvolutivo<String>(child);
+    public ArbolEvolutivo<string> addChild(string child) {
+    	ArbolEvolutivo<string> childNode = new ArbolEvolutivo<string>(child);
         childNode.parent = this;
         this.children.add(childNode);
         return childNode;
     }
 
 	@Override
-	public Iterator<ArbolEvolutivo<String>> iterator() {
+	public Iterator<ArbolEvolutivo<string>> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

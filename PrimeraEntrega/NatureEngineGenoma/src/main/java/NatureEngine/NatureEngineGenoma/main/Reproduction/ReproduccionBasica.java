@@ -1,12 +1,12 @@
-package NatureEngine.NatureEngineGenoma.Reproduction;
+package NatureEngine.NatureEngineGenoma.main.Reproduction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import NatureEngine.Modelo.GenAtributo;
-import NatureEngine.NatureEngineGenoma.Attributes.AttributesHandler;
-import NatureEngine.NatureEngineGenoma.Commons.ReproductionLogger;
-import NatureEngine.Utils.RandomExtendido;
+import NatureEngine.NatureEngineGenoma.main.Attributes.AttributesHandler;
+import NatureEngine.NatureEngineGenoma.main.GenomaUtils.ReproductionLogger;
 
 abstract public class ReproduccionBasica {
 
@@ -16,7 +16,7 @@ abstract public class ReproduccionBasica {
 	protected List<GenAtributo> CrearListaDeGenAtributosParaHijosInner(Integer numerohijos, String nombreAtributo,
 			GenAtributo genatributomadre, GenAtributo genatributopadre) {
 		List<GenAtributo> listadealelosdeindividuos = null;
-		RandomExtendido randomextendido = new RandomExtendido();
+		Float random = new Random().nextFloat();
 		try {
 			listadealelosdeindividuos = ReproduccionSexual(numerohijos, nombreAtributo, genatributomadre,
 					genatributopadre);
@@ -24,8 +24,7 @@ abstract public class ReproduccionBasica {
 			ReproductionLogger.ReproductionError("ReproduccionSexual", ex);
 			listadealelosdeindividuos = new ArrayList<GenAtributo>();
 			while (numerohijos > 0) {
-				GenAtributo genNuevo = (randomextendido.RandomBooleanoGaussiano(null) ? genatributomadre
-						: genatributopadre);
+				GenAtributo genNuevo = ((random < 0.5) ? genatributomadre : genatributopadre);
 				listadealelosdeindividuos.add(genNuevo);
 				numerohijos--;
 			}
@@ -34,11 +33,11 @@ abstract public class ReproduccionBasica {
 	}
 
 	private List<GenAtributo> ReproduccionSexual(Integer numerohijos, String nombreAtributo,
-			GenAtributo genatributomadre, GenAtributo genatributopadre) {
+			GenAtributo genatributomadre, GenAtributo genatributopadre) throws Exception {
 		List<GenAtributo> listadealelosdeindividuos = null;
 		AttributesHandler manejadoratributos = AttributesHandler.Singleton();
-		listadealelosdeindividuos = manejadoratributos.AlelosDeHijos(numerohijos, nombreAtributo,
-				genatributomadre, genatributopadre);
+		listadealelosdeindividuos = manejadoratributos.AlelosDeHijos(numerohijos, nombreAtributo, genatributomadre,
+				genatributopadre);
 		return listadealelosdeindividuos;
 	}
 

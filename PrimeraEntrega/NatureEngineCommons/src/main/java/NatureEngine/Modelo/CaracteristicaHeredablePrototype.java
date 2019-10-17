@@ -134,6 +134,8 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 		return this.tipoCaracteristica;
 	}
 	
+
+	
 	public Object getValorMinimo() {
 		Object valor = null;		
 

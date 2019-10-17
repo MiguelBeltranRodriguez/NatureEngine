@@ -1,24 +1,11 @@
-package NatureEngine.NatureEngineGenoma.AlelesAndComparison;
+package NatureEngine.NatureEngineGenoma.main.AlelesAndComparison;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import NatureEngine.Modelo.Alelo;
 
 public abstract class AlelesAndComparisonSupport {
 
-	protected Float GradoDeSimilitudEntreDosIndividuosInner(List<Alelo> alelosIndividuoUno,List<Alelo> alelosIndividuoDos){
-		Float suma=0f;
-		Integer numeroalelos = alelosIndividuoUno.size();
-		for (int index = 0; index <numeroalelos ; index++) {
-			String nameIdUno = alelosIndividuoUno.get(index).getnameId();
-			String nameIdDos = alelosIndividuoDos.get(index).getnameId();
-			suma = suma + CalcularSimilitudEntreAlelos(nameIdUno,nameIdDos);
-		}
-		Float gradodesimilitud = suma/numeroalelos;
-		return gradodesimilitud;
-	}
 	
 	protected Alelo CrearNuevoAleloInner(Integer dominancia, Object valorAtributo, String alelopadreNameId){
 		String nameId = GenerarIdAlelo();
@@ -47,11 +34,11 @@ public abstract class AlelesAndComparisonSupport {
 		//Guardar posisciones en el amros
 	}
 	
-	private Float CalcularSimilitudEntreAlelos(String nameIdUno,String nameIdDos){
-		//Comparar posiciones en el arbol entre ambos alelosString
-		Float gradosimilitud = null;
-		return gradosimilitud;
-	}
+	//private Float CalcularSimilitudEntreAlelos(String nameIdUno,String nameIdDos){
+	//	//Comparar posiciones en el arbol entre ambos alelosString
+	//	Float gradosimilitud = null;
+	//	return gradosimilitud;
+	//}
 	
 
 }

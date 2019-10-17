@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.Stack;
 
 import NatureEngine.Modelo.AtributosBasicos;
-import NatureEngine.Modelo.CaracteristicaHeredableAgente;
+import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
@@ -39,12 +39,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-	private Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente;
+	private Map<String, GenAtributo> caracteristicasHeredablesAgente;
 	private int tamañoActual;
 	private int edadActual;  
 	
 	public Agente(Long ID, Color color, int x, int y,
-			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
+			ServiciosController servicios, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
 		super(ID);
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 		this.color = color;
