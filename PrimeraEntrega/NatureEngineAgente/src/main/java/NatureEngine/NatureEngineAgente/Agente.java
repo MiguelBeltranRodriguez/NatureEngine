@@ -122,10 +122,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				this.consumoCorporal();
 				this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
 				this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
-				// TODO: Matar agente
 				
 				try {
 					this.servicios.actualizarAgente((ObjetoDistribuido)this);
+					if (this.energiaActual <= 0 || this.aguaActual<= 0 || this.edadActual >= this.longevidad) {
+						this.servicios.morir((ObjetoDistribuido)this);
+					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
