@@ -13,6 +13,13 @@ abstract class AttributesSupport extends RecombinationFecundation {
 	protected List<GenAtributo> AlelosDeIndividuosDeNuevaEspecieInner(Integer numeroNuevosIndividousEspecie,
 			String nombreAtributo, Object valorBaseAtributo) throws Exception {
 		List<GenAtributo> setDeValoresDeAtributosNuevaespecie = new ArrayList<GenAtributo>();
+		if(nombreAtributo.equals("Sexo")) {
+			while(numeroNuevosIndividousEspecie>0) {
+				GenAtributo gen = CrearGenAtributoSexual();
+				setDeValoresDeAtributosNuevaespecie.add(gen);
+				numeroNuevosIndividousEspecie--;
+			}
+		}else {
 			Integer numerodeAlelosPorgenerar = calcularNumeroDeAlelosAgenerar(numeroNuevosIndividousEspecie);
 			List<Alelo> poolalelosiniciales = PooldeAlelosIniciales(numerodeAlelosPorgenerar, nombreAtributo, valorBaseAtributo);
 			while(numeroNuevosIndividousEspecie>0) {
@@ -22,6 +29,7 @@ abstract class AttributesSupport extends RecombinationFecundation {
 				setDeValoresDeAtributosNuevaespecie.add(gen);
 				numeroNuevosIndividousEspecie--;
 			}
+		}
 		return setDeValoresDeAtributosNuevaespecie;
 	}
 	

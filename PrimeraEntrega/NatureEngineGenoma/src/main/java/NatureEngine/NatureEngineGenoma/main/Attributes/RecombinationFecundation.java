@@ -8,8 +8,10 @@ import NatureEngine.Utils.RandomExtendido;
 abstract class RecombinationFecundation extends AttributesVariator {
 
 	protected GenAtributo FecundacioncrearGenAtributo(String nombreAtributo, Alelo aleloUno, Alelo aleloDos) throws Exception {
-		aleloUno = MutarOSeguir(nombreAtributo, aleloUno);
-		aleloDos = MutarOSeguir(nombreAtributo, aleloDos);
+		if(!(nombreAtributo.equals("Sexo"))) {
+			aleloUno = MutarOSeguir(nombreAtributo, aleloUno);
+			aleloDos = MutarOSeguir(nombreAtributo, aleloDos);	
+		}
 		// Se hace en esta fase para simplificar, pero es equivalente a una mutación que
 		// ocurre en la primera fase de la meiosis
 		Object valorAtributo = FecundacionCalcularNuevoFenotipo(nombreAtributo, aleloUno, aleloDos);
@@ -31,10 +33,15 @@ abstract class RecombinationFecundation extends AttributesVariator {
 		Object valorUno = aleloUno.getValor();
 		Object valorDos = aleloDos.getValor();
 		if(nombreAtributo=="Sexo") {
-			if((Boolean)valorUno==(Boolean)valorDos) {
-				valorFenotipo = (Object)true;
+			if((Boolean)valorUno==true && (Boolean)valorDos==true) {
+				throw new Exception("NO SE PUEDEN REPRODUCIR DOS MACHOS");
 			}else {
-				valorFenotipo = (Object)false;
+				if((Boolean)valorUno==false && (Boolean)valorDos==false) {
+					valorFenotipo = (Object)false;
+				}else {
+					valorFenotipo = (Object)true;
+				}	
+				
 			}
 			return valorFenotipo;
 		}
