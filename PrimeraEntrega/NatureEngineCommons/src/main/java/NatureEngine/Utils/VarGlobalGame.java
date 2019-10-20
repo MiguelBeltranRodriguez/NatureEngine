@@ -51,7 +51,7 @@ public class VarGlobalGame {
 	
 	/** Coheficiente de atributos Agua */
 	public final static int POTENCIA_HUMEDAD = 2;	 	
-	public final static int COHEFICIENTE_VELOCIDAD_ACTUAL = 3;
+	public final static int COHEFICIENTE_VELOCIDAD_ACTUAL = 2;
 	
 	/** Operaciones de calculo */
 	public final static int EXPONENTE = 0;
@@ -60,12 +60,12 @@ public class VarGlobalGame {
 	public final static int DIVISION = 3;
 	
 	/** Coheficiente de atributos Energia */
-	public final static int COHEFICIENTE_ENERGIA_MAXIMA = 100;
+	public final static int COHEFICIENTE_ENERGIA_MAXIMA = 1000;
 	public final static int COHEFICIENTE_POTENCIA_ACTUAL = 2;	
-	public final static int COHEFICIENTE_AGUA_MAXIMA = 2;
-	public final static int COHEFICIENTE_PERCEPCION = 2;
+	public final static int COHEFICIENTE_AGUA_MAXIMA = 1000;
+	public final static int COHEFICIENTE_PERCEPCION = 1;
 	public final static int COHEFICIENTE_TAMAÑO_ACTUAL = 2;
-	public final static int COHEFICIENTE_TOLERANCIA_HUMEDAD = 2;
+	public final static int COHEFICIENTE_TOLERANCIA_HUMEDAD = 1;
 	public final static float COHEFICIENTE_GRADO_CRECIMIENTO = (float) 0.5;
 	public final static int COHEFICIENTE_GRADO_ENVEJECIMIENTO = 10;
 

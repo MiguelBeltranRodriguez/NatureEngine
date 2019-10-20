@@ -66,6 +66,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.resaltado = false;
 		
 		this.edadActual = 0;
+		this.longevidad = (int) this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
+		this.madurezReproductiva = (int) this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
 		this.potenciaMaxima = (float) this.getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
 		this.tamañoMaximo = (int) this.getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
 		this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
@@ -75,8 +77,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.aguaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_);
 		this.humedadIdeal = (float) this.getCaracteristicaHeredable(AtributosBasicos.HUMEDAD_IDEAL_);
 		this.toleranciaHumedad = (float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_);
-		this.longevidad = (int) this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
-		this.madurezReproductiva = (int) this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
+	
+	
 		
 		this.timeOutBloqueo = 3;
 		this.moverse = 0;
@@ -162,7 +164,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		List<AtributosParaCalcular> atributosEnergia = new ArrayList<AtributosParaCalcular>();
 		List<AtributosParaCalcular> atributosAgua = new ArrayList<AtributosParaCalcular>();
 		float deltaHumedad = AtributosParaCalcular.getDeltaHumedad(this.getHumedadCasillaActual(), this.humedadIdeal);
-		float toleranciaHumedadInverso = 1 / this.toleranciaHumedad;
+		float toleranciaHumedadInverso = 1 / (this.toleranciaHumedad * 1000.0f);
 		
 		atributosEnergia.add(new AtributosParaCalcular((float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_), VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, VarGlobalGame.DIVISION));
 		atributosEnergia.add(new AtributosParaCalcular(this.potenciaActual, VarGlobalGame.COHEFICIENTE_POTENCIA_ACTUAL, VarGlobalGame.EXPONENTE));
@@ -215,7 +217,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				if(desireSeleccionado.tengoHabilidad()) {
 					desireSeleccionado.init(this.desireAnterior);
 					desireSeleccionado.ejecutar();
-					desireAnterior = desireSeleccionado;
+					//desireAnterior = desireSeleccionado;
 					break;
 				}
 			}
