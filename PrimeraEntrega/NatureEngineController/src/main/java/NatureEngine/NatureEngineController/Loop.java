@@ -187,20 +187,20 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	
 	public Map<String, CaracteristicaHeredableAgente> crearAtributosAgentePrimitivo() {
 		Map<String, CaracteristicaHeredableAgente> fenotipo = new HashMap<String, CaracteristicaHeredableAgente>();
-		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 100000.0f, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 100000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 1000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 1000.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.TAMANO_MAXIMO_, 20, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.PERCEPCION_, 50, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.SEXO_, true, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.ANSIEDAD_, 50, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.HUMEDAD_IDEAL_, 0.5f, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.TOLERANCIA_HUMEDAD_, 0.5f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.HUMEDAD_IDEAL_, 0.2f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.TOLERANCIA_HUMEDAD_, 50.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.DIGESTION_VEGETAL_, 1, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.AGRESIVIDAD_, 0.5f, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.LONGEVIDAD_, 100, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 35, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.LONGEVIDAD_, 50, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 20, fenotipo);
 		return fenotipo;
 	}
 	
