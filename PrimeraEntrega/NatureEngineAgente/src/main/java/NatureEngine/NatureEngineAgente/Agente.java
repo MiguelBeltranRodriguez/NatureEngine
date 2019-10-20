@@ -129,6 +129,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 					this.servicios.actualizarAgente((ObjetoDistribuido)this);
 					if (this.energiaActual <= 0 || this.aguaActual<= 0 || this.edadActual >= this.longevidad) {
 						this.servicios.morir((ObjetoDistribuido)this);
+						break;
 					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block

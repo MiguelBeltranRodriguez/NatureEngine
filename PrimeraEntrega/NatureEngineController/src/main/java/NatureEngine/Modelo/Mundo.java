@@ -581,8 +581,6 @@ public class Mundo implements Dibujable{
 		return casillasDelMundo[x][y];
 	}
 
-
-
 	public void matarAgente(ObjetoDistribuido agente) {
 		Agente agenteParaMorir = (Agente) agente;
 		casillasDelMundo[agenteParaMorir.getX()][agenteParaMorir.getY()].eliminarDibujable(agenteParaMorir.getID());
