@@ -22,10 +22,9 @@ public class Simulador extends SimuladorSupport {
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
 		System.out.println("Generando valores de atributos iniciales al azar");
 		HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie = SimulacionCrearMapaInicialDeAtributos();
-		System.out.println("Generando Lista de GenAtributos a partir de los valores de los atributos:");
 		List<HashMap<String, GenAtributo>> listaDeAtributosDeIndividuosDeNuevaEspecie = genomahandler
 				.NuevaEspecie(numeroIndividuos, listaDeValoresDeAtributosDeLaEspecie);
-		System.out.println("Generando Lista de GenAtributos a partir de los valores de los atributos:");
+		System.out.println("Lista de GenAtributos a partir de los valores de los atributos:");
 		
 		SimuladorLogger.ReproductionResultsLogTest(0, listaDeAtributosDeIndividuosDeNuevaEspecie);
 		return listaDeAtributosDeIndividuosDeNuevaEspecie;

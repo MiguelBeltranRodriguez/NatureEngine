@@ -21,7 +21,8 @@ public class AttributesHandler extends AttributesSupport {
 		return ColaboradorDeSingleton.instancia;
 	}
 
-	public List<GenAtributo> AlelosDeIndividuosDeNuevaEspecie(Integer numeroNuevosIndividousEspecie,
+
+	public List<GenAtributo> CrearAlelosDeIndividuosDeNuevaEspecie(Integer numeroNuevosIndividousEspecie,
 			String nombreDelAtributo, Object valorBaseAtributo) throws Exception {
 		List<GenAtributo> listadealelosdeindividuos = null;
 			listadealelosdeindividuos = AlelosDeIndividuosDeNuevaEspecieInner(numeroNuevosIndividousEspecie,
@@ -29,10 +30,9 @@ public class AttributesHandler extends AttributesSupport {
 		return listadealelosdeindividuos;
 	}
 
-	public List<GenAtributo> AlelosDeHijos(Integer numeroDeHijos, String nombreDelAtributo, GenAtributo genpadre,
+	public List<GenAtributo> ConstruirAlelosDeHijos(Integer numeroDeHijos, String nombreDelAtributo, GenAtributo genpadre,
 			GenAtributo genmadre) throws Exception {
-		List<GenAtributo> listadealelosdeindividuos = null;
-		listadealelosdeindividuos = AlelosDeHijosInner(numeroDeHijos, nombreDelAtributo, genpadre, genmadre);
+		List<GenAtributo> listadealelosdeindividuos = ConstruirAlelosDeHijosInner(numeroDeHijos, nombreDelAtributo, genpadre, genmadre);
 		return listadealelosdeindividuos;
 	}
 

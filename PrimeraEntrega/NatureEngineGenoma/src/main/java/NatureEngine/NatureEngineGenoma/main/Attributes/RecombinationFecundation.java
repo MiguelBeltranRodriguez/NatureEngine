@@ -2,16 +2,14 @@ package NatureEngine.NatureEngineGenoma.main.Attributes;
 
 import NatureEngine.Modelo.Alelo;
 import NatureEngine.Modelo.GenAtributo;
-import NatureEngine.NatureEngineGenoma.main.AlelesAndComparison.AlelesAndComparisonHandler;
 import NatureEngine.NatureEngineGenoma.main.GenomaUtils.ParametersHandler;
 import NatureEngine.Utils.RandomExtendido;
 
 abstract class RecombinationFecundation extends AttributesVariator {
 
-	protected GenAtributo FecundacioncrearGenAtributo(String nombreAtributo, Alelo aleloUno, Alelo aleloDos,
-			AlelesAndComparisonHandler generadordealelos, Boolean Es) throws Exception {
-		aleloUno = MutarOSeguir(nombreAtributo, aleloUno, generadordealelos);
-		aleloDos = MutarOSeguir(nombreAtributo, aleloDos, generadordealelos);
+	protected GenAtributo FecundacioncrearGenAtributo(String nombreAtributo, Alelo aleloUno, Alelo aleloDos) throws Exception {
+		aleloUno = MutarOSeguir(nombreAtributo, aleloUno);
+		aleloDos = MutarOSeguir(nombreAtributo, aleloDos);
 		// Se hace en esta fase para simplificar, pero es equivalente a una mutación que
 		// ocurre en la primera fase de la meiosis
 		Object valorAtributo = FecundacionCalcularNuevoFenotipo(nombreAtributo, aleloUno, aleloDos);
@@ -32,6 +30,14 @@ abstract class RecombinationFecundation extends AttributesVariator {
 		Object valorFenotipo = null;
 		Object valorUno = aleloUno.getValor();
 		Object valorDos = aleloDos.getValor();
+		if(nombreAtributo=="Sexo") {
+			if((Boolean)valorUno==(Boolean)valorDos) {
+				valorFenotipo = (Object)true;
+			}else {
+				valorFenotipo = (Object)false;
+			}
+			return valorFenotipo;
+		}
 		Integer DominanciaUno = aleloUno.getDominancia();
 		Integer DominanciaDos = aleloDos.getDominancia();
 		if (DominanciaUno == DominanciaDos) {
@@ -47,13 +53,11 @@ abstract class RecombinationFecundation extends AttributesVariator {
 		return valorFenotipo;
 	}
 
-	private Alelo MutarOSeguir(String nombreAtributo, Alelo alelo, AlelesAndComparisonHandler generadordealelos) throws Exception {
+	private Alelo MutarOSeguir(String nombreAtributo, Alelo alelo) throws Exception {
 		if (SeDebeMutarONo() == true) {
 			Object valorBaseAtributo = alelo.getValor();
 			Integer DominanciaBaseAtributo = alelo.getDominancia();
-			String aleloPadreNameId = alelo.getnameId();
-			Alelo tmpalelo = mutarAlelo(nombreAtributo, valorBaseAtributo, DominanciaBaseAtributo, aleloPadreNameId,
-					generadordealelos);
+			Alelo tmpalelo = mutarAlelo(nombreAtributo, valorBaseAtributo, DominanciaBaseAtributo);
 			if (tmpalelo != null) {
 				alelo = tmpalelo;
 			}
@@ -63,7 +67,8 @@ abstract class RecombinationFecundation extends AttributesVariator {
 
 	private Boolean SeDebeMutarONo() {
 		RandomExtendido randomextendido = new RandomExtendido();
-		Float probabilidadDeMutacion = (float) ParametersHandler.getTasaDeMutacion();
+		Float probabilidadDeMutacion = null;
+		probabilidadDeMutacion = (float) ParametersHandler.getTasaDeMutacion();
 		return randomextendido.RandomBooleanoConLimite(probabilidadDeMutacion);
 	}
 

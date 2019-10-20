@@ -4,16 +4,10 @@ public class Alelo {
 
 	private Object Valor;
 	private Integer Dominancia;
-	private String nameId;
 	
-	public Alelo(Integer Dominancia, Object Valor, String hashId) {
+	public Alelo(Integer Dominancia, Object Valor) {
 		this.Dominancia=Dominancia;
 		this.Valor = Valor;
-		this.nameId = hashId;
-	}
-	
-	public String getnameId() {
-		return this.nameId;
 	}
 	
 	public Integer getDominancia() {

@@ -2,11 +2,11 @@ package NatureEngine.NatureEngineGenoma.main.Attributes;
 
 import java.util.Random;
 
-import NatureEngine.NatureEngineGenoma.main.AlelesAndComparison.AlelesAndComparisonHandler;
 import NatureEngine.NatureEngineGenoma.main.GenomaUtils.ParametersHandler;
 import NatureEngine.Utils.RandomExtendido;
 import NatureEngine.Modelo.Alelo;
 import NatureEngine.Modelo.AtributosBasicos;
+import NatureEngine.Modelo.GenAtributo;
 
 abstract class AttributesVariator {
 
@@ -14,8 +14,7 @@ abstract class AttributesVariator {
 	///////// FUNCIONES SECUNDARIAS
 	///////////////////////////////////////////
 
-	protected Alelo mutarAlelo(String nombreAtributo, Object valorBase, Integer dominanciaBase, String alelopadreNameId,
-			AlelesAndComparisonHandler generadordealelos) throws Exception {
+	protected Alelo mutarAlelo(String nombreAtributo, Object valorBase, Integer dominanciaBase) throws Exception {
 		Object nuevoValor = null;
 		Float MultiplicadorDeVariacionPorMutacion = (float) ParametersHandler.getMultiplicadorDeVariacionPorMutacion();
 		nuevoValor = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBase,
@@ -27,27 +26,39 @@ abstract class AttributesVariator {
 			nuevaDominancia = generarNuevaDominancia();
 		}
 		if (nuevaDominancia != dominanciaBase || nuevoValor != valorBase) {
-			Alelo nuevoAlelo = generadordealelos.CrearNuevoAlelo(nuevaDominancia, nuevoValor, alelopadreNameId);
+			Alelo nuevoAlelo = CrearAlelo(nuevaDominancia, nuevoValor);
 			return nuevoAlelo;
 		} else {
 			return null;
 		}
 	}
+	
+	protected GenAtributo CrearGenAtributoSexual() {
+		Alelo aleloUno = new Alelo(0,(Object)false);
+		RandomExtendido randomextendido = new RandomExtendido();
+		Object valorAleloDos = (Object) randomextendido.RandomBooleanoConLimite(null);
+		Alelo aleloDos = new Alelo(0,valorAleloDos);
+		GenAtributo genatributo = new GenAtributo("Sexo",valorAleloDos,aleloUno,aleloDos);
+		return genatributo;
+	}
 
-	protected Alelo crearAlelo(String nombreAtributo, Object valorBaseAtributo,
-			AlelesAndComparisonHandler generadordealelos) throws Exception {
+	protected Alelo CrearNuevoAlelo(String nombreAtributo, Object valorBaseAtributo) throws Exception {
 		Object nuevoValorAtributo = null;
 
 		nuevoValorAtributo = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBaseAtributo, 1.0f);
-
 		Integer nuevaDominancia = generarNuevaDominancia();
-		Alelo nuevoAlelo = generadordealelos.CrearNuevoAlelo(nuevaDominancia, nuevoValorAtributo, "root");
+		Alelo nuevoAlelo = CrearAlelo(nuevaDominancia, nuevoValorAtributo);
 		return nuevoAlelo;
+	}
+	
+	protected Alelo CrearAlelo(Integer nuevaDominancia, Object nuevoValorAtibuto) {
+		Alelo alelo = new Alelo(nuevaDominancia,nuevoValorAtibuto);
+		return alelo;
 	}
 
 	private Integer generarNuevaDominancia() {
-		Integer gradosDominancia = (int) ParametersHandler.getGradosDeDominancia();
-		Integer nuevaDominancia = (int) new Random().nextFloat() * gradosDominancia;
+		Integer gradosDominancia = ParametersHandler.getGradosDeDominancia();
+		Integer nuevaDominancia = (int) (new Random().nextFloat() * gradosDominancia);
 		return nuevaDominancia;
 	}
 

@@ -36,7 +36,7 @@ abstract public class ReproduccionBasica {
 			GenAtributo genatributomadre, GenAtributo genatributopadre) throws Exception {
 		List<GenAtributo> listadealelosdeindividuos = null;
 		AttributesHandler manejadoratributos = AttributesHandler.Singleton();
-		listadealelosdeindividuos = manejadoratributos.AlelosDeHijos(numerohijos, nombreAtributo, genatributomadre,
+		listadealelosdeindividuos = manejadoratributos.ConstruirAlelosDeHijos(numerohijos, nombreAtributo, genatributomadre,
 				genatributopadre);
 		return listadealelosdeindividuos;
 	}

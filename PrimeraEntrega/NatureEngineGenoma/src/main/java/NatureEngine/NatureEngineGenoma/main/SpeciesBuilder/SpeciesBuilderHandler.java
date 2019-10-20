@@ -33,19 +33,21 @@ public class SpeciesBuilderHandler
 		for (HashMap.Entry<String, Object> entry : listaDeValoresDeAtributosDeLaEspecie.entrySet()) {
 			String nombreAtributo = entry.getKey();
 			Object valorBaseAtributo = entry.getValue();
-			List<GenAtributo> listadealelosdeindividuos = manejadoratributos.AlelosDeIndividuosDeNuevaEspecie(numeroIndividuos, nombreAtributo, valorBaseAtributo);
+			List<GenAtributo> listadeunsoloatributoenespeciecero = manejadoratributos.CrearAlelosDeIndividuosDeNuevaEspecie(numeroIndividuos,nombreAtributo, valorBaseAtributo);
+			
 			if(primeravuelta==true) {
-				for (int index = 0; index < listadealelosdeindividuos.size(); index++) {
+				for (int index = 0; index < listadeunsoloatributoenespeciecero.size(); index++) {
 					HashMap<String, GenAtributo> IndividuoActual = new HashMap<String, GenAtributo>();
 					listadeGenAtributosdeindividuos.add(IndividuoActual);
 				}	
 				primeravuelta=false;
 			}
-			for (int index = 0; index < listadealelosdeindividuos.size(); index++) {
+			for (int index = 0; index < listadeunsoloatributoenespeciecero.size(); index++) {
 				HashMap<String, GenAtributo> IndividuoActual =listadeGenAtributosdeindividuos.get(index); 
-				IndividuoActual.put(nombreAtributo,listadealelosdeindividuos.get(index));
+				IndividuoActual.put(nombreAtributo,listadeunsoloatributoenespeciecero.get(index));
 				listadeGenAtributosdeindividuos.set(index, IndividuoActual);
 			}
+
 		}
 		return listadeGenAtributosdeindividuos;
 	}

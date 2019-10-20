@@ -1,12 +1,10 @@
 package NatureEngine.NatureEngineGenoma.main.GenomaUtils;
 
-import java.util.HashMap;
 
 public abstract class ParametersRepository {
 
-	private static HashMap<String, Object> parameters= new HashMap<String, Object>();
-	
-	private static Float TasaDeMutacion=0.05f;
+
+	private static Float TasaDeMutacion=0.01f;
 	private static Float ProbabilidadMutarDominancia=0.2f;
 	private static Float MultiplicadorDeVariacionPorMutacion=1f;
 	private static Integer GradosDeDominancia=4;
