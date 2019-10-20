@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Stack;
 
 import NatureEngine.Modelo.AtributosBasicos;
@@ -19,7 +18,6 @@ import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
 import NatureEngine.RMI.ServiciosController;
 import NatureEngine.Utils.VarGlobalGame;
-import NatureEngine.Utils.VarGlobalVista;
 
 public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
 
@@ -50,6 +48,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private float toleranciaHumedad;
 	private int longevidad;
 	private int madurezReproductiva;
+	private int tamañoMaximo;
+	private float potenciaMaxima;
 	
 	public Agente(Long ID, Color color, int x, int y,
 			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
@@ -64,15 +64,20 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.delX = 0;
 		this.delY = 0;
 		this.resaltado = false;
-		this.potenciaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
-		this.tamañoActual = (int) this.getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
+		
+		this.edadActual = 0;
+		this.potenciaMaxima = (float) this.getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
+		this.tamañoMaximo = (int) this.getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
+		this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
+		this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
+		
 		this.energiaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
 		this.aguaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_);
 		this.humedadIdeal = (float) this.getCaracteristicaHeredable(AtributosBasicos.HUMEDAD_IDEAL_);
 		this.toleranciaHumedad = (float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_);
 		this.longevidad = (int) this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
 		this.madurezReproductiva = (int) this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
-		this.edadActual = 0;
+		
 		this.timeOutBloqueo = 3;
 		this.moverse = 0;
 		this.percepcion = new ArrayList<ObjetoDistribuido>();
@@ -112,11 +117,19 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 						+" | Edad Actual: "+this.edadActual);
 				
 				ticks = 0;
+				this.edadActual++;
 				this.velocidadActual = ActualizacionAtributosDependientes.actualizarVelocidadActual(this.casillasMovidas, VarGlobalGame.UNIDAD_TIEMPO_VELOCIDAD);
 				this.consumoCorporal();
-				this.cambioSegunEdad();
-				this.edadActual++;
+				this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
+				this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
 				// TODO: Matar agente
+				
+				try {
+					this.servicios.actualizarAgente((ObjetoDistribuido)this);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			t_1 = System.currentTimeMillis();
 			delta = t_1 - t_0;
@@ -132,10 +145,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}
 	}
 
-	private void cambioSegunEdad() {
-		List<AtributosParaCalcular> atributosTamaño = new ArrayList<AtributosParaCalcular>();
-		List<AtributosParaCalcular> atributosPotencia = new ArrayList<AtributosParaCalcular>();
-		float coheficienteMadurez = (float) Math.pow(this.edadActual - this.madurezReproductiva, 2);
+	private float cambioSegunEdad(float atributoMaximo) {
+		float coheficienteMadurez = (float) Math.pow(this.edadActual - this.madurezReproductiva, 2) * (-1);
 		float coheficienteLogevidad = this.longevidad;
 
 		if (this.edadActual > this.madurezReproductiva) {
@@ -143,11 +154,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		} else {
 			coheficienteLogevidad *= VarGlobalGame.COHEFICIENTE_GRADO_CRECIMIENTO;
 		}
-		atributosTamaño.add(new AtributosParaCalcular(coheficienteMadurez, coheficienteLogevidad, VarGlobalGame.DIVISION));
-		atributosPotencia.add(new AtributosParaCalcular(coheficienteMadurez, coheficienteLogevidad, VarGlobalGame.DIVISION));
 
-		this.tamañoActual = (int) ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.tamañoActual, atributosTamaño);
-		this.potenciaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.potenciaActual, atributosPotencia);
+		return (coheficienteMadurez / coheficienteLogevidad) + atributoMaximo;
 	}
 
 	private void consumoCorporal() {
@@ -170,12 +178,6 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.energiaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.energiaActual, atributosEnergia);
 		this.aguaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.aguaActual, atributosAgua);
 		
-		try {
-			this.servicios.actualizarAgente((ObjetoDistribuido)this);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		this.casillasMovidas = 0;
 	}
 
@@ -293,8 +295,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.moverse = moverse;
 	}
 
-
-	private void decisionIrA(int newX, int newY) {
+/**	private void decisionIrA(int newX, int newY) {
 		delX = Math.abs(newX-x);
 		delY = Math.abs(newY-y);
 		if(newX > x) {
@@ -307,7 +308,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}else {
 			direccionY = -1;
 		}
-	}
+	}*/
+
 	public synchronized  void cambiarPosicion(int x2, int y2) {
 		try {
 			ServiciosController servicios = getServicios();
@@ -367,18 +369,26 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public String info() {
 		return ID+ 
 				"#x: "+ this.x + " y: "+this.y+
-				"#energía: "+this.energiaActual+
-				"#velocidad: "+this.potenciaActual+
-				"#percepción: "+this.getPercepciones()+
-				"#tamaño: "+this.tamañoActual;
+				"#energía: " + this.energiaActual+
+				"#velocidad: " + this.potenciaActual+
+				"#percepción: " + this.getPercepciones()+
+				"#tamaño: "+ this.tamañoActual;
 	}
-
 
 	public ServiciosController getServicios() {
 		return servicios;
 	}
+
 	public void setServicios(ServiciosController servicios) {
 		this.servicios = servicios;
+	}
+
+	public float getAguaActual() {
+		return aguaActual;
+	}
+
+	public void setAguaActual(float aguaActual) {
+		this.aguaActual = aguaActual;
 	}
 
 
@@ -415,87 +425,70 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.resaltado = resaltado;
 	}
 
-
 	public float getPotenciaActual() {
 		return potenciaActual;
 	}
-
 
 	public void setPotenciaActual(float potenciaActual) {
 		this.potenciaActual = potenciaActual;
 	}
 
-
 	public Desire getDesireAnterior() {
 		return desireAnterior;
 	}
-
 
 	public void setDesireAnterior(Desire desireAnterior) {
 		this.desireAnterior = desireAnterior;
 	}
 
-
 	public Map<String, CaracteristicaHeredableAgente> getCaracteristicasHeredablesAgente() {
 		return caracteristicasHeredablesAgente;
 	}
-
 
 	public void setCaracteristicasHeredablesAgente(
 			Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) {
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 	}
 
-
 	public int getTamañoActual() {
 		return tamañoActual;
 	}
-
 
 	public void setTamañoActual(int tamañoActual) {
 		this.tamañoActual = tamañoActual;
 	}
 
-
 	public int getEdadActual() {
 		return edadActual;
 	}
-
 
 	public void setEdadActual(int edadActual) {
 		this.edadActual = edadActual;
 	}
 
-
 	public int getCasillasMovidas() {
 		return casillasMovidas;
 	}
-
 
 	public void setCasillasMovidas(int casillasMovidas) {
 		this.casillasMovidas = casillasMovidas;
 	}
 
-
 	public float getEnergiaActual() {
 		return energiaActual;
 	}
-
 
 	public void setEnergiaActual(float energiaActual) {
 		this.energiaActual = energiaActual;
 	}
 
-
 	public float getVelocidadActual() {
 		return velocidadActual;
 	}
 
-
 	public void setVelocidadActual(float velocidadActual) {
 		this.velocidadActual = velocidadActual;
 	}
-
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

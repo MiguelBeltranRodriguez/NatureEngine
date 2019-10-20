@@ -200,7 +200,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		this.agregarCaracteristica(AtributosBasicos.DIGESTION_VEGETAL_, 1, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.AGRESIVIDAD_, 0.5f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.LONGEVIDAD_, 100, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 20, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 35, fenotipo);
 		return fenotipo;
 	}
 	

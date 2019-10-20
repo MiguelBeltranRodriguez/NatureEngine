@@ -568,9 +568,11 @@ public class Mundo implements Dibujable{
 
 
 	public void actualizarAgente(Agente agente) {
-		Agente agenteCopia = (Agente) casillasDelMundo[agente.getX()][agente.getY()].findAgente(agente.getID());
-		agenteCopia.setEnergiaActual(agente.getEnergiaActual());
-		
+		Agente agenteForaneo = (Agente) casillasDelMundo[agente.getX()][agente.getY()].findAgente(agente.getID());
+		agenteForaneo.setEnergiaActual(agente.getEnergiaActual());
+		agenteForaneo.setAguaActual(agente.getAguaActual());
+		agenteForaneo.setTamañoActual(agente.getTamañoActual());
+		agenteForaneo.setPotenciaActual(agente.getPotenciaActual());
 	}
 
 
