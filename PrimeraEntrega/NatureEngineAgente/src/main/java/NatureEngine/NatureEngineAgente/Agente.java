@@ -24,9 +24,9 @@ import NatureEngine.Utils.VarGlobalVista;
 public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
 
 	private static final long serialVersionUID = 1L;
-	private Color color;  //prueba <- ??
-	private int x;	//prueba <- ??
-	private int y; //prueba <- ??
+	private Color color;
+	private int x;
+	private int y;
 	private ServiciosController servicios;
 	private boolean resaltado;
 	private int delX;
@@ -44,7 +44,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int edadActual;  
 	private int casillasMovidas;
 	private float energiaActual;
+	private float aguaActual;
 	private float velocidadActual;
+	private float humedadIdeal;
+	private float toleranciaHumedad;
+	private int longevidad;
+	private int madurezReproductiva;
 	
 	public Agente(Long ID, Color color, int x, int y,
 			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
@@ -58,10 +63,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.direccionY = 0;
 		this.delX = 0;
 		this.delY = 0;
-		resaltado = false;
-		this.potenciaActual = (float)getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
-		this.tamañoActual = (int)getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
-		this.energiaActual = (float)getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
+		this.resaltado = false;
+		this.potenciaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
+		this.tamañoActual = (int) this.getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
+		this.energiaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
+		this.aguaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_);
+		this.humedadIdeal = (float) this.getCaracteristicaHeredable(AtributosBasicos.HUMEDAD_IDEAL_);
+		this.toleranciaHumedad = (float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_);
+		this.longevidad = (int) this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
+		this.madurezReproductiva = (int) this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
 		this.edadActual = 0;
 		this.timeOutBloqueo = 3;
 		this.moverse = 0;
@@ -94,8 +104,18 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			this.pensar();
 			// this.belief.pensar();
 			if(ticks==(VarGlobalGame.FRECUENCIA_TICKS_CONSUMO)) {
+				
+				System.out.println("|Energía Actual: "+this.energiaActual
+						+" | Agua actual: "+this.aguaActual
+						+" | Tamaño actual: "+this.tamañoActual
+						+" | Potencia actual: "+this.potenciaActual
+						+" | Edad Actual: "+this.edadActual);
+				
 				ticks = 0;
-				consumo();
+				this.velocidadActual = ActualizacionAtributosDependientes.actualizarVelocidadActual(this.casillasMovidas, VarGlobalGame.UNIDAD_TIEMPO_VELOCIDAD);
+				this.consumoCorporal();
+				this.cambioSegunEdad();
+				this.edadActual++;
 				// TODO: Matar agente
 			}
 			t_1 = System.currentTimeMillis();
@@ -111,28 +131,66 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			ticks++;
 		}
 	}
-	private void consumo() {
-		this.velocidadActual = ActualizacionAtributosDependientes
-				.actualizarVelocidadActual(casillasMovidas, VarGlobalGame.UNIDAD_TIEMPO_VELOCIDAD);
 
-		List<AtributosEnergia> atributosEnergia = new ArrayList<AtributosEnergia>();
-		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_), VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, VarGlobalGame.DIVISION));
-		atributosEnergia.add(new AtributosEnergia(this.potenciaActual, VarGlobalGame.COHEFICIENTE_POTENCIA_ACTUAL, VarGlobalGame.EXPONENTE));
-		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_), VarGlobalGame.COHEFICIENTE_AGUA_MAXIMA, VarGlobalGame.DIVISION));
-		atributosEnergia.add(new AtributosEnergia(Float.parseFloat(this.getCaracteristicaHeredable(AtributosBasicos.PERCEPCION_).toString()), VarGlobalGame.COHEFICIENTE_PERCEPCION, VarGlobalGame.MULTIPLICACION));
-		atributosEnergia.add(new AtributosEnergia(this.tamañoActual, VarGlobalGame.COHEFICIENTE_TAMAÑO_ACTUAL, VarGlobalGame.EXPONENTE));
-		atributosEnergia.add(new AtributosEnergia((float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_), VarGlobalGame.COHEFICIENTE_TOLERANCIA_HUMEDAD, VarGlobalGame.MULTIPLICACION));
-		atributosEnergia.add(new AtributosEnergia(this.velocidadActual, VarGlobalGame.COHEFICIENTE_VELOCIDAD_ACTUAL, VarGlobalGame.EXPONENTE));
+	private void cambioSegunEdad() {
+		List<AtributosParaCalcular> atributosTamaño = new ArrayList<AtributosParaCalcular>();
+		List<AtributosParaCalcular> atributosPotencia = new ArrayList<AtributosParaCalcular>();
+		float coheficienteMadurez = (float) Math.pow(this.edadActual - this.madurezReproductiva, 2);
+		float coheficienteLogevidad = this.longevidad;
+
+		if (this.edadActual > this.madurezReproductiva) {
+			coheficienteLogevidad *= VarGlobalGame.COHEFICIENTE_GRADO_ENVEJECIMIENTO;
+		} else {
+			coheficienteLogevidad *= VarGlobalGame.COHEFICIENTE_GRADO_CRECIMIENTO;
+		}
+		atributosTamaño.add(new AtributosParaCalcular(coheficienteMadurez, coheficienteLogevidad, VarGlobalGame.DIVISION));
+		atributosPotencia.add(new AtributosParaCalcular(coheficienteMadurez, coheficienteLogevidad, VarGlobalGame.DIVISION));
+
+		this.tamañoActual = (int) ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.tamañoActual, atributosTamaño);
+		this.potenciaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.potenciaActual, atributosPotencia);
+	}
+
+	private void consumoCorporal() {
+		List<AtributosParaCalcular> atributosEnergia = new ArrayList<AtributosParaCalcular>();
+		List<AtributosParaCalcular> atributosAgua = new ArrayList<AtributosParaCalcular>();
+		float deltaHumedad = AtributosParaCalcular.getDeltaHumedad(this.getHumedadCasillaActual(), this.humedadIdeal);
+		float toleranciaHumedadInverso = 1 / this.toleranciaHumedad;
 		
-		this.energiaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(energiaActual, atributosEnergia);
-		System.out.println(energiaActual + " BANANA");
+		atributosEnergia.add(new AtributosParaCalcular((float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_), VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, VarGlobalGame.DIVISION));
+		atributosEnergia.add(new AtributosParaCalcular(this.potenciaActual, VarGlobalGame.COHEFICIENTE_POTENCIA_ACTUAL, VarGlobalGame.EXPONENTE));
+		atributosEnergia.add(new AtributosParaCalcular((float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_), VarGlobalGame.COHEFICIENTE_AGUA_MAXIMA, VarGlobalGame.DIVISION));
+		atributosEnergia.add(new AtributosParaCalcular(Float.parseFloat(this.getCaracteristicaHeredable(AtributosBasicos.PERCEPCION_).toString()), VarGlobalGame.COHEFICIENTE_PERCEPCION, VarGlobalGame.MULTIPLICACION));
+		atributosEnergia.add(new AtributosParaCalcular(this.tamañoActual, VarGlobalGame.COHEFICIENTE_TAMAÑO_ACTUAL, VarGlobalGame.EXPONENTE));
+		atributosEnergia.add(new AtributosParaCalcular((float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_), VarGlobalGame.COHEFICIENTE_TOLERANCIA_HUMEDAD, VarGlobalGame.MULTIPLICACION));
+		atributosEnergia.add(new AtributosParaCalcular(this.velocidadActual, VarGlobalGame.COHEFICIENTE_VELOCIDAD_ACTUAL, VarGlobalGame.EXPONENTE));
+
+		atributosAgua.add(new AtributosParaCalcular(this.velocidadActual, VarGlobalGame.COHEFICIENTE_VELOCIDAD_ACTUAL, VarGlobalGame.EXPONENTE));
+		atributosAgua.add(new AtributosParaCalcular(deltaHumedad, toleranciaHumedadInverso, VarGlobalGame.MULTIPLICACION));
+		
+		this.energiaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.energiaActual, atributosEnergia);
+		this.aguaActual = ActualizacionAtributosDependientes.actualizarEnergiaGrupo(this.aguaActual, atributosAgua);
+		
 		try {
 			this.servicios.actualizarAgente((ObjetoDistribuido)this);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		casillasMovidas = 0;
+		this.casillasMovidas = 0;
+	}
+
+
+	private float getHumedadCasillaActual() {
+		Casilla casilla = null;
+		try {
+			casilla = (Casilla) servicios.getCasilla(this.x, this.y);
+			return casilla.getHumedadActual();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TODO manejar cuando no encuentra humedad
+		return (float) 0.000000000000000000000000001;
 	}
 
 
@@ -155,6 +213,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				if(desireSeleccionado.tengoHabilidad()) {
 					desireSeleccionado.init(this.desireAnterior);
 					desireSeleccionado.ejecutar();
+					desireAnterior = desireSeleccionado;
 					break;
 				}
 			}
@@ -264,14 +323,17 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		
 	}
 	@Override
-	public void dibujar(Renderizador2D r) {
+	public void dibujar(Renderizador2D render) {
 		int tamañoActual = this.tamañoActual;
 		int distanciaPercepcion = this.getDistanciaPercepcion();
-		r.dibujarRectangulo(color, x-(tamañoActual/2), y-(tamañoActual/2), tamañoActual, tamañoActual);
-		r.dibujarLinea(Color.BLACK, this.x, this.y, this.direccionX, this.direccionY, distanciaPercepcion);
+		int mitadTamaño = tamañoActual / 2;
+		int diametroPercepcion = distanciaPercepcion * 2;
+		
+		render.dibujarRectangulo(color, x - mitadTamaño, y - mitadTamaño, tamañoActual, tamañoActual);
+		render.dibujarLinea(Color.LIGHT_GRAY, this.x, this.y, this.direccionX, this.direccionY, distanciaPercepcion);
 		if(resaltado) {
-			r.dibujarContornoRectangular(Color.darkGray, x-(tamañoActual/2), y-(tamañoActual/2), tamañoActual, tamañoActual);
-			r.dibujarContornoRectangular(Color.BLACK, x-distanciaPercepcion, y-distanciaPercepcion, distanciaPercepcion*2, distanciaPercepcion*2);
+			render.dibujarContornoRectangular(Color.darkGray, x - mitadTamaño, y - mitadTamaño, tamañoActual, tamañoActual);
+			render.dibujarContornoRectangular(Color.BLACK, x - distanciaPercepcion, y - distanciaPercepcion, diametroPercepcion, diametroPercepcion);
 		}
 	}
 

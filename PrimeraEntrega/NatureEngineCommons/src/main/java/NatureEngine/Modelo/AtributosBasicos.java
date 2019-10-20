@@ -39,6 +39,7 @@ public class AtributosBasicos {
 	public static final String DIGESTION_VEGETAL_ = "Digestion vegetal";
 	public static final String AGRESIVIDAD_ = "Agresividad";
 	public static final String LONGEVIDAD_ = "Longevidad";
+	public static final String MADUREZ_REPRODUCTIVA = "Madurez reproductiva";
 	
 	//Tipos Atributos
 	public static final String TIPO_FLOAT_ = "java.lang.Float";

@@ -1,10 +1,11 @@
 package NatureEngine.Modelo.Intentions;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import NatureEngine.NatureEngineAgente.Agente;
 
-public abstract class Intention {
+public abstract class Intention implements Serializable {
 	protected Agente agente;
 	protected boolean finalizado;
 	public abstract void ejecutar() throws RemoteException;

@@ -2,14 +2,14 @@ package NatureEngine.NatureEngineAgente;
 
 import NatureEngine.Utils.VarGlobalGame;
 
-public class AtributosEnergia {
-	private int coheficiente;
-	private float atributo;
+public class AtributosParaCalcular {
+	private float valor1;
+	private float valor2;
 	private int tipoOperacion;
 
-	public AtributosEnergia(float atributo, int coheficiente, int tipoOperacion) {
-		this.coheficiente = coheficiente;
-		this.atributo = atributo;
+	public AtributosParaCalcular(float valor1, float valor2, int tipoOperacion) {
+		this.valor1 = valor1;
+		this.valor2 = valor2;
 		this.tipoOperacion = tipoOperacion;
 	}
 	
@@ -27,10 +27,9 @@ public class AtributosEnergia {
 		
 		return resultado;
 	}
-	
-	
+
 	public float calcularExponente() {
-		return (float) (Math.pow((double) this.atributo, (double) this.coheficiente));
+		return (float) (Math.pow((double) this.valor1, (double) this.valor2));
 	}
 	
 	public float calcularInverso() {
@@ -38,18 +37,26 @@ public class AtributosEnergia {
 	}
 	
 	public float calcularMultiplicacion() {
-		return (float) this.atributo * this.coheficiente;
+		return (float) this.valor1 * this.valor2;
 	}
 	
 	public float calcularDivision() {
-		return (float) this.atributo / this.coheficiente;
+		return (float) this.valor1 / this.valor2;
+	}
+	
+	public static float getDeltaHumedad(float humedadCasillaActual, float humedadIdeal) {
+		return (float) Math.pow(humedadCasillaActual - humedadIdeal, 3);
+	}
+	
+	public static float getToleranciaHumedadInverso(float toleranciaHumedadIdeal) {
+		return 1 / toleranciaHumedadIdeal;
 	}
 
-	public int getCoheficiente() {
-		return coheficiente;
+	public float getCoheficiente() {
+		return valor2;
 	}
 
 	public float getAtributo() {
-		return atributo;
+		return valor1;
 	}
 }

@@ -30,10 +30,10 @@ public class DesireAlimentarme extends Desire {
 			if(desireAlim.objetivo.equals(this.objetivo)) {
 				this.intenciones = desire.getIntenciones();
 			}else {
-				llenarPila();
+				this.llenarPila();
 			}
 		}else {
-			llenarPila();
+			this.llenarPila();
 		}
 	}
 	

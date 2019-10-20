@@ -116,4 +116,13 @@
 		<variabilidad>5</variabilidad>
 	</atributo>
 	
+	<atributo>
+		<id>14</id>
+		<nombre>Madurez reproductiva</nombre>
+		<tipo>java.lang.Integer</tipo>
+		<valorMaximo></valorMaximo>
+		<valorMinimo>1</valorMinimo>
+		<variabilidad>5</variabilidad>
+	</atributo>
+	
 </Atributos>

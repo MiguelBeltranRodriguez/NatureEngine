@@ -7,8 +7,8 @@ public class ActualizacionAtributosDependientes {
 		return numeroCasillas / milisegundos;
 	}
 	
-	public static float actualizarEnergiaGrupo(float energiaActual, List<AtributosEnergia> atributoEnergia) {
-		for (AtributosEnergia atributosEnergia : atributoEnergia) {
+	public static float actualizarEnergiaGrupo(float energiaActual, List<AtributosParaCalcular> atributoEnergia) {
+		for (AtributosParaCalcular atributosEnergia : atributoEnergia) {
 			energiaActual -= atributosEnergia.calcular();
 		}
 

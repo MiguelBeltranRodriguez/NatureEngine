@@ -1,5 +1,6 @@
 package NatureEngine.Modelo.Intentions;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import NatureEngine.Modelo.Planta;

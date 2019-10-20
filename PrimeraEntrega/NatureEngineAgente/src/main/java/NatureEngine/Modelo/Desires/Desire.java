@@ -1,12 +1,13 @@
 package NatureEngine.Modelo.Desires;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Stack;
 
 import NatureEngine.Modelo.Intentions.Intention;
 import NatureEngine.NatureEngineAgente.Agente;
 
-public abstract class Desire {
+public abstract class Desire implements Serializable {
 	protected int prioridad;
 	protected Agente agente;
 	protected Stack<Intention> intenciones;

@@ -66,4 +66,8 @@ public class VarGlobalGame {
 	public final static int COHEFICIENTE_PERCEPCION = 2;
 	public final static int COHEFICIENTE_TAMAÑO_ACTUAL = 2;
 	public final static int COHEFICIENTE_TOLERANCIA_HUMEDAD = 2;
+	public final static float COHEFICIENTE_GRADO_CRECIMIENTO = (float) 0.5;
+	public final static int COHEFICIENTE_GRADO_ENVEJECIMIENTO = 10;
+
+	
 }
