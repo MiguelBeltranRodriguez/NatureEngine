@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -58,13 +59,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int tamañoMaximo;
 	private float potenciaMaxima;
 	private ServiciosAdministradorAgentes serviciosAgente;
-	private Queue<Mensaje> colaMensajes;
+	private Queue<Mensaje> colaMensajesRecibidos;
+	private Map<String, Mensaje> mensajesEnviadosEsperando;
 	
 	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
 
 		super(ID);
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
-		this.colaMensajes = new LinkedList<Mensaje>();
+		this.mensajesEnviadosEsperando = new HashMap<String, Mensaje>();
+		this.colaMensajesRecibidos = new LinkedList<Mensaje>();
 		this.serviciosAgente = serviciosAgente;
 		this.color = color;
 		this.x = x;
@@ -134,12 +137,14 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				this.velocidadActual = ActualizacionAtributosDependientes.actualizarVelocidadActual(this.casillasMovidas, VarGlobalGame.UNIDAD_TIEMPO_VELOCIDAD);
 				this.consumoCorporal();
 				this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
-				this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
-				// TODO: Matar agente
-				
+				this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);		
 				try {
 					this.servicios.actualizarAgente((ObjetoDistribuido)this);
-				} catch (RemoteException e) {
+					if (this.energiaActual <= 0 /*|| this.aguaActual<= 0*/ || this.edadActual >= this.longevidad) {
+						this.servicios.morir((ObjetoDistribuido)this);
+						Thread.currentThread().join();
+					}
+				} catch (RemoteException | InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -175,7 +180,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		List<AtributosParaCalcular> atributosEnergia = new ArrayList<AtributosParaCalcular>();
 		List<AtributosParaCalcular> atributosAgua = new ArrayList<AtributosParaCalcular>();
 		float deltaHumedad = AtributosParaCalcular.getDeltaHumedad(this.getHumedadCasillaActual(), this.humedadIdeal);
-		float toleranciaHumedadInverso = 1 / (this.toleranciaHumedad * 1000.0f);
+		float toleranciaHumedadInverso = 1 / (this.toleranciaHumedad * 10000.0f);
 		
 		atributosEnergia.add(new AtributosParaCalcular((float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_), VarGlobalGame.COHEFICIENTE_ENERGIA_MAXIMA, VarGlobalGame.DIVISION));
 		atributosEnergia.add(new AtributosParaCalcular(this.potenciaActual, VarGlobalGame.COHEFICIENTE_POTENCIA_ACTUAL, VarGlobalGame.EXPONENTE));
@@ -216,12 +221,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				System.out.println(temporal.getHumedad());
 			} */
 			Stack<Desire> desires = new Stack<Desire>();
-			//desires.push(new DesireAlimentarme(this));
 			if((boolean)getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
 				desires.push(new DesireReproducirmeHembra(this));
 			}else {
 				desires.push(new DesireReproducirmeMacho(this));
 			}
+			desires.push(new DesireAlimentarme(this));
+			
 			
 			// TODO: crear dssirePorDefecto
 			// TODO: pasar a función OPTION + FILTER
@@ -330,6 +336,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public synchronized void consumirPlanta(ObjetoDistribuido planta) {
 		try {
 			ServiciosController servicios = getServicios();
+			
 			this.energiaActual += (float) servicios.consumirPlata((ObjetoDistribuido)this, planta);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -516,6 +523,16 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	public void setServiciosAgente(ServiciosAdministradorAgentes serviciosAgente) {
 		this.serviciosAgente = serviciosAgente;
+	}
+	
+
+	public Map<String, Mensaje> getMensajesEnviadosEsperando() {
+		return mensajesEnviadosEsperando;
+	}
+
+
+	public void setMensajesEnviadosEsperando(Map<String, Mensaje> mensajesEnviadosEsperando) {
+		this.mensajesEnviadosEsperando = mensajesEnviadosEsperando;
 	}
 
 

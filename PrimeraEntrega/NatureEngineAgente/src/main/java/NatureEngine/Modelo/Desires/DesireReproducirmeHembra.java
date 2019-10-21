@@ -15,7 +15,7 @@ public class DesireReproducirmeHembra extends Desire {
 		this.intenciones = new Stack<Intention>();
 	}
 	@Override
-	public boolean tengoHabilidad() {
+	public boolean tengoCapacidad() {
 		if(this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA)) {
 			return true;
 		}else {
@@ -25,7 +25,7 @@ public class DesireReproducirmeHembra extends Desire {
 
 	@Override
 	public void init(Desire desireAnterior) {
-
+		
 	}
 
 	

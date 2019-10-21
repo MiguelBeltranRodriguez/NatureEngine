@@ -29,7 +29,11 @@ public class MoverseA extends Intention {
 		this.objetivoY = objetivoY;
 		this.delX = Math.abs(agente.getX() - this.objetivoX);
 		this.delY = Math.abs(agente.getY() - this.objetivoY);
-		this.finalizado = false;
+		if(delX == 0 && delY == 0) {
+			this.finalizado = true;
+		}else {
+			this.finalizado = false;
+		}
 	}
 
 	@Override
@@ -46,7 +50,7 @@ public class MoverseA extends Intention {
 			this.agente.setMoverse(moverse + velocidadPXs);
 		}
 
-		if(delX == 0 && delY == 0) {
+		if(delX == 0 && delY == 0) {	
 			this.finalizado = true;
 		}
 	}

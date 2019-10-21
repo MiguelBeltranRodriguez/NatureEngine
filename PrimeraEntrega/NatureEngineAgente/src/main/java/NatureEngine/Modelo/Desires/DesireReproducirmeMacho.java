@@ -2,6 +2,7 @@ package NatureEngine.Modelo.Desires;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import NatureEngine.Mensajeria.Mensaje;
@@ -24,25 +25,52 @@ public class DesireReproducirmeMacho extends Desire {
 	
 	
 	@Override
-	public boolean tengoHabilidad() {
+	public boolean tengoCapacidad() {
 		
 		List<ObjetoDistribuido> percepciones = agente.getPercepciones();
+		Map<String, Mensaje> mensajesEnviados = agente.getMensajesEnviadosEsperando();
 		
 		hembraObjetivo(percepciones);
-		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA)) {
-			try {
-				Mensaje respuesta = agenteHembra.enviarCortejo(new Mensaje(agente.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, this.agente, agenteHembra));
-				
-				if(respuesta.getTipo().equals(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCIRME_ACK)) {
-					return true;
-				}else {
-					return false;
+		Mensaje mensajeAnterior = mensajesEnviados.get(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
+		
+		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) ) {
+			if(mensajeAnterior == null) {
+				try {
+					Mensaje mensajeAEnviar = new Mensaje(agente.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, this.agente, agenteHembra);
+					Mensaje respuesta = agenteHembra.enviarCortejo(mensajeAEnviar);
+					
+					if(respuesta.getTipo().equals(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCIRME_ACK)) {
+						mensajesEnviados.put(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, mensajeAEnviar);
+						return true;
+					}else {
+						return false;
+					}
+					
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+			else if(!mensajeAnterior.getReceptor().getID().equals(agenteHembra.getID())) {
+				try {
+					Mensaje mensajeAEnviar = new Mensaje(agente.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, this.agente, agenteHembra);
+					Mensaje respuesta = agenteHembra.enviarCortejo(mensajeAEnviar);
+					mensajesEnviados.put(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, mensajeAEnviar);
+					if(respuesta.getTipo().equals(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCIRME_ACK)) {
+						mensajesEnviados.put(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, mensajeAEnviar);
+						return true;
+					}else {
+						return false;
+					}
+					
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else {
+				return true;
+			}
+			
 			
 		}	
 		return false;
@@ -50,22 +78,17 @@ public class DesireReproducirmeMacho extends Desire {
 
 	@Override
 	public void init(Desire desireAnterior) {
-		/*
-		if(desireAnterior instanceof DesireReproducirmeMacho) {
-			DesireReproducirmeMacho desireAlim = (DesireReproducirmeMacho) desireAnterior;
-			if(desireAlim.agenteHembra.getID().equals(agenteHembra.getID())) {
-				this.agenteHembra = desireAlim.agenteHembra;
-				this.intenciones = desireAnterior.getIntenciones();
-			}else {
-				this.llenarPila();
-			}
-		}else {
-			this.llenarPila();
-		}*/
 		this.llenarPila();
 	}
 	private void llenarPila() {
-		this.intenciones.push(new MoverseA(agente, agenteHembra.getX(), agenteHembra.getY()));
+		Intention intencionMoverse = new MoverseA(agente, agenteHembra.getX(), agenteHembra.getY());
+		Map<String, Mensaje> mensajesEnviados = agente.getMensajesEnviadosEsperando();
+		if(intencionMoverse.isFinalizado()) {
+			mensajesEnviados.remove(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
+		}else {
+			this.intenciones.push(intencionMoverse);
+		}
+		
 	}
 	private void hembraObjetivo(List<ObjetoDistribuido> percepciones) {
 		for (ObjetoDistribuido c : percepciones) {
@@ -75,7 +98,7 @@ public class DesireReproducirmeMacho extends Desire {
 			if(agente!=null && (boolean)agente.getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
 				if (this.agenteHembra==null) {
 					this.agenteHembra = agente;
-				} else if (calcularDistancia(agenteHembra, this.agente) < calcularDistancia(this.agenteHembra, this.agente)) {
+				} else if (calcularDistancia(agente, this.agente) < calcularDistancia(this.agenteHembra, this.agente)) {
 					this.agenteHembra = agente;
 				}
 			}

@@ -125,7 +125,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void run() {
 		inicio();
 
-		double timerPerTick = 1000000000 / VarGlobalGame.FPS;
+		double timerPerTick = 2000000000 / VarGlobalGame.FPS;
 
 		long now;
 		long lastTime = System.nanoTime();
@@ -144,7 +144,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				ticks++;
 				VarGlobalGame.DELTA--;
 			}
-			if(timer > 1000000000) {
+			if(timer > 2000000000) {
 				VarGlobalGame.TICKS_S = ticks;
 				ticks = 0;	
 				timer = 0;
@@ -204,6 +204,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		fenotipo.put(AtributosBasicos.AGRESIVIDAD_, 0.5f);
 		fenotipo.put(AtributosBasicos.LONGEVIDAD_, 100);
 		fenotipo.put(AtributosBasicos.MADUREZ_REPRODUCTIVA, 10);
+		
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
 		Integer numeroIndividuos = 1;
 		HashMap<String, GenAtributo> individuodePrueba=null;
@@ -217,6 +218,15 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		if(individuodePrueba == null) {
 			System.out.println("Error");
 		}
+		individuodePrueba.get(AtributosBasicos.ENERGIA_MAXIMA_).setValorCaracteristica(6000.0f);
+		individuodePrueba.get(AtributosBasicos.AGUA_MAXIMA_).setValorCaracteristica(3000.0f);
+		individuodePrueba.get(AtributosBasicos.POTENCIA_MAXIMA_).setValorCaracteristica(20.0f);
+		individuodePrueba.get(AtributosBasicos.TAMANO_MAXIMO_).setValorCaracteristica(10);
+		individuodePrueba.get(AtributosBasicos.PERCEPCION_).setValorCaracteristica(50);
+		individuodePrueba.get(AtributosBasicos.MADUREZ_REPRODUCTIVA).setValorCaracteristica(10);
+		individuodePrueba.get(AtributosBasicos.LONGEVIDAD_).setValorCaracteristica(25);
+		individuodePrueba.get(AtributosBasicos.HUMEDAD_IDEAL_).setValorCaracteristica(0.5f);
+		individuodePrueba.get(AtributosBasicos.TOLERANCIA_HUMEDAD_).setValorCaracteristica(0.5f);
 		return individuodePrueba;
 	}
 	

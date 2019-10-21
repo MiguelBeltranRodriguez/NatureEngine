@@ -32,7 +32,10 @@ public class DesireAlimentarme extends Desire {
 
 	private void llenarPila() {
 		this.intenciones.push(new AlimentarsePlanta(this.agente, this.objetivo));
-		this.intenciones.push(new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY()));
+		Intention intencionMoverse = new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY());
+		if(!intencionMoverse.isFinalizado()){
+			this.intenciones.push(new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY()));
+		}
 	}
 
 	

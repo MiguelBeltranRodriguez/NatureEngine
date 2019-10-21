@@ -22,11 +22,11 @@ public abstract class Desire implements Serializable {
 	}
 	public void ejecutar() throws RemoteException {
 		if(!intenciones.empty()) {
-			Intention intencion = this.intenciones.firstElement();
-			if (!intencion.isFinalizado()) {
-				intencion.ejecutar();
-			} else {
+			Intention intencion = this.intenciones.peek();
+			if (intencion.isFinalizado()) {
 				this.intenciones.pop();
+			} else {
+				intencion.ejecutar();
 			}
 		}
 		
