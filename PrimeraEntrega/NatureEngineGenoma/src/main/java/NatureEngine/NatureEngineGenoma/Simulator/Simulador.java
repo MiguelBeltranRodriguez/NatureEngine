@@ -92,7 +92,7 @@ public class Simulador extends SimuladorSupport {
 					continue;
 				}
 				individuosUsados.add(genomaDos);
-				if (comparadordegenoma.SonMismaEspecieComparandoGenoma(genomaUno, genomaUno) == false) {
+				if (comparadordegenoma.SonMismaEspecieComparandoGenoma(genomaUno, genomaDos) == false) {
 					interespecie++;
 					continue;
 				}
