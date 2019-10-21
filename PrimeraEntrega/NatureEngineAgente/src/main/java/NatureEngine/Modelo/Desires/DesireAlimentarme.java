@@ -35,15 +35,7 @@ public class DesireAlimentarme extends Desire {
 		this.intenciones.push(new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY()));
 	}
 
-	@Override
-	public void ejecutar() throws RemoteException {
-		Intention intencion = this.intenciones.firstElement();
-		if (!intencion.isFinalizado()) {
-			intencion.ejecutar();
-		} else {
-			this.intenciones.pop();
-		}
-	}
+	
 
 	@Override
 	public boolean tengoCapacidad() {
@@ -91,7 +83,7 @@ public class DesireAlimentarme extends Desire {
 			if(planta!=null) {
 				if (this.objetivo==null) {
 					this.objetivo = planta;
-				} else if (calcularDistancia(planta) < calcularDistancia(this.objetivo)) {
+				} else if (Desire.calcularDistancia(planta, this.agente) < (Desire.calcularDistancia(this.objetivo, this.agente))) {
 					this.objetivo = planta;
 				}
 			}
@@ -99,17 +91,6 @@ public class DesireAlimentarme extends Desire {
 		}
 	}
 
-	private double calcularDistancia(Dibujable objetivo) {
-		int agenteX = agente.getX();
-		int agenteY = agente.getY();
-		int objetivoX = objetivo.getX();
-		int objetivoY = objetivo.getY();
-
-		double deltaX = Math.abs(agenteX - objetivoX);
-		double deltaY = Math.abs(agenteY - objetivoY);
-		double areasTotales = Math.pow(deltaX, 2.0) + Math.pow(deltaY, 2.0);
- 
-		return Math.sqrt(areasTotales);
-	}
+	
 
 }

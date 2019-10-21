@@ -4,19 +4,26 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 
+import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.Modelo.AtributosBasicos;
-import NatureEngine.Modelo.CaracteristicaHeredableAgente;
+import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desires.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
+import NatureEngine.Modelo.Desires.DesireReproducirmeHembra;
+import NatureEngine.Modelo.Desires.DesireReproducirmeMacho;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
+import NatureEngine.RMI.ServiciosAdministradorAgentes;
 import NatureEngine.RMI.ServiciosController;
+import NatureEngine.Utils.DiccionarioDePalabras;
 import NatureEngine.Utils.VarGlobalGame;
 
 public class Agente extends ObjetoDistribuido implements Dibujable, Serializable, Runnable  {
@@ -37,7 +44,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-	private Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente;
+	private Map<String, GenAtributo> caracteristicasHeredablesAgente;
 	private int tamañoActual;
 	private int edadActual;  
 	private int casillasMovidas;
@@ -50,11 +57,15 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int madurezReproductiva;
 	private int tamañoMaximo;
 	private float potenciaMaxima;
+	private ServiciosAdministradorAgentes serviciosAgente;
+	private Queue<Mensaje> colaMensajes;
 	
-	public Agente(Long ID, Color color, int x, int y,
-			ServiciosController servicios, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
+	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
+
 		super(ID);
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
+		this.colaMensajes = new LinkedList<Mensaje>();
+		this.serviciosAgente = serviciosAgente;
 		this.color = color;
 		this.x = x;
 		this.y = y;
@@ -124,13 +135,10 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				this.consumoCorporal();
 				this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
 				this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
+				// TODO: Matar agente
 				
 				try {
 					this.servicios.actualizarAgente((ObjetoDistribuido)this);
-					if (this.energiaActual <= 0 || this.aguaActual<= 0 || this.edadActual >= this.longevidad) {
-						this.servicios.morir((ObjetoDistribuido)this);
-						break;
-					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -208,8 +216,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				System.out.println(temporal.getHumedad());
 			} */
 			Stack<Desire> desires = new Stack<Desire>();
-			desires.push(new DesireAlimentarme(this));
-
+			//desires.push(new DesireAlimentarme(this));
+			if((boolean)getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
+				desires.push(new DesireReproducirmeHembra(this));
+			}else {
+				desires.push(new DesireReproducirmeMacho(this));
+			}
+			
 			// TODO: crear dssirePorDefecto
 			// TODO: pasar a función OPTION + FILTER
 			Desire desireSeleccionado = null;
@@ -219,7 +232,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				if(desireSeleccionado.tengoCapacidad()) {
 					desireSeleccionado.init(this.desireAnterior);
 					desireSeleccionado.ejecutar();
-					//desireAnterior = desireSeleccionado;
+					desireAnterior = desireSeleccionado;
 					break;
 				}
 			}
@@ -494,5 +507,36 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+
+	public ServiciosAdministradorAgentes getServiciosAgente() {
+		return serviciosAgente;
+	}
+
+
+	public void setServiciosAgente(ServiciosAdministradorAgentes serviciosAgente) {
+		this.serviciosAgente = serviciosAgente;
+	}
+
+
+	public Mensaje enviarCortejo(Mensaje mensaje) throws RemoteException {
+		try {
+			return servicios.enviarMensaje(mensaje);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Mensaje((long) -1, 0, DiccionarioDePalabras.TIPO_MENSAJE_ERROR, null, null);
+	}
+
+
+	public synchronized Mensaje agregarMensaje(Mensaje mensaje) throws Exception {
+		if(desireAnterior instanceof DesireReproducirmeHembra) {
+			return new Mensaje(this.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCIRME_ACK, this, mensaje.getEmisor());
+		}else {
+			return new Mensaje(this.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_NO, this, mensaje.getEmisor());
+		}
+	}
+	
 	
 }

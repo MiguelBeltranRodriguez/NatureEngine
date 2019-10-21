@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 
 /**
@@ -38,5 +39,7 @@ public interface ServiciosController extends Remote{
 	public void morir(ObjetoDistribuido agente) throws RemoteException;
 	
 	public float consumirPlata(ObjetoDistribuido agente, ObjetoDistribuido planta) throws RemoteException;
+
+	public Mensaje enviarMensaje(Mensaje mensaje) throws RemoteException;
 
 }

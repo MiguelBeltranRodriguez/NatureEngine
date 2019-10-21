@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import NatureEngine.Modelo.Intentions.Intention;
 import NatureEngine.NatureEngineAgente.Agente;
+import NatureEngine.NatureEngineGUI.Dibujable;
 
 public abstract class Desire implements Serializable {
 	protected int prioridad;
@@ -19,5 +20,27 @@ public abstract class Desire implements Serializable {
 	public void setIntenciones(Stack<Intention> intenciones) {
 		this.intenciones = intenciones;
 	}
-	public abstract void ejecutar() throws RemoteException;
+	public void ejecutar() throws RemoteException {
+		if(!intenciones.empty()) {
+			Intention intencion = this.intenciones.firstElement();
+			if (!intencion.isFinalizado()) {
+				intencion.ejecutar();
+			} else {
+				this.intenciones.pop();
+			}
+		}
+		
+	}
+	public static double calcularDistancia(Dibujable objetivo, Dibujable agente) {
+		int agenteX = agente.getX();
+		int agenteY = agente.getY();
+		int objetivoX = objetivo.getX();
+		int objetivoY = objetivo.getY();
+
+		double deltaX = Math.abs(agenteX - objetivoX);
+		double deltaY = Math.abs(agenteY - objetivoY);
+		double areasTotales = Math.pow(deltaX, 2.0) + Math.pow(deltaY, 2.0);
+ 
+		return Math.sqrt(areasTotales);
+	}
 }

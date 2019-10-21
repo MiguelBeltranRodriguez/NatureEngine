@@ -77,16 +77,16 @@
 		<tipo>java.lang.Float</tipo>
 		<valorMaximo>1.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
-		<variabilidad>2.0f</variabilidad>
+		<variabilidad>0.01f</variabilidad>
 	</atributo>
 	
 	<atributo>
 		<id>10</id>
 		<nombre>Tolerancia humedad</nombre>
 		<tipo>java.lang.Float</tipo>
-		<valorMaximo>1.0f</valorMaximo>
+		<valorMaximo>100.0f</valorMaximo>
 		<valorMinimo>0.0f</valorMinimo>
-		<variabilidad>2.0f</variabilidad>
+		<variabilidad>1.0f</variabilidad>
 	</atributo>
 	
 	<atributo>
@@ -113,7 +113,7 @@
 		<tipo>java.lang.Integer</tipo>
 		<valorMaximo></valorMaximo>
 		<valorMinimo>1</valorMinimo>
-		<variabilidad>5</variabilidad>
+		<variabilidad>3</variabilidad>
 	</atributo>
 	
 	<atributo>
