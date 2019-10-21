@@ -1,10 +1,6 @@
 package NatureEngine.Modelo;
 
-
-import java.util.Arrays;
-import java.util.List;
 import java.io.Serializable;
-
 
 /**
  * Representa una caracteristica heredable específica de un agente
@@ -14,14 +10,28 @@ import java.io.Serializable;
  *         Fecha Autor Descripcion 20191006 Andrea Gutierrez Version inicial
  */
 
-public class CaracteristicaHeredableAgente extends CaracteristicaHeredablePrototype implements Serializable {
+public class GenAtributo extends CaracteristicaHeredablePrototype implements Serializable {
 
 	protected Object fenotipo;
-	private List<Alelo> alelos;
-
-	public CaracteristicaHeredableAgente(String nombreCaracteristica, Object valorCaracteristica, List<Alelo> alelos) {
-		this.alelos = alelos;
+	private Alelo aleloUno;
+	private Alelo aleloDos;	
+	
+	public GenAtributo(String nombreCaracteristica) {
 		this.nombreCaracteristica = nombreCaracteristica;
+	}
+	
+	public Object getFenotipo() {
+		return fenotipo;
+	}
+	
+	public GenAtributo(String nombreCaracteristica, Object fenotipo, Alelo aleloUno, Alelo aleloDos) {
+		this.nombreCaracteristica = nombreCaracteristica;
+		LlenarGen(fenotipo, aleloUno, aleloDos);
+	}
+	
+	public void LlenarGen(Object fenotipo, Alelo aleloUno, Alelo aleloDos) {
+		this.aleloUno = aleloUno;
+		this.aleloDos = aleloDos;
 		this.id = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getId();
 		this.tipoCaracteristica = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica)
 				.getTipoCaracteristica();
@@ -29,12 +39,15 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 				.getNombreCaracteristica();
 		this.valorMaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMaximo();
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
-
-		this.fenotipo = valorCaracteristica;
+		this.fenotipo = fenotipo;
 	}
 
-	public List<Alelo> getAlelos() {
-		return this.alelos;
+	public Alelo getaleloUno() {
+		return aleloUno;
+	}
+
+	public Alelo getaleloDos() {
+		return aleloDos;
 	}
 
 	public Object getValorMinimo() {
@@ -50,8 +63,7 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 
 		if (this.fenotipo != null) {
 
-			if(this.fenotipo != null)
-			{
+			if (this.fenotipo != null) {
 
 				valor = new Object();
 
@@ -62,15 +74,13 @@ public class CaracteristicaHeredableAgente extends CaracteristicaHeredableProtot
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		return valor;
 	}
 
-
 	public void setValorCaracteristica(Object valorCaracteristica) {
 		this.fenotipo = valorCaracteristica;
 	}
-
 
 }

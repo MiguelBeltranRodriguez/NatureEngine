@@ -2,19 +2,19 @@ package NatureEngine.Modelo;
 
 public class Alelo {
 
-	private Float Valor;
+	private Object Valor;
 	private Integer Dominancia;
 	
-	public Alelo(Integer Dominancia, Float Valor) {
+	public Alelo(Integer Dominancia, Object Valor) {
 		this.Dominancia=Dominancia;
 		this.Valor = Valor;
 	}
 	
-	public Integer getDominacia() {
+	public Integer getDominancia() {
 		return this.Dominancia;
 	}
 
-	public Float getValor() {
+	public Object getValor() {
 		return this.Valor;
 	}
 	

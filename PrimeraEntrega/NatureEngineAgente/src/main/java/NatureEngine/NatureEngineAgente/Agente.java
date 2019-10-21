@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.Modelo.AtributosBasicos;
-import NatureEngine.Modelo.CaracteristicaHeredableAgente;
+import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desires.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
@@ -44,7 +44,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-	private Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente;
+	private Map<String, GenAtributo> caracteristicasHeredablesAgente;
 	private int tamañoActual;
 	private int edadActual;  
 	private int casillasMovidas;
@@ -60,8 +60,8 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private ServiciosAdministradorAgentes serviciosAgente;
 	private Queue<Mensaje> colaMensajes;
 	
-	public Agente(Long ID, Color color, int x, int y,
-			ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) throws RemoteException {
+	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
+
 		super(ID);
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 		this.colaMensajes = new LinkedList<Mensaje>();
