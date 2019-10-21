@@ -190,8 +190,8 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 
 	public Map<String, GenAtributo> crearAtributosAgentePrimitivo(boolean Hembra) {		
 		HashMap<String, Object> fenotipo = new HashMap<String, Object>();
-		fenotipo.put(AtributosBasicos.ENERGIA_MAXIMA_, 1000.0f);
-		fenotipo.put(AtributosBasicos.AGUA_MAXIMA_, 1000.0f);
+		fenotipo.put(AtributosBasicos.ENERGIA_MAXIMA_, 6000.0f);
+		fenotipo.put(AtributosBasicos.AGUA_MAXIMA_, 3000.0f);
 		fenotipo.put(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f);
 		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 5);
 		fenotipo.put(AtributosBasicos.PERCEPCION_, 50);
