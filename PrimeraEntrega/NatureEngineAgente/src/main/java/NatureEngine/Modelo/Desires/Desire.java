@@ -12,7 +12,7 @@ public abstract class Desire implements Serializable {
 	protected int prioridad;
 	protected Agente agente;
 	protected Stack<Intention> intenciones;
-	public abstract boolean tengoHabilidad();
+	public abstract boolean tengoCapacidad();
 	public abstract void init(Desire desireAnterior);
 	public Stack<Intention> getIntenciones() {
 		return intenciones;

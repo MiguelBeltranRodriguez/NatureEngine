@@ -1,6 +1,5 @@
 package NatureEngine.Modelo.Intentions;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import NatureEngine.Modelo.Planta;
@@ -39,7 +38,7 @@ public class MoverseA extends Intention {
 		float velocidadPXs = this.agente.getVelocidadPXs();
 		
 		if(moverse >= VarGlobalGame.MIU_DE_FRICCION) {
-			moverse = moverse-100;
+			moverse = moverse - VarGlobalGame.MIU_DE_FRICCION;
 			this.agente.setMoverse(moverse);
 			this.setVectorDireccion();
 			this.actualizarPosicion();

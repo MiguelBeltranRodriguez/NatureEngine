@@ -325,7 +325,7 @@ public class Mundo implements Dibujable{
 
 	public synchronized void moverAgente(int x2, int y2, ObjetoDistribuido agente) throws RemoteException {
 		Agente agenteRemoto = (Agente) agente;	
-		Agente agenteMundo = (Agente) casillasDelMundo[agenteRemoto.getX()][agenteRemoto.getY()].findAgente(agente.getID());
+		Agente agenteMundo = (Agente) casillasDelMundo[agenteRemoto.getX()][agenteRemoto.getY()].buscarDibujable(agente.getID());
 
 		casillasDelMundo[agenteRemoto.getX()][agenteRemoto.getY()].eliminarDibujable(agenteRemoto.getID());
 		casillasDelMundo[x2][y2].agregarDibujable(agenteMundo);
@@ -534,7 +534,7 @@ public class Mundo implements Dibujable{
 
 
 	public synchronized List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) {
-		Agente agenteMismo = (Agente)casillasDelMundo[x][y].findAgente(idAgente);
+		Agente agenteMismo = (Agente)casillasDelMundo[x][y].buscarDibujable(idAgente);
 		int widht_pantalla_map = VarGlobalVista.widht_pantalla_map;
 		int heigth_pantalla_map = VarGlobalVista.heigth_pantalla_map;
 		int xAgente = agenteMismo.getX();
@@ -569,7 +569,7 @@ public class Mundo implements Dibujable{
 
 
 	public void actualizarAgente(Agente agente) {
-		Agente agenteForaneo = (Agente) casillasDelMundo[agente.getX()][agente.getY()].findAgente(agente.getID());
+		Agente agenteForaneo = (Agente) casillasDelMundo[agente.getX()][agente.getY()].buscarDibujable(agente.getID());
 		agenteForaneo.setEnergiaActual(agente.getEnergiaActual());
 		agenteForaneo.setAguaActual(agente.getAguaActual());
 		agenteForaneo.setTamañoActual(agente.getTamañoActual());
@@ -587,6 +587,31 @@ public class Mundo implements Dibujable{
 		casillasDelMundo[agenteParaMorir.getX()][agenteParaMorir.getY()].eliminarDibujable(agenteParaMorir.getID());
 	}
 
-
+	public float consumirPlata(ObjetoDistribuido agente, ObjetoDistribuido planta) {
+		Agente agenteConsumidor = (Agente) agente;
+		Planta plataParaConsumir = (Planta) planta;		
+		Agente agenteConsumidorMundo = (Agente) casillasDelMundo[agenteConsumidor.getX()][agenteConsumidor.getY()].buscarDibujable(agenteConsumidor.getID());
+		Planta plataParaConsumirMundo = (Planta) casillasDelMundo[plataParaConsumir.getX()][plataParaConsumir.getY()].buscarDibujable(plataParaConsumir.getID());
+		float energiaConsumida = 0;
 		
+		if(plataParaConsumirMundo != null) {
+			float energiaMaximaAgente = (float) agenteConsumidorMundo.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
+			float energiaActualAgente = agenteConsumidorMundo.getEnergiaActual();
+			float energiaActualPlanta = plataParaConsumirMundo.getEnergiaActual();
+			float energiaAgenteMasPlanta = energiaActualAgente + energiaActualPlanta;
+			
+			if (energiaAgenteMasPlanta > energiaMaximaAgente) {
+				float energiaAgentePorConsumir = energiaMaximaAgente - energiaActualAgente;
+				agenteConsumidorMundo.setEnergiaActual(energiaMaximaAgente);
+				plataParaConsumirMundo.setEnergiaActual(energiaActualPlanta - energiaAgentePorConsumir);
+				energiaConsumida = energiaAgentePorConsumir;
+			} else {
+				agenteConsumidorMundo.setEnergiaActual(energiaActualAgente + energiaActualPlanta);
+				energiaConsumida = energiaActualPlanta;
+				this.matarPlanta(plataParaConsumirMundo);
+			}
+		}
+		
+		return energiaConsumida;
+	}
 }

@@ -254,6 +254,10 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 
 	@Override
+	public float consumirPlata(ObjetoDistribuido agente, ObjetoDistribuido planta) throws RemoteException {
+		return mundo.consumirPlata(agente, planta);
+	}
+
 	public Mensaje enviarMensaje(Mensaje mensaje) throws RemoteException {
 		Agente agenteReceptor  = (Agente) mensaje.getReceptor();
 		for (ServiciosAdministradorAgentes serviciosAdministradorAgentes : servidoresAgentes) {
