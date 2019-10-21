@@ -1,6 +1,8 @@
 package NatureEngine.Modelo;
 
-public class Alelo {
+import java.io.Serializable;
+
+public class Alelo implements Serializable {
 
 	private Object Valor;
 	private Integer Dominancia;

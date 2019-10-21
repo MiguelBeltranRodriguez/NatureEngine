@@ -193,7 +193,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		fenotipo.put(AtributosBasicos.ENERGIA_MAXIMA_, 6000.0f);
 		fenotipo.put(AtributosBasicos.AGUA_MAXIMA_, 3000.0f);
 		fenotipo.put(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f);
-		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 5);
+		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 10);
 		fenotipo.put(AtributosBasicos.PERCEPCION_, 50);
 		fenotipo.put(AtributosBasicos.SEXO_, Hembra);
 		fenotipo.put(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1);
@@ -211,9 +211,12 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			List<HashMap<String, GenAtributo>> listadeIndividuos = genomahandler.NuevaEspecie(numeroIndividuos, fenotipo);	
 			individuodePrueba = listadeIndividuos.get(0);
 		}catch(Exception ex){
+			ex.printStackTrace();
 			System.out.println("[Error en GenomaHandler] "+ex.getMessage());
 		}
-		
+		if(individuodePrueba == null) {
+			System.out.println("Error");
+		}
 		return individuodePrueba;
 	}
 	

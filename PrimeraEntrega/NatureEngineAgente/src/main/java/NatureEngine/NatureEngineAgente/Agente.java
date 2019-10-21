@@ -459,12 +459,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.desireAnterior = desireAnterior;
 	}
 
-	public Map<String, CaracteristicaHeredableAgente> getCaracteristicasHeredablesAgente() {
+	public Map<String, GenAtributo> getCaracteristicasHeredablesAgente() {
 		return caracteristicasHeredablesAgente;
 	}
 
 	public void setCaracteristicasHeredablesAgente(
-			Map<String, CaracteristicaHeredableAgente> caracteristicasHeredablesAgente) {
+			Map<String, GenAtributo> caracteristicasHeredablesAgente) {
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 	}
 

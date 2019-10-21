@@ -96,7 +96,7 @@ abstract class AttributesVariator {
 					Float minimo = (Float) preminimo;
 					Float maximo = (Float) premaximo;
 					Float rango = maximo - minimo;
-					Float tmpvalorBaseAtributo = (float) valorBaseAtributo;
+					Float tmpvalorBaseAtributo = Float.parseFloat(valorBaseAtributo.toString()) ;
 					tmp = randomextendido.RandomGaussianoLimitadoFloat(tmpvalorBaseAtributo, variabilidad, minimo,
 							maximo);
 					nuevoValorAtributo = (Object) tmp;

@@ -49,7 +49,7 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 					this.valorMinimo = Integer.parseInt(valorMinimo);			
 					break;
 				case(AtributosBasicos.TIPO_BOOLEAN_):
-					this.valorMinimo = Boolean.FALSE;			
+					this.valorMinimo = Boolean.parseBoolean(valorMinimo);			
 					break;
 			}
 		}
@@ -77,7 +77,7 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 					this.valorMaximo = Integer.parseInt(valorMaximo);			
 					break;
 				case(AtributosBasicos.TIPO_BOOLEAN_):
-					this.valorMaximo = Boolean.TRUE;			
+					this.valorMaximo = Boolean.parseBoolean(valorMaximo);			
 					break;
 			}
 		}
@@ -97,26 +97,26 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 		if(variabilidad != null && !"".equals(variabilidad)) {
 			switch (this.tipoCaracteristica){
 				case(AtributosBasicos.TIPO_FLOAT_):
-					this.valorMaximo = Float.parseFloat(variabilidad);
+					this.variabilidad = Float.parseFloat(variabilidad);
 					break;
 				case(AtributosBasicos.TIPO_INTEGER_):
-					this.valorMaximo = Integer.parseInt(variabilidad);			
+					this.variabilidad = Integer.parseInt(variabilidad);			
 					break;
 				case(AtributosBasicos.TIPO_BOOLEAN_):
-					this.valorMaximo = Boolean.TRUE;			
+					this.variabilidad = Boolean.parseBoolean(variabilidad);			
 					break;
 			}
 		}
 		else{
 			switch (this.tipoCaracteristica){
 				case(AtributosBasicos.TIPO_FLOAT_):
-					this.valorMaximo = Float.MAX_VALUE;
+					this.variabilidad = Float.MAX_VALUE;
 					break;
 				case(AtributosBasicos.TIPO_INTEGER_):
-					this.valorMaximo = Integer.MAX_VALUE;			
+					this.variabilidad = Integer.MAX_VALUE;			
 					break;
 				case(AtributosBasicos.TIPO_BOOLEAN_):
-					this.valorMaximo = Boolean.TRUE;			
+					this.variabilidad = Boolean.TRUE;			
 					break;
 			}
 		}
@@ -174,21 +174,8 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 
 
 	public Object getVariabilidad() {
-		Object valor = null;		
-
-		if(this.variabilidad != null)
-		{
-			variabilidad = new Object();
-			
-			try {
-				Class<?> clazz = Class.forName(this.tipoCaracteristica);
-				valor = clazz.cast(this.variabilidad);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return valor;
+		System.out.println(variabilidad.toString());
+		return this.variabilidad;
 	}
 
 
