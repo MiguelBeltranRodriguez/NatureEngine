@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.RMI.ServiciosAdministradorAgentes;
 import NatureEngine.RMI.ServiciosController;
+import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.Modelo.AtributosBasicos;
 import NatureEngine.NatureEngineAgente.Agente;
 
@@ -25,7 +26,6 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 	private String port;
 	
 	protected AdministradorAgentesServidorController(ServiciosController serviciosController, String port) throws RemoteException {
-		super();
 		try {
 			AtributosBasicos.loadAtributosXML();
 		} catch (ParserConfigurationException | SAXException | IOException e1) {
@@ -70,6 +70,24 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 
 	public void setPort(String port) {
 		this.port = port;
+	}
+
+	@Override
+	public String getID() throws RemoteException {
+		// TODO Auto-generated method stub
+		return port;
+	}
+
+	@Override
+	public Mensaje enviarMensaje(Mensaje mensaje) {
+		Agente agenteReceptor = agentes.get(mensaje.getReceptor().getID());
+		try {
+			return agenteReceptor.agregarMensaje(mensaje);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

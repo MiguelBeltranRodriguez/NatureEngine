@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.Modelo.Alelo;
 import NatureEngine.Modelo.AtributosBasicos;
 import NatureEngine.Modelo.CaracteristicaHeredableAgente;
@@ -185,14 +186,14 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		mundo.addAgente(ag);
 	}
 	
-	public Map<String, CaracteristicaHeredableAgente> crearAtributosAgentePrimitivo() {
+	public Map<String, CaracteristicaHeredableAgente> crearAtributosAgentePrimitivo(boolean hembra) {
 		Map<String, CaracteristicaHeredableAgente> fenotipo = new HashMap<String, CaracteristicaHeredableAgente>();
-		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 1000.0f, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 1000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.ENERGIA_MAXIMA_, 3000.0f, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.AGUA_MAXIMA_, 3000.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.TAMANO_MAXIMO_, 20, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.PERCEPCION_, 50, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.SEXO_, true, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.SEXO_, hembra, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.ANSIEDAD_, 50, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.HUMEDAD_IDEAL_, 0.2f, fenotipo);
@@ -200,7 +201,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		this.agregarCaracteristica(AtributosBasicos.DIGESTION_VEGETAL_, 1, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.AGRESIVIDAD_, 0.5f, fenotipo);
 		this.agregarCaracteristica(AtributosBasicos.LONGEVIDAD_, 50, fenotipo);
-		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 20, fenotipo);
+		this.agregarCaracteristica(AtributosBasicos.MADUREZ_REPRODUCTIVA, 10, fenotipo);
 		return fenotipo;
 	}
 	
@@ -210,9 +211,13 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	
 	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
 		// TODO: Agregar agentes en un csv o xml etc
-		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, this.crearAtributosAgentePrimitivo());
+		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(true));
+		Agente agenteNuevoHembra = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(15), 150+(15), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(false));
 		addAgente(agenteNuevo);
+		addAgente(agenteNuevoHembra);
+		
 		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevo);
+		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevoHembra);
 	}
 
 	@Override
@@ -234,5 +239,17 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	@Override
 	public void morir(ObjetoDistribuido agente) throws RemoteException {
 		mundo.matarAgente(agente);
+	}
+
+	@Override
+	public Mensaje enviarMensaje(Mensaje mensaje) throws RemoteException {
+		Agente agenteReceptor  = (Agente) mensaje.getReceptor();
+		for (ServiciosAdministradorAgentes serviciosAdministradorAgentes : servidoresAgentes) {
+			String ID = serviciosAdministradorAgentes.getID();
+			if(agenteReceptor.getServiciosAgente().getID().equals(ID)) {
+				return serviciosAdministradorAgentes.enviarMensaje(mensaje);
+			}
+		}
+		throw new RemoteException("Error");
 	}
 }

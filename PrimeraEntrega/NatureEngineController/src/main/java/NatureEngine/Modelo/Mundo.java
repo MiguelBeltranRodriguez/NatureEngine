@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import NatureEngine.Mensajeria.Mensaje;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.CasillaAgua;
 import NatureEngine.Modelo.CasillaTierra;
@@ -585,6 +586,7 @@ public class Mundo implements Dibujable{
 		Agente agenteParaMorir = (Agente) agente;
 		casillasDelMundo[agenteParaMorir.getX()][agenteParaMorir.getY()].eliminarDibujable(agenteParaMorir.getID());
 	}
+
 
 		
 }
