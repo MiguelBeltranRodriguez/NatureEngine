@@ -174,7 +174,21 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 
 
 	public Object getVariabilidad() {
-		return variabilidad;
+		Object valor = null;		
+
+		if(this.variabilidad != null)
+		{
+			variabilidad = new Object();
+			
+			try {
+				Class<?> clazz = Class.forName(this.tipoCaracteristica);
+				valor = clazz.cast(this.variabilidad);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return valor;
 	}
 
 
