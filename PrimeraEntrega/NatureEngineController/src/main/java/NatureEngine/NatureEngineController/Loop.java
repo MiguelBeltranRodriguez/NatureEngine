@@ -235,4 +235,9 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void morir(ObjetoDistribuido agente) throws RemoteException {
 		mundo.matarAgente(agente);
 	}
+
+	@Override
+	public float consumirPlata(ObjetoDistribuido agente, ObjetoDistribuido planta) throws RemoteException {
+		return mundo.consumirPlata(agente, planta);
+	}
 }

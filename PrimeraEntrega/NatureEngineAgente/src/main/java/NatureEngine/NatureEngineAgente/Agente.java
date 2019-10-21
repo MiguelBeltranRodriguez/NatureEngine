@@ -200,7 +200,6 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		return (float) 0.000000000000000000000000001;
 	}
 
-
 	private void pensar() {
 		try {
 			percepcion = servicios.percibir(this.ID, this.x, this.y); // BRF
@@ -217,7 +216,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 			while(!desires.isEmpty()) {
 				desireSeleccionado = desires.pop();
-				if(desireSeleccionado.tengoHabilidad()) {
+				if(desireSeleccionado.tengoCapacidad()) {
 					desireSeleccionado.init(this.desireAnterior);
 					desireSeleccionado.ejecutar();
 					//desireAnterior = desireSeleccionado;
@@ -300,22 +299,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.moverse = moverse;
 	}
 
-/**	private void decisionIrA(int newX, int newY) {
-		delX = Math.abs(newX-x);
-		delY = Math.abs(newY-y);
-		if(newX > x) {
-			direccionX = 1;
-		}else {
-			direccionX = -1;
-		}
-		if(newY > y) {
-			direccionY = 1;
-		}else {
-			direccionY = -1;
-		}
-	}*/
-
-	public synchronized  void cambiarPosicion(int x2, int y2) {
+	public synchronized void cambiarPosicion(int x2, int y2) {
 		try {
 			ServiciosController servicios = getServicios();
 			servicios.moverAgente(x2, y2, (ObjetoDistribuido)this);
@@ -329,6 +313,18 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}
 		
 	}
+	
+	public synchronized void consumirPlanta(ObjetoDistribuido planta) {
+		try {
+			ServiciosController servicios = getServicios();
+			this.energiaActual += (float) servicios.consumirPlata((ObjetoDistribuido)this, planta);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	@Override
 	public void dibujar(Renderizador2D render) {
 		int tamañoActual = this.tamañoActual;

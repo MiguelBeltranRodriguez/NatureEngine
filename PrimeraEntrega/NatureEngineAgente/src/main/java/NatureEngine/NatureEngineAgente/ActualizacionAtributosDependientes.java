@@ -14,10 +14,6 @@ public class ActualizacionAtributosDependientes {
 
 		return energiaActual;
 	}
-	
-	public static float actualizarAgua(float aguaActual, AtributoAgua atributoAgua) {
-		return aguaActual - atributoAgua.calcularFactorHumedad();
-	}
 
 	// TODO: Agregar modelo de crecimiento y potencia
 }

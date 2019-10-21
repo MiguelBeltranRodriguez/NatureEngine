@@ -176,7 +176,7 @@ public class Casilla extends ObjetoDistribuido implements Dibujable, Serializabl
 		
 	}
 
-	public Dibujable findAgente(Long id) {
+	public Dibujable buscarDibujable(Long id) {
 		return dibujablesCasilla.get(id);
 	}
 	

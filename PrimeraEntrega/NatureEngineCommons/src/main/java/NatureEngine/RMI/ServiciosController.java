@@ -29,7 +29,6 @@ public interface ServiciosController extends Remote{
 	 */
 	public void moverAgente(int newX, int newY, ObjetoDistribuido agente) throws RemoteException;
 
-
 	public List<ObjetoDistribuido> percibir(Long idAgente, int x, int y) throws RemoteException;
 
 	public void actualizarAgente(ObjetoDistribuido agente) throws RemoteException;
@@ -37,5 +36,7 @@ public interface ServiciosController extends Remote{
 	public ObjetoDistribuido getCasilla(int x, int y) throws RemoteException;
 	
 	public void morir(ObjetoDistribuido agente) throws RemoteException;
+	
+	public float consumirPlata(ObjetoDistribuido agente, ObjetoDistribuido planta) throws RemoteException;
 
 }
