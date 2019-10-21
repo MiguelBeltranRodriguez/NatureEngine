@@ -17,11 +17,9 @@ public class ComparadorDeGenoma {
 			String tipoAtributo = genatributoMacho.getTipoCaracteristica();
 			Object prevariabilidad = genatributoMacho.getVariabilidad();
 			if(prevariabilidad==null) {
-				throw new Exception("Variabilidad null: Atributo: "+nombreAtributo);
+				throw new Exception("Variabilidad de "+nombreAtributo+" es null");
 			}
 			Float variabilidad = (float)prevariabilidad;
-			
-			
 			Boolean comparacionDeAtributos = null;
 			try {
 				comparacionDeAtributos = TienenMismoAtributoComparandoGenoma(tipoAtributo, variabilidad, genatributoHembra,genatributoMacho);	
@@ -47,12 +45,12 @@ public class ComparadorDeGenoma {
 			if (tipo.equals("java.lang.Integer") || tipo.equals("java.lang.Float")) {
 				if (tipo.equals("java.lang.Integer")) {
 					Integer prevalorBaseAtributoHembra = (Integer) objFenotipoHembra;
-					Integer prevalorBaseAtributoMacho = (Integer) objFenotipoHembra;
+					Integer prevalorBaseAtributoMacho = (Integer) objFenotipoMacho;
 					valorBaseAtributoHembra = (float) prevalorBaseAtributoHembra;
 					valorBaseAtributoMacho = (float) prevalorBaseAtributoMacho;
 				}
 				if (tipo.equals("java.lang.Float")) {
-					valorBaseAtributoHembra = (float) objFenotipoMacho;
+					valorBaseAtributoHembra = (float) objFenotipoHembra;
 					valorBaseAtributoMacho = (float) objFenotipoMacho;
 				}
 				Float diferencia = Math.abs(valorBaseAtributoHembra-valorBaseAtributoMacho);
