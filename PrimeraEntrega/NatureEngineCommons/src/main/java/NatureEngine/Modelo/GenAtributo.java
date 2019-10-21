@@ -39,6 +39,7 @@ public class GenAtributo extends CaracteristicaHeredablePrototype implements Ser
 				.getNombreCaracteristica();
 		this.valorMaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMaximo();
 		this.valorMinimo = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getValorMinimo();
+		this.variabilidad = AtributosBasicos.getAtributosBasicosByName().get(nombreCaracteristica).getVariabilidad();
 		this.fenotipo = fenotipo;
 	}
 

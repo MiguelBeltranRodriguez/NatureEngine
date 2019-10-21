@@ -174,7 +174,6 @@ public class CaracteristicaHeredablePrototype implements Serializable {
 
 
 	public Object getVariabilidad() {
-		System.out.println(variabilidad.toString());
 		return this.variabilidad;
 	}
 

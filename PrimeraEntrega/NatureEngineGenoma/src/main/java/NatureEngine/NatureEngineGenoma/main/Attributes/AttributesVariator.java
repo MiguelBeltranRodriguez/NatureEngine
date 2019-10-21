@@ -45,7 +45,7 @@ abstract class AttributesVariator {
 	protected Alelo CrearNuevoAlelo(String nombreAtributo, Object valorBaseAtributo) throws Exception {
 		Object nuevoValorAtributo = null;
 
-		nuevoValorAtributo = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBaseAtributo, 1.0f);
+		nuevoValorAtributo = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBaseAtributo,1.0f);
 		Integer nuevaDominancia = generarNuevaDominancia();
 		Alelo nuevoAlelo = CrearAlelo(nuevaDominancia, nuevoValorAtributo);
 		return nuevoAlelo;
@@ -64,7 +64,6 @@ abstract class AttributesVariator {
 
 	private Object VariarAtributoUsandoDistribucionNormal(String nombreAtributo, Object valorBaseAtributo,
 			Float multiplicadorDeVariabilidad) throws Exception {
-
 		Object preminimo = AtributosBasicos.getAtributosBasicosByName().get(nombreAtributo).getValorMinimo();
 		Object premaximo = AtributosBasicos.getAtributosBasicosByName().get(nombreAtributo).getValorMaximo();
 		String tipo = AtributosBasicos.getAtributosBasicosByName().get(nombreAtributo).getTipoCaracteristica();
@@ -75,38 +74,23 @@ abstract class AttributesVariator {
 			nuevoValorAtributo = (Object) randomextendido.RandomBooleanoConLimite(null);
 		} else {
 			if (tipo.equals("java.lang.Integer") || tipo.equals("java.lang.Float")) {
-				Float variabilidad = Float.parseFloat(prevariabilidad.toString());
-				if (multiplicadorDeVariabilidad != null) {
-					variabilidad = variabilidad * multiplicadorDeVariabilidad;
+				Float valorInicial = RandomExtendido.ObjectAFloat(valorBaseAtributo);
+				Float minimo = RandomExtendido.ObjectAFloat(preminimo);
+				Float maximo = RandomExtendido.ObjectAFloat(premaximo);
+				Float variabilidad = RandomExtendido.ObjectAFloat(prevariabilidad);	
+				Float valortmp = randomextendido.RandomGaussianoLimitadoFloat(valorInicial, variabilidad, minimo, maximo);
+				if((Math.abs(valorInicial-valortmp)/valorInicial)>1.5){
+					System.out.println(valortmp+"/"+valorInicial);
 				}
-				Float tmp = null;
-				if (tipo.equals("java.lang.Integer")) {
-					Integer pretwominimo = (Integer) preminimo;
-					Integer pretwomaximo = (Integer) premaximo;
-					Integer pretmvalorBaseAtributo = (Integer) valorBaseAtributo;
-					Float minimo = (float) pretwominimo;
-					Float maximo = (float) pretwomaximo;
-					Float tmpvalorBaseAtributo = (float) pretmvalorBaseAtributo;
-					Float rango = maximo - minimo;
-					tmp = randomextendido.RandomGaussianoLimitadoFloat(tmpvalorBaseAtributo, variabilidad, minimo,
-							maximo);
-					nuevoValorAtributo = (Object) ((int) Math.round(tmp));
-				}
-				if (tipo.equals("java.lang.Float")) {
-					Float minimo = (Float) preminimo;
-					Float maximo = (Float) premaximo;
-					Float rango = maximo - minimo;
-					Float tmpvalorBaseAtributo = Float.parseFloat(valorBaseAtributo.toString()) ;
-					tmp = randomextendido.RandomGaussianoLimitadoFloat(tmpvalorBaseAtributo, variabilidad, minimo,
-							maximo);
-					nuevoValorAtributo = (Object) tmp;
-				}
+				nuevoValorAtributo = (Object) valortmp;
 			} else {
 				throw new Exception("Tipo de variable desconocido: " + tipo);
 			}
 		}
 		return nuevoValorAtributo;
 	}
+	
+
 
 	protected Object FenotipoCodominancia(String nombreAtributo, Object prevalorUno, Object prevalorDos)
 			throws Exception {
@@ -118,15 +102,11 @@ abstract class AttributesVariator {
 			nuevoFenotipo = (Object) TmpBool;
 		} else {
 			if (tipo.equals("java.lang.Integer") || tipo.equals("java.lang.Float")) {
-				if (tipo.equals("java.lang.Float")) {
-					Float valorUno = (Float) prevalorUno;
-					Float valorDos = (Float) prevalorDos;
-					Float TmpFloat = ((valorUno + valorDos) / 2);
-					nuevoFenotipo = (Object) TmpFloat;
-				} else {
-					int valorUno = (int) prevalorUno;
-					int valorDos = (int) prevalorDos;
-					Float TmpFloat = ((float) (valorUno + valorDos) / 2);
+				Float valorUno = RandomExtendido.ObjectAFloat(prevalorUno);
+						Float valorDos = RandomExtendido.ObjectAFloat(prevalorDos); 
+						Float TmpFloat = ((valorUno + valorDos) / 2);
+						
+				if (tipo.equals("java.lang.Integer")) {
 					Integer TmpInteger = (int) Math.round(TmpFloat);
 					nuevoFenotipo = (Object) TmpInteger;
 				}

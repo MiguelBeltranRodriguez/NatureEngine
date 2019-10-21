@@ -22,6 +22,15 @@ abstract class AttributesSupport extends RecombinationFecundation {
 		}else {
 			Integer numerodeAlelosPorgenerar = calcularNumeroDeAlelosAgenerar(numeroNuevosIndividousEspecie);
 			List<Alelo> poolalelosiniciales = PooldeAlelosIniciales(numerodeAlelosPorgenerar, nombreAtributo, valorBaseAtributo);
+			if(nombreAtributo.equals("Energia maxima")) {
+				System.out.print(nombreAtributo+" => Base: "+valorBaseAtributo+" =>");
+				
+			for (Alelo gen : poolalelosiniciales) 
+			{ 
+				System.out.print(gen.getValor()+"--");
+			}
+			System.out.println("");
+			}
 			while(numeroNuevosIndividousEspecie>0) {
 				Alelo aleloUno = SeleccionarAleloDePool(poolalelosiniciales);
 				Alelo aleloDos = SeleccionarAleloDePool(poolalelosiniciales);
@@ -52,8 +61,8 @@ abstract class AttributesSupport extends RecombinationFecundation {
 	/////////////////////////////////////////////
 
 	private Alelo SeleccionarAleloDePool(List<Alelo> poolalelosiniciales) {
-		Integer aleloUnoIndex = 1;
-		Alelo alelo = poolalelosiniciales.get(aleloUnoIndex);
+		Integer random = (new Random()).nextInt(poolalelosiniciales.size()-1);
+		Alelo alelo = poolalelosiniciales.get(random);
 		return alelo;
 	}
 

@@ -1,12 +1,14 @@
 package NatureEngine.NatureEngineCommons;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import NatureEngine.Modelo.GenAtributo;
 
 public class ComparadorDeGenoma {
 	
 	public Boolean SonMismaEspecieComparandoGenoma(HashMap<String, GenAtributo> genomaHembra, HashMap<String, GenAtributo> genomaMacho) throws Exception{
-	
+		DecimalFormat df = new DecimalFormat();
+	df.setMaximumFractionDigits(2);
 		for (HashMap.Entry<String, GenAtributo> entry : genomaHembra.entrySet()) {
 			String nombreAtributo = entry.getKey();
 			GenAtributo genatributoHembra = entry.getValue();
@@ -19,10 +21,18 @@ public class ComparadorDeGenoma {
 			if(prevariabilidad==null) {
 				throw new Exception("Variabilidad de "+nombreAtributo+" es null");
 			}
-			Float variabilidad = (float)prevariabilidad;
+			Float variabilidad = null;
+			if(prevariabilidad instanceof Integer) {
+				Integer tmpvariabilidad =(Integer)prevariabilidad;
+				variabilidad =(float)tmpvariabilidad;
+			}
+			if(prevariabilidad instanceof Float) {
+				variabilidad =(float)prevariabilidad;
+			}
+			
 			Boolean comparacionDeAtributos = null;
 			try {
-				comparacionDeAtributos = TienenMismoAtributoComparandoGenoma(tipoAtributo, variabilidad, genatributoHembra,genatributoMacho);	
+				comparacionDeAtributos = TienenMismoAtributoComparandoGenoma(nombreAtributo,tipoAtributo, variabilidad, genatributoHembra,genatributoMacho,df);	
 			}catch(Exception ex) {
 				comparacionDeAtributos=false;
 			}
@@ -33,7 +43,7 @@ public class ComparadorDeGenoma {
 		return true;
 	}
 	
-	private Boolean TienenMismoAtributoComparandoGenoma(String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho) throws Exception{
+	private Boolean TienenMismoAtributoComparandoGenoma(String nombreAtributo, String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho,DecimalFormat df) throws Exception{
 		Object objFenotipoHembra = genHembra.getFenotipo();
 		Object objFenotipoMacho = genMacho.getFenotipo();
 		Float valorBaseAtributoHembra = null;
@@ -54,7 +64,7 @@ public class ComparadorDeGenoma {
 					valorBaseAtributoMacho = (float) objFenotipoMacho;
 				}
 				Float diferencia = Math.abs(valorBaseAtributoHembra-valorBaseAtributoMacho);
-				if(diferencia>variabilidad) {
+				if(diferencia>(variabilidad*2)) {
 					Comparacion = false;
 				}else {
 					Comparacion = true;
