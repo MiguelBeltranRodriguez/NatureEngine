@@ -5,21 +5,26 @@ import NatureEngine.Modelo.GenAtributo;
 
 public class ComparadorDeGenoma {
 	
-	public Boolean CompararGenoma(HashMap<String, GenAtributo> genomaHembra, HashMap<String, GenAtributo> genomaMacho){
+	public Boolean SonMismaEspecieComparandoGenoma(HashMap<String, GenAtributo> genomaHembra, HashMap<String, GenAtributo> genomaMacho) throws Exception{
 	
 		for (HashMap.Entry<String, GenAtributo> entry : genomaHembra.entrySet()) {
 			String nombreAtributo = entry.getKey();
 			GenAtributo genatributoHembra = entry.getValue();
-			if(nombreAtributo=="Sexo") {
+			if(nombreAtributo.equals("Sexo")) {
 				continue;
 			}
 			GenAtributo genatributoMacho = genomaMacho.get(nombreAtributo);
 			String tipoAtributo = genatributoMacho.getTipoCaracteristica();
 			Object prevariabilidad = genatributoMacho.getVariabilidad();
-			Float variabilidad = Float.parseFloat(prevariabilidad.toString());
+			if(prevariabilidad==null) {
+				throw new Exception("Variabilidad null: Atributo: "+nombreAtributo);
+			}
+			Float variabilidad = (float)prevariabilidad;
+			
+			
 			Boolean comparacionDeAtributos = null;
 			try {
-				comparacionDeAtributos = CompararAtributos(tipoAtributo, variabilidad, genatributoHembra,genatributoMacho);	
+				comparacionDeAtributos = TienenMismoAtributoComparandoGenoma(tipoAtributo, variabilidad, genatributoHembra,genatributoMacho);	
 			}catch(Exception ex) {
 				comparacionDeAtributos=false;
 			}
@@ -30,7 +35,7 @@ public class ComparadorDeGenoma {
 		return true;
 	}
 	
-	private Boolean CompararAtributos(String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho) throws Exception{
+	private Boolean TienenMismoAtributoComparandoGenoma(String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho) throws Exception{
 		Object objFenotipoHembra = genHembra.getFenotipo();
 		Object objFenotipoMacho = genMacho.getFenotipo();
 		Float valorBaseAtributoHembra = null;
@@ -52,9 +57,9 @@ public class ComparadorDeGenoma {
 				}
 				Float diferencia = Math.abs(valorBaseAtributoHembra-valorBaseAtributoMacho);
 				if(diferencia>variabilidad) {
-					Comparacion = true;
-				}else {
 					Comparacion = false;
+				}else {
+					Comparacion = true;
 				}
 			} else {
 				throw new Exception("Tipo de variable desconocido: " + tipo);

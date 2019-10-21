@@ -22,7 +22,7 @@ abstract class RecombinationFecundation extends AttributesVariator {
 	protected Alelo MeiosisEscogerCualquieraDeLosDosAlelosDeAbuelos(GenAtributo genparental) {
 		RandomExtendido randomextendido = new RandomExtendido();
 		Alelo aleloabuela = genparental.getaleloUno();
-		Alelo aleloabuelo = genparental.getaleloUno();
+		Alelo aleloabuelo = genparental.getaleloDos();
 		Alelo aleloredeabuelo = randomextendido.RandomBooleanoConLimite(null) ? aleloabuela : aleloabuelo;
 		return aleloredeabuelo;
 	}
@@ -32,11 +32,11 @@ abstract class RecombinationFecundation extends AttributesVariator {
 		Object valorFenotipo = null;
 		Object valorUno = aleloUno.getValor();
 		Object valorDos = aleloDos.getValor();
-		if(nombreAtributo=="Sexo") {
+		if(nombreAtributo.equals("Sexo")) {
 			if((Boolean)valorUno==true && (Boolean)valorDos==true) {
 				throw new Exception("NO SE PUEDEN REPRODUCIR DOS MACHOS");
 			}else {
-				if((Boolean)valorUno==false && (Boolean)valorDos==false) {
+				if(((Boolean)valorUno==false) && ((Boolean)valorDos)==false) {
 					valorFenotipo = (Object)false;
 				}else {
 					valorFenotipo = (Object)true;

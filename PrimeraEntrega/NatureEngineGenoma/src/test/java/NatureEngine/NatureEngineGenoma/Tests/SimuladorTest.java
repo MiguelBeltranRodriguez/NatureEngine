@@ -12,7 +12,10 @@ class SimuladorTest {
     @Test
     public void Simuladordegeneraciones() {
 		try {
-			toTest.SimularNuevaEspecieYGeneraciones(100,20,100);
+			Integer numeroGeneraciones=100;
+			Integer numeroinicialindividuos=40;
+			Integer numeromaximoinidividuos=1000;
+			toTest.SimularNuevaEspecieYGeneraciones(numeroGeneraciones,numeroinicialindividuos,numeromaximoinidividuos);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

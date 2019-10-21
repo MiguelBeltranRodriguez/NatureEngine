@@ -42,11 +42,7 @@ public class SimuladorLogger {
 			return valor.toString();
 		}
 		if (tipo.equals("java.lang.Boolean")) {
-			if (((Boolean) valor) == true) {
-				return "T" + txt;
-			} else {
-				return "T" + txt;
-			}
+		 return ((Boolean)valor).toString()+ txt;
 		}
 		return "TIPODESCONOCIDO.."+tipo;
 	}
