@@ -26,10 +26,10 @@ class Surface extends JPanel implements ActionListener {
 		
 		//Escala de ruido - Lo deje entre 40 y 100 porque en las pruebas vi que eran los valores que mejor funcionaban
 		map.noiseScale = (float) (40 + (Math.random()*60));
+		//Numero de octavas - Lo deje entre 6 y 10 porque en las pruebas vi que eran los valores que mejor funcionaban
+		map.octaves = 6+(int)(4*Math.random());
 		
-		//Numero de octavas - Lo deje entre 20 y 60 porque en las pruebas vi que eran los valores que mejor funcionaban
-		map.octaves = 20+(int)(Math.random()*40);
-		
+		System.out.println("octaves = " + map.octaves);
 		
 		float[][]  noiseMap = map.GenerateMap();
         
@@ -38,10 +38,12 @@ class Surface extends JPanel implements ActionListener {
         for (int i = 0; i < map.mapWidth; i++) {
         	for (int j= 0; j < map.mapHeight; j++)
         	{
-        		color = new Color((int) (noiseMap[i][j] * 128));
+        		//System.out.print((noiseMap[i][j]) + " ");
+        		color = new Color((int) ((noiseMap[i][j]) * 2048));
         		g2d.setColor(color);
         		g2d.drawLine(j, i, j, i);
         	}
+    		System.out.println();
         }
     }
 

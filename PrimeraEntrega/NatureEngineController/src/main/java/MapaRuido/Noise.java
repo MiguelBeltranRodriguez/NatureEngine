@@ -42,11 +42,17 @@ public class Noise {
 
 					//Usando Z=0, por ser solo dos dimensiones
 					perlinValue = (float) (Math.abs((ImprovedNoise.noise(sampleX, sampleY, 0))));					
-					noiseMap[x][y] += perlinValue;			
+					noiseMap[x][y] += perlinValue;
 				}
 			}
 		}
 		
+		//Para que los valores entregados sean entre 0 y 1
+		for (int y = 0; y < mapHeight; y++) {
+			for (int x= 0; x < mapWidth; x++) {
+				noiseMap[x][y] = noiseMap[x][y] / octaves;			
+			}
+		}
 		
 		return noiseMap;
 		
