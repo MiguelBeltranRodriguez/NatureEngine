@@ -60,24 +60,8 @@ public class GenAtributo extends CaracteristicaHeredablePrototype implements Ser
 	}
 
 	public Object getValorCaracteristica() {
-		Object valor = null;
-
-		if (this.fenotipo != null) {
-
-			if (this.fenotipo != null) {
-
-				valor = new Object();
-
-				try {
-					Class<?> clazz = Class.forName(this.tipoCaracteristica);
-					valor = clazz.cast(this.fenotipo);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
-		return valor;
+		
+		return fenotipo;
 	}
 
 	public void setValorCaracteristica(Object valorCaracteristica) {

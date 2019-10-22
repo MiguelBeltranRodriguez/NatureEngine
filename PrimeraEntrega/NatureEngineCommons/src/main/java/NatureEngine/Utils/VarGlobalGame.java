@@ -9,7 +9,7 @@ import java.awt.Color;
 public class VarGlobalGame {
 
 	/** FPS */
-	public final static int FPS =30; 
+	public final static int FPS =15; 
 	
 	/** Delta de los FPS */
 	public static double DELTA = 0;

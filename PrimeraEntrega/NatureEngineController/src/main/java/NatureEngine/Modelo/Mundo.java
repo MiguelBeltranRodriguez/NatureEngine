@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import NatureEngine.Mensajeria.Mensaje;
@@ -17,9 +19,12 @@ import NatureEngine.Modelo.CasillaTierra;
 import NatureEngine.Modelo.Planta;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
+import NatureEngine.NatureEngineController.Loop;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.PopUpInfo;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
+import NatureEngine.NatureEngineGenoma.main.CreadorDeEspecies;
+import NatureEngine.NatureEngineGenoma.main.GenomaHandler;
 import NatureEngine.Utils.ManejadorArchivos;
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
@@ -47,7 +52,9 @@ public class Mundo implements Dibujable{
 	private float consumoEnergiaPlanta;
 	public static Long ID_ACTUAL = (long) 0;
 	
-	public Mundo() {
+	private Loop loop;
+	
+	public Mundo(Loop loop) {
 		casillasDelMundo = new Casilla[VarGlobalVista.widht_pantalla_map][VarGlobalVista.heigth_pantalla_map];
 		popUpsInfo = new ArrayList<PopUpInfo>();
 		plantasMundo = new ArrayList<Planta>();
@@ -56,6 +63,7 @@ public class Mundo implements Dibujable{
 		estacion = 1.0f;
 		tiempoActual = 0;
 		direccionCambioEstacion = -1;
+		this.loop = loop;
 		cargarMapa();
 	}
 
@@ -260,7 +268,7 @@ public class Mundo implements Dibujable{
 	public  void addAgente(ObjetoDistribuido agente) {
 		Agente ag = (Agente) agente;
 		casillasDelMundo[ag.getX()][ag.getY()].agregarDibujable((Dibujable)agente);;
-		setContadorAgentes(getContadorAgentes() + 1);
+		contadorAgentes++;
 	}
 
 
@@ -615,4 +623,26 @@ public class Mundo implements Dibujable{
 		
 		return energiaConsumida;
 	}
+
+
+
+	public void reproducirAgentes(Agente agente, Agente hembra) {
+		int capacidadReproductivaMacho = (int) agente.getCaracteristicaHeredable(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_);
+		int capacidadReproductivaHembra = (int) hembra.getCaracteristicaHeredable(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_);
+		int numeroDeHijos = (capacidadReproductivaHembra+capacidadReproductivaMacho)/2;
+		int xHijo = agente.getX();
+		int yHijo = agente.getY();
+		GenomaHandler genomahandler = GenomaHandler.Singleton();
+		System.out.println("Nuevo Agente");
+		
+		List<HashMap<String, GenAtributo>> atributosHijo = genomahandler.Reproducirse(Integer.valueOf(numeroDeHijos), agente.getCaracteristicasHeredablesAgente(), hembra.getCaracteristicasHeredablesAgente());
+		
+		for (int i = 0; i < numeroDeHijos; i++) {
+			loop.crearAgente(xHijo, yHijo, atributosHijo.get(i));
+		}
+		
+	}
+
+
+
 }

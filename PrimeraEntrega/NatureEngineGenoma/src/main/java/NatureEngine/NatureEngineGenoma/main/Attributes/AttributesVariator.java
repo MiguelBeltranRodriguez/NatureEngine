@@ -78,7 +78,8 @@ abstract class AttributesVariator {
 		RandomExtendido randomextendido = new RandomExtendido();
 		Object nuevoValorAtributo = null;
 		if (tipo.equals("java.lang.Boolean")) {
-			nuevoValorAtributo = (Object) randomextendido.RandomBooleanoConLimite(null);
+			Boolean valortmptwo = randomextendido.RandomBooleanoConLimite(null);
+			nuevoValorAtributo = (Object) valortmptwo;
 		} else {
 			if (tipo.equals("java.lang.Integer") || tipo.equals("java.lang.Float")) {
 				Float valorInicial = RandomExtendido.ObjectAFloat(valorBaseAtributo);
@@ -89,7 +90,13 @@ abstract class AttributesVariator {
 				if((Math.abs(valorInicial-valortmp)/valorInicial)>1.5){
 					System.out.println(valortmp+"/"+valorInicial);
 				}
-				nuevoValorAtributo = (Object) valortmp;
+				if (tipo.equals("java.lang.Integer")){
+					int valortmptwo = (int) Math.round(valortmp);
+					nuevoValorAtributo = (Object) valortmptwo;
+				}else {
+					nuevoValorAtributo = (float) valortmp;
+					nuevoValorAtributo = (Object) valortmp;	
+				}
 			} else {
 				throw new Exception("Tipo de variable desconocido: " + tipo);
 			}
@@ -121,10 +128,11 @@ abstract class AttributesVariator {
 						Float TmpFloat = ((valorUno + valorDos) / 2);
 						
 				if (tipo.equals("java.lang.Integer")) {
-					Integer TmpInteger = (int) Math.round(TmpFloat);
+					int TmpInteger = (int) Math.round(TmpFloat);
 					nuevoFenotipo = (Object) TmpInteger;
 				}else {
-					nuevoFenotipo = (Object) TmpFloat;
+					float TmpFloattwo = (float)TmpFloat;
+					nuevoFenotipo = (Object) TmpFloattwo;
 				}
 			} else {
 				throw new Exception("Tipo de variable desconocido: " + tipo);

@@ -61,7 +61,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	private void inicio() {
 		setPantalla(Pantalla.getPantalla());
 		render2D = new Renderizador2D();
-		mundo = new Mundo();
+		mundo = new Mundo(this);
 		corriendo = true;
 		
 		try {
@@ -125,7 +125,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	public void run() {
 		inicio();
 
-		double timerPerTick = 2000000000 / VarGlobalGame.FPS;
+		double timerPerTick = 2100000000 / VarGlobalGame.FPS;
 
 		long now;
 		long lastTime = System.nanoTime();
@@ -144,7 +144,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 				ticks++;
 				VarGlobalGame.DELTA--;
 			}
-			if(timer > 2000000000) {
+			if(timer > 2100000000) {
 				VarGlobalGame.TICKS_S = ticks;
 				ticks = 0;	
 				timer = 0;
@@ -188,29 +188,28 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 	
 
-	public Map<String, GenAtributo> crearAtributosAgentePrimitivo(boolean Hembra) {		
+	public List<HashMap<String, GenAtributo>> crearAtributosAgentePrimitivo(int numeroInicial) {		
 		HashMap<String, Object> fenotipo = new HashMap<String, Object>();
 		fenotipo.put(AtributosBasicos.ENERGIA_MAXIMA_, 6000.0f);
 		fenotipo.put(AtributosBasicos.AGUA_MAXIMA_, 3000.0f);
 		fenotipo.put(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f);
 		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 10);
-		fenotipo.put(AtributosBasicos.PERCEPCION_, 50);
-		fenotipo.put(AtributosBasicos.SEXO_, Hembra);
+		fenotipo.put(AtributosBasicos.PERCEPCION_, 35);
+		fenotipo.put(AtributosBasicos.SEXO_, 1);
 		fenotipo.put(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1);
 		fenotipo.put(AtributosBasicos.ANSIEDAD_, 50);
 		fenotipo.put(AtributosBasicos.HUMEDAD_IDEAL_, 0.5f);
 		fenotipo.put(AtributosBasicos.TOLERANCIA_HUMEDAD_, 0.5f);
 		fenotipo.put(AtributosBasicos.DIGESTION_VEGETAL_, 1);
 		fenotipo.put(AtributosBasicos.AGRESIVIDAD_, 0.5f);
-		fenotipo.put(AtributosBasicos.LONGEVIDAD_, 100);
+		fenotipo.put(AtributosBasicos.LONGEVIDAD_, 50);
 		fenotipo.put(AtributosBasicos.MADUREZ_REPRODUCTIVA, 10);
 		
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
-		Integer numeroIndividuos = 1;
 		HashMap<String, GenAtributo> individuodePrueba=null;
 		try {
-			List<HashMap<String, GenAtributo>> listadeIndividuos = genomahandler.NuevaEspecie(numeroIndividuos, fenotipo);	
-			individuodePrueba = listadeIndividuos.get(0);
+			List<HashMap<String, GenAtributo>> listadeIndividuos = genomahandler.NuevaEspecie(numeroInicial, fenotipo);	
+			return listadeIndividuos;
 		}catch(Exception ex){
 			ex.printStackTrace();
 			System.out.println("[Error en GenomaHandler] "+ex.getMessage());
@@ -218,28 +217,17 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		if(individuodePrueba == null) {
 			System.out.println("Error");
 		}
-		individuodePrueba.get(AtributosBasicos.ENERGIA_MAXIMA_).setValorCaracteristica(6000.0f);
-		individuodePrueba.get(AtributosBasicos.AGUA_MAXIMA_).setValorCaracteristica(3000.0f);
-		individuodePrueba.get(AtributosBasicos.POTENCIA_MAXIMA_).setValorCaracteristica(20.0f);
-		individuodePrueba.get(AtributosBasicos.TAMANO_MAXIMO_).setValorCaracteristica(10);
-		individuodePrueba.get(AtributosBasicos.PERCEPCION_).setValorCaracteristica(50);
-		individuodePrueba.get(AtributosBasicos.MADUREZ_REPRODUCTIVA).setValorCaracteristica(10);
-		individuodePrueba.get(AtributosBasicos.LONGEVIDAD_).setValorCaracteristica(25);
-		individuodePrueba.get(AtributosBasicos.HUMEDAD_IDEAL_).setValorCaracteristica(0.5f);
-		individuodePrueba.get(AtributosBasicos.TOLERANCIA_HUMEDAD_).setValorCaracteristica(0.5f);
-		return individuodePrueba;
+		return null;
 	}
 	
 	
 	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
 		// TODO: Agregar agentes en un csv o xml etc
-		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(true));
-		Agente agenteNuevoHembra = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(15), 150+(15), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(false));
-		addAgente(agenteNuevo);
-		addAgente(agenteNuevoHembra);
+		List<HashMap<String, GenAtributo>> listaInicial = crearAtributosAgentePrimitivo(10);
+		for (int i = 0; i < 10; i++) {
+			crearAgente(400+i, 400+i, listaInicial.get(i));
+		}
 		
-		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevo);
-		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevoHembra);
 	}
 
 	@Override
@@ -277,5 +265,22 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 			}
 		}
 		throw new RemoteException("Error");
+	}
+
+	@Override
+	public void reproducir(ObjetoDistribuido agente, ObjetoDistribuido hembra) throws RemoteException {
+		this.mundo.reproducirAgentes((Agente)agente, (Agente)hembra);
+	}
+
+	public void crearAgente(int xHijo, int yHijo, HashMap<String, GenAtributo> hashMap) {
+		try {
+			Agente hijo = new Agente(Mundo.ID_ACTUAL++, Color.RED, xHijo, yHijo, (ServiciosController)this, servidoresAgentes.get(0), hashMap);
+			addAgente(hijo);
+			
+			servidoresAgentes.get(0).agregarAgente((ObjetoDistribuido)hijo);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -42,4 +42,6 @@ public interface ServiciosController extends Remote{
 
 	public Mensaje enviarMensaje(Mensaje mensaje) throws RemoteException;
 
+	public void reproducir(ObjetoDistribuido agente, ObjetoDistribuido hembra) throws RemoteException;
+
 }

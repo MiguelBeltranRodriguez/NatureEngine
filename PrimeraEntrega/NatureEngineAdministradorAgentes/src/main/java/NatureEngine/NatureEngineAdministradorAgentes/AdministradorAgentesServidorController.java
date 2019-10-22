@@ -89,5 +89,10 @@ public class AdministradorAgentesServidorController extends UnicastRemoteObject 
 		}
 		return null;
 	}
+
+	@Override
+	public void morir(Long id) throws RemoteException {
+		agentes.remove(id);
+	}
 	
 }

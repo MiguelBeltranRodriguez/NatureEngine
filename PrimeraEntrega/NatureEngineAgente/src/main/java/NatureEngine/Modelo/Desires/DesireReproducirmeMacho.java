@@ -10,6 +10,7 @@ import NatureEngine.Modelo.AtributosBasicos;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Intentions.Intention;
 import NatureEngine.Modelo.Intentions.MoverseA;
+import NatureEngine.Modelo.Intentions.TenerHijo;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.Utils.DiccionarioDePalabras;
@@ -33,7 +34,7 @@ public class DesireReproducirmeMacho extends Desire {
 		hembraObjetivo(percepciones);
 		Mensaje mensajeAnterior = mensajesEnviados.get(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
 		
-		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) ) {
+		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) && agente.getTiempoDescansoReproduccion()==0 ) {
 			if(mensajeAnterior == null) {
 				try {
 					Mensaje mensajeAEnviar = new Mensaje(agente.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, this.agente, agenteHembra);
@@ -81,13 +82,16 @@ public class DesireReproducirmeMacho extends Desire {
 		this.llenarPila();
 	}
 	private void llenarPila() {
+		
 		Intention intencionMoverse = new MoverseA(agente, agenteHembra.getX(), agenteHembra.getY());
 		Map<String, Mensaje> mensajesEnviados = agente.getMensajesEnviadosEsperando();
+		this.intenciones.push(new TenerHijo(this.agente, this.agenteHembra));
 		if(intencionMoverse.isFinalizado()) {
 			mensajesEnviados.remove(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
 		}else {
 			this.intenciones.push(intencionMoverse);
 		}
+		
 		
 	}
 	private void hembraObjetivo(List<ObjetoDistribuido> percepciones) {

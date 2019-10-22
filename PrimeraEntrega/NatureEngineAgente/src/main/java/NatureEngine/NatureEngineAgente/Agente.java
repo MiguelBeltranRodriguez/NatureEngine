@@ -45,7 +45,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	// TODO: pasar a una clase BDI
 	private List<ObjetoDistribuido> percepcion;
 	private Desire desireAnterior;
-	private Map<String, GenAtributo> caracteristicasHeredablesAgente;
+	private HashMap<String, GenAtributo> caracteristicasHeredablesAgente;
 	private int tamañoActual;
 	private int edadActual;  
 	private int casillasMovidas;
@@ -61,10 +61,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private ServiciosAdministradorAgentes serviciosAgente;
 	private Queue<Mensaje> colaMensajesRecibidos;
 	private Map<String, Mensaje> mensajesEnviadosEsperando;
+	private int tiempoDescansoReproduccion;
 	
-	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
+	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, HashMap<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
 
 		super(ID);
+		this.tiempoDescansoReproduccion = 20;
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 		this.mensajesEnviadosEsperando = new HashMap<String, Mensaje>();
 		this.colaMensajesRecibidos = new LinkedList<Mensaje>();
@@ -80,12 +82,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.resaltado = false;
 		
 		this.edadActual = 0;
-		this.longevidad = (int) this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
-		this.madurezReproductiva = (int) this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
+		this.longevidad =(int)this.getCaracteristicaHeredable(AtributosBasicos.LONGEVIDAD_);
+		this.madurezReproductiva = (int)this.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA);
 		this.potenciaMaxima = (float) this.getCaracteristicaHeredable(AtributosBasicos.POTENCIA_MAXIMA_);
 		this.tamañoMaximo = (int) this.getCaracteristicaHeredable(AtributosBasicos.TAMANO_MAXIMO_);
 		this.potenciaActual = this.cambioSegunEdad(this.potenciaMaxima);
-		this.tamañoActual = (int) this.cambioSegunEdad((float) this.tamañoMaximo);
+		this.tamañoActual = (int) this.cambioSegunEdad(this.tamañoMaximo);
 		
 		this.energiaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);
 		this.aguaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_);
@@ -101,12 +103,13 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.casillasMovidas = 0;
 		this.velocidadActual = 0;
 	}
-
-
+	
+	
 	public int getDistanciaPercepcion() {
 		return (int)getCaracteristicaHeredable(AtributosBasicos.PERCEPCION_);
 	}
 
+	
 	// No activo =============================================================================
 	@Override
 	public void update() {
@@ -121,6 +124,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		long delta = 0;
 		int ticks = 0;
 		while(true) {
+			this.tiempoDescansoReproduccion--;
 			t_0 = System.currentTimeMillis();
 			this.pensar();
 			// this.belief.pensar();
@@ -142,6 +146,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 					this.servicios.actualizarAgente((ObjetoDistribuido)this);
 					if (this.energiaActual <= 0 /*|| this.aguaActual<= 0*/ || this.edadActual >= this.longevidad) {
 						this.servicios.morir((ObjetoDistribuido)this);
+						this.serviciosAgente.morir(getID());
 						Thread.currentThread().join();
 					}
 				} catch (RemoteException | InterruptedException e) {
@@ -462,12 +467,12 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.desireAnterior = desireAnterior;
 	}
 
-	public Map<String, GenAtributo> getCaracteristicasHeredablesAgente() {
+	public HashMap<String, GenAtributo> getCaracteristicasHeredablesAgente() {
 		return caracteristicasHeredablesAgente;
 	}
 
 	public void setCaracteristicasHeredablesAgente(
-			Map<String, GenAtributo> caracteristicasHeredablesAgente) {
+			HashMap<String, GenAtributo> caracteristicasHeredablesAgente) {
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
 	}
 
@@ -553,6 +558,21 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}else {
 			return new Mensaje(this.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_NO, this, mensaje.getEmisor());
 		}
+	}
+
+
+	public void reproducirse(ObjetoDistribuido hembra) throws RemoteException{
+		 servicios.reproducir((ObjetoDistribuido)this, hembra);
+	}
+
+
+	public int getTiempoDescansoReproduccion() {
+		return tiempoDescansoReproduccion;
+	}
+
+
+	public void setTiempoDescansoReproduccion(int tiempoDescansoReproduccion) {
+		this.tiempoDescansoReproduccion = tiempoDescansoReproduccion;
 	}
 	
 	

@@ -29,5 +29,7 @@ public interface ServiciosAdministradorAgentes extends Remote {
 	public String getID() throws RemoteException;
 
 	public Mensaje enviarMensaje(Mensaje mensaje) throws RemoteException;
+
+	public void morir(Long id)  throws RemoteException;
 	
 }
