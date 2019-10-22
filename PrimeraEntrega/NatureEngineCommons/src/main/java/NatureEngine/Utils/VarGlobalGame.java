@@ -9,7 +9,7 @@ import java.awt.Color;
 public class VarGlobalGame {
 
 	/** FPS */
-	public final static int FPS =2; 
+	public final static int FPS =10; 
 	
 	/** Delta de los FPS */
 	public static double DELTA = 0;
@@ -19,7 +19,7 @@ public class VarGlobalGame {
 	/** Ticks por segundo */
 	public static int TICKS_S = 0;
 	
-	public static int DELAY = 10;
+	public static int DELAY = 100;
 	
 	public static int MIU_DE_FRICCION = 100;
 	
@@ -70,5 +70,5 @@ public class VarGlobalGame {
 	public final static int COHEFICIENTE_GRADO_ENVEJECIMIENTO = 10;
 
 	/** Coheficiente en los Desires */
-	public final static float UMBRAL_HAMBRE = (float) 0.5;
+	public final static float UMBRAL_HAMBRE = (float) 0.6;
 }

@@ -17,6 +17,7 @@ import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desires.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
+import NatureEngine.Modelo.Desires.DesireMovimientoAleatorio;
 import NatureEngine.Modelo.Desires.DesireReproducirmeHembra;
 import NatureEngine.Modelo.Desires.DesireReproducirmeMacho;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -229,6 +230,7 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 				System.out.println(temporal.getHumedad());
 			} */
 			Stack<Desire> desires = new Stack<Desire>();
+			desires.push(new DesireMovimientoAleatorio(this));
 			if((boolean)getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
 				desires.push(new DesireReproducirmeHembra(this));
 			}else {

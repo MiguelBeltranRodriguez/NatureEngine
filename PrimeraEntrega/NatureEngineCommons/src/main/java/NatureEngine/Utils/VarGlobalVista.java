@@ -11,16 +11,16 @@ public class VarGlobalVista {
 	public final static String TITULO_APP = "NatureEngine";
 	
 	/** El ancho de la visualización del mapa */
-	public static int widht_pantalla_map = 720;
+	public static int widht_pantalla_map = 416;
 	
 	/** El alto de la visualización del mapa */
-	public static int heigth_pantalla_map = 720;
+	public static int heigth_pantalla_map = 416;
 	
 	/** El ancho de la pantalla */
 	public final static int WIDHT_PANTALLA = 1080;
 	
 	/** El alto de la pantalla */
-	public final static int HEIGTH_PANTALLA = 720;
+	public final static int HEIGTH_PANTALLA = 416;
 	
 	/** Tamaño de las texturas cuadriculadas(casillas) N*N */
 	public final static int TAMANO_TEXTURA_CUADRICULA = 8;

@@ -43,4 +43,5 @@ public abstract class Desire implements Serializable {
  
 		return Math.sqrt(areasTotales);
 	}
+	public abstract void llenarPila();
 }

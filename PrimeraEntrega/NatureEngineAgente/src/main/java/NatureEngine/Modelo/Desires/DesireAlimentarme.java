@@ -30,11 +30,11 @@ public class DesireAlimentarme extends Desire {
 		this.llenarPila();
 	}
 
-	private void llenarPila() {
+	public void llenarPila() {
 		this.intenciones.push(new AlimentarsePlanta(this.agente, this.objetivo));
 		Intention intencionMoverse = new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY());
 		if(!intencionMoverse.isFinalizado()){
-			this.intenciones.push(new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY()));
+			this.intenciones.push(intencionMoverse);
 		}
 	}
 

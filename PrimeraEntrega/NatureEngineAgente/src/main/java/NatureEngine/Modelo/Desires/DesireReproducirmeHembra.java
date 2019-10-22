@@ -27,6 +27,11 @@ public class DesireReproducirmeHembra extends Desire {
 	public void init(Desire desireAnterior) {
 		
 	}
+	@Override
+	public void llenarPila() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 

@@ -225,7 +225,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		// TODO: Agregar agentes en un csv o xml etc
 		List<HashMap<String, GenAtributo>> listaInicial = crearAtributosAgentePrimitivo(30);
 		for (int i = 0; i < 30; i++) {
-			crearAgente(400+i, 400+i, listaInicial.get(i));
+			crearAgente(250+i, 250+i, listaInicial.get(i));
 		}
 		
 	}

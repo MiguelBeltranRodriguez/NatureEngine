@@ -81,7 +81,7 @@ public class DesireReproducirmeMacho extends Desire {
 	public void init(Desire desireAnterior) {
 		this.llenarPila();
 	}
-	private void llenarPila() {
+	public void llenarPila() {
 		
 		Intention intencionMoverse = new MoverseA(agente, agenteHembra.getX(), agenteHembra.getY());
 		Map<String, Mensaje> mensajesEnviados = agente.getMensajesEnviadosEsperando();
