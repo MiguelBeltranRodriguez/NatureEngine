@@ -1,6 +1,7 @@
 package NatureEngine.NatureEngineGenoma.Simulator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,11 @@ import NatureEngine.NatureEngineGenoma.main.GenomaHandler;
 public class Simulador extends SimuladorSupport {
 
 	public List<HashMap<String, GenAtributo>> SimularNuevaEspecieYGeneraciones(Integer numeroGeneraciones,
-			Integer numeroinicialindividuos, Integer numeromaximoinidividuos) throws Exception {
+			Integer numeroinicialindividuos, Integer numeromaximoinidividuos, Boolean MostrarLogDetallado, Integer MostrarPadresEHijosDeGeneracionNumero) throws Exception {
 		System.out.println("Comenzando simulador");
 		List<HashMap<String, GenAtributo>> poblacioninicial = SimularNuevaEspecie(numeroinicialindividuos);
 		List<HashMap<String, GenAtributo>> poblacionfinal = SimularGeneraciones(numeromaximoinidividuos,
-				numeroGeneraciones, poblacioninicial);
+				numeroGeneraciones, poblacioninicial,MostrarLogDetallado,MostrarPadresEHijosDeGeneracionNumero);
 		return poblacionfinal;
 	}
 
@@ -25,9 +26,10 @@ public class Simulador extends SimuladorSupport {
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
 		System.out.println("Generando valores de atributos iniciales al azar");
 		HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie = AtributosIniciales();
-		List<HashMap<String, GenAtributo>> listaDeAtributosDeIndividuosDeNuevaEspecie = genomahandler
+		List<HashMap<String, GenAtributo>> poblacioninicial = genomahandler
 				.NuevaEspecie(numeroIndividuos, listaDeValoresDeAtributosDeLaEspecie);
-		return listaDeAtributosDeIndividuosDeNuevaEspecie;
+		SimuladorLogger.ReportGeneration(poblacioninicial);
+		return poblacioninicial;
 	}
 
 	public void SimulacionCreacionAtributos(Integer numeroRepeticiones) throws Exception {
@@ -42,14 +44,13 @@ public class Simulador extends SimuladorSupport {
 	
 
 	public List<HashMap<String, GenAtributo>> SimularGeneraciones(Integer numeromaximoinidividuos,
-			Integer numeroGeneraciones, List<HashMap<String, GenAtributo>> poblacioninicial) throws Exception {
+			Integer numeroGeneraciones, List<HashMap<String, GenAtributo>> poblacioninicial, Boolean MostrarLogDetallado, Integer MostrarPadresEHijosDeGeneracionNumero) throws Exception {
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
-		SimuladorLogger.ReportGeneration(poblacioninicial);
 		List<HashMap<String, GenAtributo>> generacionactual = poblacioninicial;
 		System.out.println("Simulando generaciones...");
 		int conteo = 1;
 		while (numeroGeneraciones > 0) {
-			generacionactual = SimularGeneracion(numeromaximoinidividuos, genomahandler, generacionactual, conteo);
+			generacionactual = SimularGeneracion(numeromaximoinidividuos, genomahandler, generacionactual, conteo,MostrarLogDetallado,MostrarPadresEHijosDeGeneracionNumero);
 			numeroGeneraciones--;
 			conteo++;
 		}
@@ -57,17 +58,24 @@ public class Simulador extends SimuladorSupport {
 		System.out.println("Finalizado!");
 		System.out.println("*****************************");
 		
-		SimuladorLogger.ReportGeneration(generacionactual);
+		if(MostrarLogDetallado==true) {
+			SimuladorLogger.ReproductionResultsLogTest(conteo - 1, generacionactual);
+		}else {
+			SimuladorLogger.ReportGeneration(generacionactual);	
+		}
 		
-		//SimuladorLogger.ReproductionResultsLogTest(conteo - 1, generacionactual);
 
 		return generacionactual;
 	}
 
 	private List<HashMap<String, GenAtributo>> SimularGeneracion(Integer numeromaximoinidividuos,
 			GenomaHandler genomahandler, List<HashMap<String, GenAtributo>> generacionAnterior,
-			Integer numerogeneracionactual) throws Exception {
+			Integer numerogeneracionactual, Boolean MostrarLogDetallado,Integer MostrarPadresEHijosDeGeneracionNumero) throws Exception {
 		System.out.print("G" + numerogeneracionactual + "= ");
+		Boolean MostrarPadresEHijos=false;
+		if(MostrarPadresEHijosDeGeneracionNumero!=null && MostrarPadresEHijosDeGeneracionNumero==numerogeneracionactual) {
+			MostrarPadresEHijos=true;
+		}
 		List<HashMap<String, GenAtributo>> nuevaGeneracion = new ArrayList<HashMap<String, GenAtributo>>();
 		Collections.shuffle(generacionAnterior);
 		int parejas = 0;
@@ -111,9 +119,26 @@ public class Simulador extends SimuladorSupport {
 					HashMap<String, GenAtributo> hijo = nuevosHijos.get(k);
 					nuevaGeneracion.add(hijo);
 				}
+				if(MostrarPadresEHijos==true) {
+				System.out.println("**********************");
+				System.out.println("**********************");
+				System.out.println("Pareja #"+parejas);
+				System.out.println("Parentales");
+				SimuladorLogger.ReproductionResultsLogTest(null, Arrays.asList(genomaUno, genomaDos));
+				System.out.println("------------------------");
+				System.out.println("Hijos");
+					SimuladorLogger.ReproductionResultsLogTest(null, nuevosHijos);
+					System.out.println("**********************");
+					System.out.println("**********************");
+				}
+				
+				
 				break;
 			}
 		}
+
+
+		
 		System.out.println("Parejas: " + parejas + " => Cruces Interespecie bloqueados: " + interespecie
 				+ " => Individuos nacidos: " + nuevaGeneracion.size());
 

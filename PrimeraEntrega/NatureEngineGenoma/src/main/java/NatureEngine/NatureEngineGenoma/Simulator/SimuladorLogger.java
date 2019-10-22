@@ -13,11 +13,13 @@ public class SimuladorLogger {
 
 	public static void ReproductionResultsLogTest(Integer generacion,
 			List<HashMap<String, GenAtributo>> listaDeIndividuosConAtributos) {
-		System.out.println("************************");
-		System.out.println("************************");
-		System.out.println("************************");
-		System.out.println("Generacion " + generacion);
-		for (int i = 0; i < listaDeIndividuosConAtributos.size(); i++) {
+		if(generacion!=null) {
+			System.out.println("************************");
+			System.out.println("************************");
+			System.out.println("************************");
+			System.out.println("Generacion " + generacion);	
+		}
+		for (int i = 0; i < listaDeIndividuosConAtributos.size(); i++) {			
 			System.out.println("------------------------");
 			System.out.println("Individuo #" + (i + 1));
 			HashMap<String, GenAtributo> individuo = listaDeIndividuosConAtributos.get(i);

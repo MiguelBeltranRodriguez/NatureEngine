@@ -87,9 +87,6 @@ abstract class AttributesVariator {
 				Float maximo = RandomExtendido.ObjectAFloat(premaximo);
 				Float variabilidad = RandomExtendido.ObjectAFloat(prevariabilidad);	
 				Float valortmp = randomextendido.RandomGaussianoLimitadoFloat(valorInicial, variabilidad, minimo, maximo);
-				if((Math.abs(valorInicial-valortmp)/valorInicial)>1.5){
-					System.out.println(valortmp+"/"+valorInicial);
-				}
 				if (tipo.equals("java.lang.Integer")){
 					int valortmptwo = (int) Math.round(valortmp);
 					nuevoValorAtributo = (Object) valortmptwo;

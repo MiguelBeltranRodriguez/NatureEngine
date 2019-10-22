@@ -37,7 +37,7 @@ public class ComparadorDeGenoma {
 				comparacionDeAtributos=false;
 			}
 			if(comparacionDeAtributos==false) {
-				return false;
+				return true;
 			}
 		}
 		return true;
@@ -73,7 +73,7 @@ public class ComparadorDeGenoma {
 				throw new Exception("Tipo de variable desconocido: " + tipo);
 			}
 		}
-		return true;//Comparacion;
+		return Comparacion;
 		
 	}
 
