@@ -34,6 +34,10 @@ public class SimuladorSupport {
 		for (HashMap.Entry<String, CaracteristicaHeredablePrototype> entry : listaatributos.entrySet()) {
 			String nombreAtributo = entry.getKey();
 			Object valorAtributo = SimulacionCrearAtributo(nombreAtributo);
+			if(valorAtributo==null) {
+				throw new Exception(nombreAtributo+": es null");
+			}
+			
 			listaDeValoresDeAtributosDeLaEspecie.put(nombreAtributo, valorAtributo);
 		}
 		return listaDeValoresDeAtributosDeLaEspecie;

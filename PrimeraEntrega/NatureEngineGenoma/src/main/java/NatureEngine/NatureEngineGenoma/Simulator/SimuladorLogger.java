@@ -41,10 +41,10 @@ public class SimuladorLogger {
 		} else {
 			if (tipo.equals("java.lang.Float") || tipo.equals("java.lang.Integer")) {
 				DecimalFormat numberFormat = new DecimalFormat("#.00");
-				if(valor instanceof Integer) {
-					return ((Integer) valor).toString() + txt;	
-				}else {
-					return ((Float) valor).toString() + txt;	
+				if (valor instanceof Integer) {
+					return ((Integer) valor).toString() + txt;
+				} else {
+					return ((Float) valor).toString() + txt;
 				}
 			}
 		}
@@ -53,17 +53,18 @@ public class SimuladorLogger {
 
 	public static HashMap<String, List<Float>> AddToListaFinal(HashMap<String, List<Float>> listafinal,
 			HashMap<String, Object> listaDeValoresDeAtributosDeLaEspecie) throws Exception {
-		if (listafinal.size() == 0) {
-			for (HashMap.Entry<String, Object> entry : listaDeValoresDeAtributosDeLaEspecie.entrySet()) {
-				String key = entry.getKey();
-				List<Float> list = new ArrayList<Float>();
-				listafinal.put(key, list);
-			}
-		}
 		for (HashMap.Entry<String, Object> entry : listaDeValoresDeAtributosDeLaEspecie.entrySet()) {
 			String key = entry.getKey();
-			List<Float> list = listafinal.get(entry.getKey());
-			Object preval = listaDeValoresDeAtributosDeLaEspecie.get(key);
+			Object preval = entry.getValue();
+			if (preval == null) {
+				throw new Exception("Valor de " + key + " no puede ser null");
+			}
+			
+			List<Float> list = listafinal.get(entry.getKey());	
+			if (list==null || list.size()==0) {
+				list = new ArrayList<Float>();
+			}
+			
 			Float val = null;
 			if (preval instanceof Boolean) {
 				Boolean tmp = (Boolean) preval;
@@ -71,22 +72,35 @@ public class SimuladorLogger {
 			} else {
 				val = RandomExtendido.ObjectAFloat(preval);
 			}
+			if (val == null) {
+				throw new Exception("Error en " + key + " esto no debería salir");
+			}
 			list.add(val);
-			listafinal.replace(key, list);
+			listafinal.put(key, list);
 		}
 		return listafinal;
 	}
 
 	public static void ReportGeneration(List<HashMap<String, GenAtributo>> generacionactual) throws Exception {
 		HashMap<String, List<Float>> listafinal = new HashMap<String, List<Float>>();
+				
+		
 		for (int index = 0; index < generacionactual.size(); index++) {
 			HashMap<String, GenAtributo> tmp = generacionactual.get(index);
-			HashMap<String, Object> listatmp = new HashMap<String, Object>();
+			HashMap<String, Object> listaatributos = new HashMap<String, Object>();		
 			for (HashMap.Entry<String, GenAtributo> entry : tmp.entrySet()) {
 				GenAtributo gen = entry.getValue();
-				listatmp.put(entry.getKey(), gen.getFenotipo());
+				String nombreatributo = entry.getKey();
+				if(gen==null) {
+					throw new Exception(nombreatributo+": null en reportgeneration");
+				}
+				Object valoratributo = gen.getFenotipo();
+				if(valoratributo==null) {
+					throw new Exception(nombreatributo+": null en reportgeneration");
+				}
+				listaatributos.put(nombreatributo,valoratributo );
 			}
-			listafinal = SimuladorLogger.AddToListaFinal(listafinal, listatmp);
+			listafinal = SimuladorLogger.AddToListaFinal(listafinal, listaatributos);
 		}
 		ReportFinalData(listafinal);
 	}

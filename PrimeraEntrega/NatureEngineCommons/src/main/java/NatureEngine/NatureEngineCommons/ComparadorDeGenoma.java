@@ -6,7 +6,7 @@ import NatureEngine.Modelo.GenAtributo;
 
 public class ComparadorDeGenoma {
 	
-	public Boolean SonMismaEspecieComparandoGenoma(HashMap<String, GenAtributo> genomaHembra, HashMap<String, GenAtributo> genomaMacho) throws Exception{
+	static public Boolean SonMismaEspecieComparandoGenoma(HashMap<String, GenAtributo> genomaHembra, HashMap<String, GenAtributo> genomaMacho) throws Exception{
 		DecimalFormat df = new DecimalFormat();
 	df.setMaximumFractionDigits(2);
 		for (HashMap.Entry<String, GenAtributo> entry : genomaHembra.entrySet()) {
@@ -43,7 +43,7 @@ public class ComparadorDeGenoma {
 		return true;
 	}
 	
-	private Boolean TienenMismoAtributoComparandoGenoma(String nombreAtributo, String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho,DecimalFormat df) throws Exception{
+	static private Boolean TienenMismoAtributoComparandoGenoma(String nombreAtributo, String tipo,Float variabilidad,GenAtributo genHembra, GenAtributo genMacho,DecimalFormat df) throws Exception{
 		Object objFenotipoHembra = genHembra.getFenotipo();
 		Object objFenotipoMacho = genMacho.getFenotipo();
 		Float valorBaseAtributoHembra = null;
@@ -64,7 +64,7 @@ public class ComparadorDeGenoma {
 					valorBaseAtributoMacho = (float) objFenotipoMacho;
 				}
 				Float diferencia = Math.abs(valorBaseAtributoHembra-valorBaseAtributoMacho);
-				if(diferencia>(variabilidad*2)) {
+				if(diferencia>(variabilidad*5)) {
 					Comparacion = false;
 				}else {
 					Comparacion = true;
@@ -73,7 +73,7 @@ public class ComparadorDeGenoma {
 				throw new Exception("Tipo de variable desconocido: " + tipo);
 			}
 		}
-		return Comparacion;
+		return true;//Comparacion;
 		
 	}
 

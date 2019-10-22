@@ -16,15 +16,15 @@ public class GenAtributo extends CaracteristicaHeredablePrototype implements Ser
 	private Alelo aleloUno;
 	private Alelo aleloDos;	
 	
-	public GenAtributo(String nombreCaracteristica) {
-		this.nombreCaracteristica = nombreCaracteristica;
-	}
-	
+
 	public Object getFenotipo() {
 		return fenotipo;
 	}
 	
-	public GenAtributo(String nombreCaracteristica, Object fenotipo, Alelo aleloUno, Alelo aleloDos) {
+	public GenAtributo(String nombreCaracteristica, Object fenotipo, Alelo aleloUno, Alelo aleloDos) throws Exception {
+		if(fenotipo==null) {
+			throw new Exception(nombreCaracteristica+": no se puede crear un atributo con un valor null");
+		}
 		this.nombreCaracteristica = nombreCaracteristica;
 		LlenarGen(fenotipo, aleloUno, aleloDos);
 	}

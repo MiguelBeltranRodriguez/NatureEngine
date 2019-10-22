@@ -27,7 +27,11 @@ public class RandomExtendido {
 		}
 	}
 	
-	public static Float ObjectAFloat(Object object) {
+	public static Float ObjectAFloat(Object object) throws Exception {
+		if(object==null) {
+			throw new Exception ("Objeto no puede ser null");
+		}
+		
 		Float result=null;
 		if(object instanceof Boolean) {
 			Boolean tmp = (Boolean)object;

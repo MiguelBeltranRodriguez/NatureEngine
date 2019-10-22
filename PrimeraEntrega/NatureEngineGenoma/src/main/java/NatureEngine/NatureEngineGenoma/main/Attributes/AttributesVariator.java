@@ -19,6 +19,9 @@ abstract class AttributesVariator {
 		Float MultiplicadorDeVariacionPorMutacion = (float) ParametersHandler.getMultiplicadorDeVariacionPorMutacion();
 		nuevoValor = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBase,
 				MultiplicadorDeVariacionPorMutacion);
+		if(nuevoValor==null) {
+			throw new Exception(nombreAtributo +": Esto no debería ser null");
+		}
 		Float randonormal = new Random().nextFloat();
 		Float probabilidadMutarDominancia = (float) ParametersHandler.getProbabilidadMutarDominancia();
 		Integer nuevaDominancia = dominanciaBase;
@@ -33,7 +36,7 @@ abstract class AttributesVariator {
 		}
 	}
 	
-	protected GenAtributo CrearGenAtributoSexual() {
+	protected GenAtributo CrearGenAtributoSexual() throws Exception {
 		Alelo aleloUno = new Alelo(0,(Object)false);
 		RandomExtendido randomextendido = new RandomExtendido();
 		Object valorAleloDos = (Object) randomextendido.RandomBooleanoConLimite(null);
@@ -46,6 +49,10 @@ abstract class AttributesVariator {
 		Object nuevoValorAtributo = null;
 
 		nuevoValorAtributo = VariarAtributoUsandoDistribucionNormal(nombreAtributo, valorBaseAtributo,1.0f);
+		if(nuevoValorAtributo==null) {
+			throw new Exception(nombreAtributo +": Esto no debería ser null");
+		}
+		
 		Integer nuevaDominancia = generarNuevaDominancia();
 		Alelo nuevoAlelo = CrearAlelo(nuevaDominancia, nuevoValorAtributo);
 		return nuevoAlelo;
@@ -94,6 +101,13 @@ abstract class AttributesVariator {
 
 	protected Object FenotipoCodominancia(String nombreAtributo, Object prevalorUno, Object prevalorDos)
 			throws Exception {
+		if(prevalorUno==null) {
+			throw new Exception(nombreAtributo+" fenotipo parental Uno resulto en null");
+		}
+		if(prevalorDos==null) {
+			throw new Exception(nombreAtributo+" fenotipo parental Dos resulto en null");
+		}
+		
 		String tipo = AtributosBasicos.getAtributosBasicosByName().get(nombreAtributo).getTipoCaracteristica();
 		Object nuevoFenotipo = null;
 		if (tipo.equals("java.lang.Boolean")) {
@@ -109,15 +123,23 @@ abstract class AttributesVariator {
 				if (tipo.equals("java.lang.Integer")) {
 					Integer TmpInteger = (int) Math.round(TmpFloat);
 					nuevoFenotipo = (Object) TmpInteger;
+				}else {
+					nuevoFenotipo = (Object) TmpFloat;
 				}
 			} else {
 				throw new Exception("Tipo de variable desconocido: " + tipo);
 			}
 		}
+		if(nuevoFenotipo==null) {
+			throw new Exception(nombreAtributo+" codominancia resulto en null");
+		}
 		return nuevoFenotipo;
 	}
 
-	protected Object FenotipoDominancia(Object valorDominante, Object valorRecesivo) {
+	protected Object FenotipoDominancia(String nombreAtributo, Object valorDominante, Object valorRecesivo) throws Exception {
+		if(valorDominante==null) {
+			throw new Exception(nombreAtributo+" dominancia tradicional resulto en null");
+		}
 		return valorDominante;
 	}
 
