@@ -125,16 +125,19 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		int ticks = 0;
 		while(true) {
 			this.tiempoDescansoReproduccion--;
+			if(this.tiempoDescansoReproduccion<0) {
+				this.tiempoDescansoReproduccion = 0;
+			}
 			t_0 = System.currentTimeMillis();
 			this.pensar();
 			// this.belief.pensar();
 			if(ticks==(VarGlobalGame.FRECUENCIA_TICKS_CONSUMO)) {
 				
-				System.out.println("|Energía Actual: "+this.energiaActual
+				/*System.out.println("|Energía Actual: "+this.energiaActual
 						+" | Agua actual: "+this.aguaActual
 						+" | Tamaño actual: "+this.tamañoActual
 						+" | Potencia actual: "+this.potenciaActual
-						+" | Edad Actual: "+this.edadActual);
+						+" | Edad Actual: "+this.edadActual);*/
 				
 				ticks = 0;
 				this.edadActual++;

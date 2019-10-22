@@ -196,7 +196,7 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 10);
 		fenotipo.put(AtributosBasicos.PERCEPCION_, 35);
 		fenotipo.put(AtributosBasicos.SEXO_, 1);
-		fenotipo.put(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1);
+		fenotipo.put(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 3);
 		fenotipo.put(AtributosBasicos.ANSIEDAD_, 50);
 		fenotipo.put(AtributosBasicos.HUMEDAD_IDEAL_, 0.5f);
 		fenotipo.put(AtributosBasicos.TOLERANCIA_HUMEDAD_, 0.5f);
@@ -223,8 +223,8 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	
 	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
 		// TODO: Agregar agentes en un csv o xml etc
-		List<HashMap<String, GenAtributo>> listaInicial = crearAtributosAgentePrimitivo(10);
-		for (int i = 0; i < 10; i++) {
+		List<HashMap<String, GenAtributo>> listaInicial = crearAtributosAgentePrimitivo(30);
+		for (int i = 0; i < 30; i++) {
 			crearAgente(400+i, 400+i, listaInicial.get(i));
 		}
 		

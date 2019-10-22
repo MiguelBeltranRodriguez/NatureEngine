@@ -633,7 +633,7 @@ public class Mundo implements Dibujable{
 		int xHijo = agente.getX();
 		int yHijo = agente.getY();
 		GenomaHandler genomahandler = GenomaHandler.Singleton();
-		System.out.println("Nuevo Agente");
+		
 		
 		List<HashMap<String, GenAtributo>> atributosHijo = genomahandler.Reproducirse(Integer.valueOf(numeroDeHijos), agente.getCaracteristicasHeredablesAgente(), hembra.getCaracteristicasHeredablesAgente());
 		

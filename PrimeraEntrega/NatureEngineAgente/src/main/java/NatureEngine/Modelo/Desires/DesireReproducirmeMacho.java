@@ -34,7 +34,7 @@ public class DesireReproducirmeMacho extends Desire {
 		hembraObjetivo(percepciones);
 		Mensaje mensajeAnterior = mensajesEnviados.get(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
 		
-		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) && agente.getTiempoDescansoReproduccion()==0 ) {
+		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) && agente.getTiempoDescansoReproduccion()<=0 ) {
 			if(mensajeAnterior == null) {
 				try {
 					Mensaje mensajeAEnviar = new Mensaje(agente.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION, this.agente, agenteHembra);

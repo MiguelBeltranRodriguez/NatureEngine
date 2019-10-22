@@ -1,8 +1,8 @@
 ﻿#tamano,720,720
-#energiaMaxima,800000
+#energiaMaxima,2000000
 #estacionMinima,0.75
 #estacionMaxima,1.3
-#numeroDePlantasMaxima,200
+#numeroDePlantasMaxima,600
 #frecuenciaEstacion,500
 #velocidadCambio,0.05
 #consumoPlanta,500.0
