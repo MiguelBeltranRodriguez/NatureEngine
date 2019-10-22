@@ -29,10 +29,10 @@ public class DesireReproducirmeMacho extends Desire {
 		
 		List<ObjetoDistribuido> percepciones = agente.getPercepciones();
 		Map<String, Mensaje> mensajesEnviados = agente.getMensajesEnviadosEsperando();
-		
+
 		hembraObjetivo(percepciones);
 		Mensaje mensajeAnterior = mensajesEnviados.get(DiccionarioDePalabras.TIPO_MENSAJE_REPRODUCCION);
-		
+
 		if(agenteHembra != null && this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA) ) {
 			if(mensajeAnterior == null) {
 				try {
@@ -93,12 +93,11 @@ public class DesireReproducirmeMacho extends Desire {
 	private void hembraObjetivo(List<ObjetoDistribuido> percepciones) {
 		for (ObjetoDistribuido c : percepciones) {
 			Casilla casilla = (Casilla)c;
-			// TODO agregar esta palabra al diccionario en commons	
-			Agente agente = (Agente)casilla.getElementoTipo("agente");
+			Agente agente = (Agente)casilla.getElementoTipo(DiccionarioDePalabras.AGENTE);
 			if(agente!=null && (boolean)agente.getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
 				if (this.agenteHembra==null) {
 					this.agenteHembra = agente;
-				} else if (calcularDistancia(agente, this.agente) < calcularDistancia(this.agenteHembra, this.agente)) {
+				} else if (Desire.calcularDistancia(agente, this.agente) < Desire.calcularDistancia(this.agenteHembra, this.agente)) {
 					this.agenteHembra = agente;
 				}
 			}

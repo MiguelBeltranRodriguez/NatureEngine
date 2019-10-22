@@ -9,10 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
+import NatureEngine.Utils.DiccionarioDePalabras;
 import NatureEngine.Utils.VarGlobalGame;
 import NatureEngine.Utils.VarGlobalVista;
 
@@ -181,14 +184,13 @@ public class Casilla extends ObjetoDistribuido implements Dibujable, Serializabl
 	}
 	
 	public Dibujable getElementoTipo(String tipo) {
-		// TODO agregar esta palabra al diccionario en commons	
 		Collection<Dibujable> listaDibujables = (Collection<Dibujable>) dibujablesCasilla.values();
 		for (Dibujable dibujable : listaDibujables) {
-			if(tipo.equals("planta")) {
+			if(tipo.equals(DiccionarioDePalabras.PLANTA)) {
 				if (dibujable instanceof Planta) {
 					return dibujable;
 				}
-			}else if(tipo.equals("agente")) {
+			}else if(tipo.equals(DiccionarioDePalabras.AGENTE)) {
 				if (dibujable instanceof Agente) {
 					return dibujable;
 				}

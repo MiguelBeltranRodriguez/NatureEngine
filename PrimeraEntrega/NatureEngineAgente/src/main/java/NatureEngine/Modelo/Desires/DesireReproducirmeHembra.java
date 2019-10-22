@@ -9,11 +9,11 @@ import NatureEngine.NatureEngineAgente.Agente;
 
 public class DesireReproducirmeHembra extends Desire {
 
-	
 	public DesireReproducirmeHembra(Agente agente) {
 		this.agente = agente;
 		this.intenciones = new Stack<Intention>();
 	}
+
 	@Override
 	public boolean tengoCapacidad() {
 		if(this.agente.getEdadActual()>=(int)this.agente.getCaracteristicaHeredable(AtributosBasicos.MADUREZ_REPRODUCTIVA)) {
@@ -27,7 +27,4 @@ public class DesireReproducirmeHembra extends Desire {
 	public void init(Desire desireAnterior) {
 		
 	}
-
-	
-
 }

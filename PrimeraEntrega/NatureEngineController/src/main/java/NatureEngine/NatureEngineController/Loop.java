@@ -188,19 +188,19 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	}
 	
 
-	public Map<String, GenAtributo> crearAtributosAgentePrimitivo(boolean Hembra) {		
+	public Map<String, GenAtributo> crearAtributosAgentePrimitivo(boolean sexo, float digestionVegetal) {		
 		HashMap<String, Object> fenotipo = new HashMap<String, Object>();
 		fenotipo.put(AtributosBasicos.ENERGIA_MAXIMA_, 6000.0f);
 		fenotipo.put(AtributosBasicos.AGUA_MAXIMA_, 3000.0f);
 		fenotipo.put(AtributosBasicos.POTENCIA_MAXIMA_, 20.0f);
 		fenotipo.put(AtributosBasicos.TAMANO_MAXIMO_, 10);
 		fenotipo.put(AtributosBasicos.PERCEPCION_, 50);
-		fenotipo.put(AtributosBasicos.SEXO_, Hembra);
+		fenotipo.put(AtributosBasicos.SEXO_, sexo);
 		fenotipo.put(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_, 1);
 		fenotipo.put(AtributosBasicos.ANSIEDAD_, 50);
 		fenotipo.put(AtributosBasicos.HUMEDAD_IDEAL_, 0.5f);
 		fenotipo.put(AtributosBasicos.TOLERANCIA_HUMEDAD_, 0.5f);
-		fenotipo.put(AtributosBasicos.DIGESTION_VEGETAL_, 1);
+		fenotipo.put(AtributosBasicos.DIGESTION_VEGETAL_, digestionVegetal);
 		fenotipo.put(AtributosBasicos.AGRESIVIDAD_, 0.5f);
 		fenotipo.put(AtributosBasicos.LONGEVIDAD_, 100);
 		fenotipo.put(AtributosBasicos.MADUREZ_REPRODUCTIVA, 10);
@@ -218,14 +218,21 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 		if(individuodePrueba == null) {
 			System.out.println("Error");
 		}
+
 		individuodePrueba.get(AtributosBasicos.ENERGIA_MAXIMA_).setValorCaracteristica(6000.0f);
 		individuodePrueba.get(AtributosBasicos.AGUA_MAXIMA_).setValorCaracteristica(3000.0f);
 		individuodePrueba.get(AtributosBasicos.POTENCIA_MAXIMA_).setValorCaracteristica(20.0f);
 		individuodePrueba.get(AtributosBasicos.TAMANO_MAXIMO_).setValorCaracteristica(10);
 		individuodePrueba.get(AtributosBasicos.PERCEPCION_).setValorCaracteristica(50);
-		individuodePrueba.get(AtributosBasicos.MADUREZ_REPRODUCTIVA).setValorCaracteristica(10);
-		individuodePrueba.get(AtributosBasicos.LONGEVIDAD_).setValorCaracteristica(25);
+		individuodePrueba.get(AtributosBasicos.SEXO_).setValorCaracteristica(sexo);
+		individuodePrueba.get(AtributosBasicos.CAPACIDAD_REPRODUCTIVA_).setValorCaracteristica(1);
+		individuodePrueba.get(AtributosBasicos.ANSIEDAD_).setValorCaracteristica(50);
 		individuodePrueba.get(AtributosBasicos.HUMEDAD_IDEAL_).setValorCaracteristica(0.5f);
+		individuodePrueba.get(AtributosBasicos.TOLERANCIA_HUMEDAD_).setValorCaracteristica(0.5f);
+		individuodePrueba.get(AtributosBasicos.DIGESTION_VEGETAL_).setValorCaracteristica(digestionVegetal);
+		individuodePrueba.get(AtributosBasicos.AGRESIVIDAD_).setValorCaracteristica(0.5f);
+		individuodePrueba.get(AtributosBasicos.LONGEVIDAD_).setValorCaracteristica(100);
+		individuodePrueba.get(AtributosBasicos.MADUREZ_REPRODUCTIVA).setValorCaracteristica(10);
 		individuodePrueba.get(AtributosBasicos.TOLERANCIA_HUMEDAD_).setValorCaracteristica(0.5f);
 		return individuodePrueba;
 	}
@@ -233,13 +240,16 @@ public class Loop extends UnicastRemoteObject implements Runnable, ServiciosCont
 	
 	public void crearAgentesIniciales(ServiciosAdministradorAgentes serviciosAgentes) throws RemoteException {
 		// TODO: Agregar agentes en un csv o xml etc
-		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(6), 150+(6), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(true));
-		Agente agenteNuevoHembra = new Agente(Mundo.ID_ACTUAL++,Color.ORANGE, 150+(15), 150+(15), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(false));
+		Agente agenteNuevo = new Agente(Mundo.ID_ACTUAL++,Color.PINK, 150+(6), 150+(6), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(false, 1.0f));
+		Agente agenteNuevoHembra = new Agente(Mundo.ID_ACTUAL++,Color.PINK, 150+(15), 150+(15), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(true, 1.0f));
+		Agente agenteNuevoDepredador = new Agente(Mundo.ID_ACTUAL++,Color.RED, 150+(0), 150+(30), (ServiciosController)this, serviciosAgentes, this.crearAtributosAgentePrimitivo(true, 1.0f));
 		addAgente(agenteNuevo);
 		addAgente(agenteNuevoHembra);
+		addAgente(agenteNuevoDepredador);
 		
 		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevo);
 		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevoHembra);
+		serviciosAgentes.agregarAgente((ObjetoDistribuido)agenteNuevoDepredador);	
 	}
 
 	@Override

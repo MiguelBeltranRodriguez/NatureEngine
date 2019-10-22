@@ -17,6 +17,7 @@ import NatureEngine.Modelo.GenAtributo;
 import NatureEngine.Modelo.Casilla;
 import NatureEngine.Modelo.Desires.Desire;
 import NatureEngine.Modelo.Desires.DesireAlimentarme;
+import NatureEngine.Modelo.Desires.DesireHuir;
 import NatureEngine.Modelo.Desires.DesireReproducirmeHembra;
 import NatureEngine.Modelo.Desires.DesireReproducirmeMacho;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
@@ -58,11 +59,17 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	private int madurezReproductiva;
 	private int tamañoMaximo;
 	private float potenciaMaxima;
+	private float gradoDigestionVegetal;
 	private ServiciosAdministradorAgentes serviciosAgente;
 	private Queue<Mensaje> colaMensajesRecibidos;
 	private Map<String, Mensaje> mensajesEnviadosEsperando;
+	private boolean esHerbivoro;
+	private boolean esCarnivoro;
 	
-	public Agente(Long ID, Color color, int x, int y, ServiciosController servicios,	ServiciosAdministradorAgentes serviciosAgente, Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
+	public Agente(Long ID, Color color, int x, int y,
+			ServiciosController servicios, 
+			ServiciosAdministradorAgentes serviciosAgente, 
+			Map<String, GenAtributo> caracteristicasHeredablesAgente) throws RemoteException {
 
 		super(ID);
 		this.caracteristicasHeredablesAgente = caracteristicasHeredablesAgente;
@@ -91,15 +98,17 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		this.aguaActual = (float) this.getCaracteristicaHeredable(AtributosBasicos.AGUA_MAXIMA_);
 		this.humedadIdeal = (float) this.getCaracteristicaHeredable(AtributosBasicos.HUMEDAD_IDEAL_);
 		this.toleranciaHumedad = (float) this.getCaracteristicaHeredable(AtributosBasicos.TOLERANCIA_HUMEDAD_);
+		this.gradoDigestionVegetal = (float) this.getCaracteristicaHeredable(AtributosBasicos.DIGESTION_VEGETAL_);
 	
-	
-		
 		this.timeOutBloqueo = 3;
 		this.moverse = 0;
 		this.percepcion = new ArrayList<ObjetoDistribuido>();
 		this.desireAnterior = null;
 		this.casillasMovidas = 0;
 		this.velocidadActual = 0;
+		
+		this.setEsHerbivoro((VarGlobalGame.UMBRAL_HERVIBORO < this.gradoDigestionVegetal));
+		this.setEsCarnivoro((VarGlobalGame.UMBRAL_CARNIVORO > this.gradoDigestionVegetal));
 	}
 
 
@@ -126,7 +135,9 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 			// this.belief.pensar();
 			if(ticks==(VarGlobalGame.FRECUENCIA_TICKS_CONSUMO)) {
 				
-				System.out.println("|Energía Actual: "+this.energiaActual
+				System.out.println("|Es carnivoro: "+this.esCarnivoro
+						+" | Es herbivoro: "+this.esHerbivoro
+						+" | Energía Actual: "+this.energiaActual
 						+" | Agua actual: "+this.aguaActual
 						+" | Tamaño actual: "+this.tamañoActual
 						+" | Potencia actual: "+this.potenciaActual
@@ -215,18 +226,17 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 
 	private void pensar() {
 		try {
-			percepcion = servicios.percibir(this.ID, this.x, this.y); // BRF
-			/* for (int i = 0; i < percepcion.size(); i++) {
-				Casilla temporal = (Casilla) percepcion.get(i);
-				System.out.println(temporal.getHumedad());
-			} */
 			Stack<Desire> desires = new Stack<Desire>();
+
+			this.percepcion = servicios.percibir(this.ID, this.x, this.y); // BRF
+
 			if((boolean)getCaracteristicaHeredable(AtributosBasicos.SEXO_)) {
 				desires.push(new DesireReproducirmeHembra(this));
 			}else {
 				desires.push(new DesireReproducirmeMacho(this));
 			}
 			desires.push(new DesireAlimentarme(this));
+			desires.push(new DesireHuir(this));
 			
 			
 			// TODO: crear dssirePorDefecto
@@ -516,6 +526,16 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 	}
 
 
+	public float getGradoDigestionVegetal() {
+		return gradoDigestionVegetal;
+	}
+
+
+	public void setGradoDigestionVegetal(float gradoDigestionVegetal) {
+		this.gradoDigestionVegetal = gradoDigestionVegetal;
+	}
+
+
 	public ServiciosAdministradorAgentes getServiciosAgente() {
 		return serviciosAgente;
 	}
@@ -553,6 +573,26 @@ public class Agente extends ObjetoDistribuido implements Dibujable, Serializable
 		}else {
 			return new Mensaje(this.getID(), 5, DiccionarioDePalabras.TIPO_MENSAJE_NO, this, mensaje.getEmisor());
 		}
+	}
+
+
+	public boolean isEsHerbivoro() {
+		return esHerbivoro;
+	}
+
+
+	public void setEsHerbivoro(boolean esHerbivoro) {
+		this.esHerbivoro = esHerbivoro;
+	}
+
+
+	public boolean isEsCarnivoro() {
+		return esCarnivoro;
+	}
+
+
+	public void setEsCarnivoro(boolean esCarnivoro) {
+		this.esCarnivoro = esCarnivoro;
 	}
 	
 	

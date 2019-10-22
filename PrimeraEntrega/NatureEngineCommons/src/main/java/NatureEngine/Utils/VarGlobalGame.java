@@ -70,5 +70,7 @@ public class VarGlobalGame {
 	public final static int COHEFICIENTE_GRADO_ENVEJECIMIENTO = 10;
 
 	/** Coheficiente en los Desires */
-	public final static float UMBRAL_HAMBRE = (float) 0.5;
+	public final static float UMBRAL_HAMBRE = (float) 1.0;
+	public final static float UMBRAL_CARNIVORO = (float) 0.25;
+	public final static float UMBRAL_HERVIBORO = (float) 0.75;
 }

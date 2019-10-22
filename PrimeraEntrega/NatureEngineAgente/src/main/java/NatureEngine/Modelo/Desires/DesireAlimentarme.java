@@ -14,6 +14,7 @@ import NatureEngine.Modelo.Intentions.MoverseA;
 import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
+import NatureEngine.Utils.DiccionarioDePalabras;
 import NatureEngine.Utils.VarGlobalGame;
 
 public class DesireAlimentarme extends Desire {
@@ -31,58 +32,44 @@ public class DesireAlimentarme extends Desire {
 	}
 
 	private void llenarPila() {
-		this.intenciones.push(new AlimentarsePlanta(this.agente, this.objetivo));
+		if (this.agente.isEsHerbivoro()) {
+			this.intenciones.push(new AlimentarsePlanta(this.agente, this.objetivo));
+		}
+		
 		Intention intencionMoverse = new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY());
 		if(!intencionMoverse.isFinalizado()){
-			this.intenciones.push(new MoverseA(this.agente, this.objetivo.getX(), this.objetivo.getY()));
+			this.intenciones.push(intencionMoverse);
 		}
 	}
-
-	
 
 	@Override
 	public boolean tengoCapacidad() {
 		List<ObjetoDistribuido> percepciones = agente.getPercepciones();
-
-		boolean esHerviboro = true; // Depende de las caracteristicas heredables
-
-		boolean esCarnivoro = false; // Depende de las caracteristicas heredables
-
-		boolean tengoHambre = this.tengoHambre();
 		
-		if (tengoHambre) {
-			if (esHerviboro) {
+		if (this.tengoHambre()) {
+			if (this.agente.isEsHerbivoro()) {
 				this.plantaObjetivo(percepciones);
-				if(this.objetivo == null) {
-					return false;
-				} else {
-					return true;
-				}
-			} else if (esCarnivoro) {
-				// TODO: logica
+			} else if (this.agente.isEsCarnivoro()) {				
+				this.presaObjetivo(percepciones);
 			} else {
-				// TODO: logica cuando es obniboro depende de que tanta habre tiene
+				// TODO: Cuando se es oniboro
 			}
-		} else {
-			return false;
 		}
-		return false;
+
+		return (this.objetivo != null);
 	}
 
 	private boolean tengoHambre() {
 		float porcetajeEnergia = VarGlobalGame.UMBRAL_HAMBRE * (float) this.agente.getCaracteristicaHeredable(AtributosBasicos.ENERGIA_MAXIMA_);		
-		if (this.agente.getEnergiaActual() < porcetajeEnergia) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return (this.agente.getEnergiaActual() < porcetajeEnergia);
 	}
 
 	private void plantaObjetivo(List<ObjetoDistribuido> percepciones) {
-		for (ObjetoDistribuido c : percepciones) {
-			Casilla casilla = (Casilla)c;
-			// TODO agregar esta palabra al diccionario en commons	
-			Planta planta = (Planta)casilla.getElementoTipo("planta");
+		for (ObjetoDistribuido percepcion : percepciones) {
+			Casilla casilla = (Casilla)percepcion;
+			Planta planta = (Planta)casilla.getElementoTipo(DiccionarioDePalabras.PLANTA);
+
 			if(planta!=null) {
 				if (this.objetivo==null) {
 					this.objetivo = planta;
@@ -93,7 +80,30 @@ public class DesireAlimentarme extends Desire {
 			// TODO: heuristica quien me da mas energia incluyendo la distancia
 		}
 	}
-
 	
+	private boolean esPresa(Agente presa) {
+		boolean distintaEspecie = true; // TODO: poner funcion del genoma
+		boolean esPequeño = true;// (this.agente.getTamañoActual() > presa.getTamañoActual());
+		
+		return (distintaEspecie && esPequeño);
+	}
+	
+	private void presaObjetivo(List<ObjetoDistribuido> percepciones) {
+		for (ObjetoDistribuido percepcion : percepciones) {
+			Casilla casilla = (Casilla)percepcion;
+			Agente presa = (Agente)casilla.getElementoTipo(DiccionarioDePalabras.AGENTE);
+
+			if(presa!=null) {
+				if(this.esPresa(presa)) {
+					if (this.objetivo == null) {
+						this.objetivo = presa;
+					} else if (Desire.calcularDistancia(presa, this.agente) < Desire.calcularDistancia(this.objetivo, this.agente)) {
+						this.objetivo = presa;		
+					}
+				}				
+			}
+			// TODO: heuristica quien me da mas energia incluyendo la distancia
+		}
+	}
 
 }
