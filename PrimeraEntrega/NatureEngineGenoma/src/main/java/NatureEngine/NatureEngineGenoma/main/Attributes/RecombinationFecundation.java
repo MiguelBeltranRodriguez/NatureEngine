@@ -15,6 +15,9 @@ abstract class RecombinationFecundation extends AttributesVariator {
 		// Se hace en esta fase para simplificar, pero es equivalente a una mutación que
 		// ocurre en la primera fase de la meiosis
 		Object valorAtributo = FecundacionCalcularNuevoFenotipo(nombreAtributo, aleloUno, aleloDos);
+		if(valorAtributo==null) {
+			throw new Exception(nombreAtributo+" la fecundación resulto en null");
+		}
 		GenAtributo genatributo = new GenAtributo(nombreAtributo, valorAtributo, aleloUno, aleloDos);
 		return genatributo;
 	}
@@ -52,9 +55,9 @@ abstract class RecombinationFecundation extends AttributesVariator {
 			valorFenotipo = FenotipoCodominancia(nombreAtributo, valorUno, valorDos);
 		} else {
 			if (DominanciaUno > DominanciaDos) {
-				valorFenotipo = FenotipoDominancia(valorUno, valorDos);
+				valorFenotipo = FenotipoDominancia(nombreAtributo,valorUno, valorDos);
 			} else {
-				valorFenotipo = FenotipoDominancia(valorDos, valorUno);
+				valorFenotipo = FenotipoDominancia(nombreAtributo,valorDos, valorUno);
 			}
 		}
 		return valorFenotipo;
