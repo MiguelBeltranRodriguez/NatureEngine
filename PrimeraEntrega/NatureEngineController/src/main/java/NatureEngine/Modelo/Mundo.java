@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import MapaRuido.MapGenerator;
 import Modelo.Casilla;
 import Modelo.CasillaAgua;
 import Modelo.CasillaTierra;
@@ -56,7 +56,7 @@ public class Mundo implements Dibujable{
 		estacion = 1.0f;
 		tiempoActual = 0;
 		direccionCambioEstacion = -1;
-		cargarMapaRuido();
+		cargarMapa();
 	}
 
 
@@ -125,79 +125,6 @@ public class Mundo implements Dibujable{
 	}
 
 
-	private void cargarMapaRuido() {
-		BufferedReader br = ManejadorArchivos.getManejadorArchivos().cargarArchivoLectura(VarGlobalGame.RUTA_MAPA);
-
-		try {
-			String line = br.readLine();
-			String sTamano[] = line.split(ManejadorArchivos.SEPARADOR);
-			int widht = Integer.parseInt(sTamano[1]);
-			int heigth = Integer.parseInt(sTamano[2]);
-			line = br.readLine();
-			String sEnergiaMaxia[] = line.split(ManejadorArchivos.SEPARADOR);
-			energiaMaxima = Float.parseFloat(sEnergiaMaxia[1]);
-			line = br.readLine();
-			String sEstacionMinima[] = line.split(ManejadorArchivos.SEPARADOR);
-			estacionMinima = Float.parseFloat(sEstacionMinima[1]);
-			line = br.readLine();
-			String sEstacionMaxima[] = line.split(ManejadorArchivos.SEPARADOR);
-			estacionMaxima = Float.parseFloat(sEstacionMaxima[1]);
-			line = br.readLine();
-			String sPlantasMaxima[] = line.split(ManejadorArchivos.SEPARADOR);
-			numeroDePlantasMaxima = Integer.parseInt(sPlantasMaxima[1]);
-			line = br.readLine();
-			String sFrecuencua[] = line.split(ManejadorArchivos.SEPARADOR);
-			frecuenciaEstacion = Integer.parseInt(sFrecuencua[1]);
-			line = br.readLine();
-			String sVelocidadCambio[] = line.split(ManejadorArchivos.SEPARADOR);
-			velocidadCambio = Float.parseFloat(sVelocidadCambio[1]);
-			line = br.readLine();
-			String sVelocidadConsumoPlanta[] = line.split(ManejadorArchivos.SEPARADOR);
-			consumoEnergiaPlanta = Float.parseFloat(sVelocidadConsumoPlanta[1]);
-			
-			//Generacion de mapa cob funciones de ruido
-	        MapGenerator map = new MapGenerator();
-	        
-	        map.mapHeight = heigth/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA;
-	        map.mapWidth = widht/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA;
-	        
-			//Escala de ruido
-			map.noiseScale = (float) (35 + (Math.random()*5));
-			//Numero de octavas 
-			map.octaves = (int )map.noiseScale - 34;
-			
-			
-			float[][]  noiseMap = map.GenerateMap();
-
-			
-			for(int i = 1; i <= (heigth/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA); i++) {
-				for(int j = 1; j <= (widht/VarGlobalVista.TAMANO_TEXTURA_CUADRICULA); j++) {
-					float humedad = noiseMap[i-1][j-1];
-					float humedadI = (humedad*250);
-					for(int x = (j*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA)-VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; x<(j*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA);x++ ) {
-						for(int y = (i*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA)-VarGlobalVista.TAMANO_TEXTURA_CUADRICULA; y<(i*VarGlobalVista.TAMANO_TEXTURA_CUADRICULA);y++ ) {
-							if(humedadI>=80) {
-								casillasDelMundo[x][y] = new CasillaAgua(x, y, humedadI);
-							}else {
-								casillasDelMundo[x][y] = new CasillaTierra(x, y, humedadI);
-							}
-						}
-					}
-				}
-			}
-			energiaMaximaPorPlanta = energiaMaxima / numeroDePlantasMaxima;
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-
-		System.out.println("Salio");
-
-
-		ManejadorArchivos.cerrarArchivo(br);
-		generarPlantas();
-	}
-	
 	private void generarPlantas() {
 		while(plantasMundo.size()<numeroDePlantasMaxima) {
 			try {
