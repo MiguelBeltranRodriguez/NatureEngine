@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>NatureEngine</groupId>
-	<artifactId>NatureEngineController</artifactId>
+	<artifactId>NatureEngineGenoma</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>NatureEngineController</name>
+	<name>NatureEngineGenoma</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -16,14 +16,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineAgente</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineGenoma</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<version>1.5.2</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>NatureEngine</groupId>
@@ -31,9 +27,9 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>NatureEngine</groupId>
-			<artifactId>NatureEngineAdministradorAgentes</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
 		</dependency>
 	</dependencies>
 	<build>

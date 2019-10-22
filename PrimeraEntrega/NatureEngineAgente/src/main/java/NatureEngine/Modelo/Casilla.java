@@ -1,13 +1,15 @@
-package Modelo;
+package NatureEngine.Modelo;
 
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-
+import NatureEngine.NatureEngineAgente.Agente;
 import NatureEngine.NatureEngineCommons.ObjetoDistribuido;
 import NatureEngine.NatureEngineGUI.Dibujable;
 import NatureEngine.NatureEngineGUI.Renderizador2D;
@@ -177,5 +179,25 @@ public class Casilla extends ObjetoDistribuido implements Dibujable, Serializabl
 	public Dibujable findAgente(Long id) {
 		return dibujablesCasilla.get(id);
 	}
+	
+	public Dibujable getElementoTipo(String tipo) {
+		// TODO agregar esta palabra al diccionario en commons	
+		Collection<Dibujable> listaDibujables = (Collection<Dibujable>) dibujablesCasilla.values();
+		for (Dibujable dibujable : listaDibujables) {
+			if(tipo.equals("planta")) {
+				if (dibujable instanceof Planta) {
+					return dibujable;
+				}
+			}else if(tipo.equals("agente")) {
+				if (dibujable instanceof Agente) {
+					return dibujable;
+				}
+			}
+			// TODO agregar a furturo...
+		}
+		return null;
+	}
+	
+	// TODO: getAgente...
 	
 }

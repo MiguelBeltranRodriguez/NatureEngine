@@ -17,7 +17,7 @@ public class VarGlobalGame {
 	/** Ticks por segundo */
 	public static int TICKS_S = 0;
 	
-	public static int DELAY = 10;
+	public static int DELAY = 100;
 	
 	public static int VELOCIDAD_MAX_CASILLA = 100;
 	
